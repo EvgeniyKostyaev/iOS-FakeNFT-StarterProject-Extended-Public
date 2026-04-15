@@ -1,18 +1,49 @@
 disabled_rules:
   - trailing_whitespace
+  - switch_case_alignment   # убираем шум
 
 opt_in_rules:
   - empty_count
-  - force_unwrapping
+  - explicit_init
+  - closure_spacing
+  - sorted_imports
 
 included:
-  - YourProject
+  - iOS-FakeNFT-Extended
 
 excluded:
   - Pods
   - Carthage
   - DerivedData
 
+# MARK: - Metrics
+
 line_length:
   warning: 120
-  error: 200
+  error: 180
+
+function_body_length:
+  warning: 50
+  error: 100
+
+type_body_length:
+  warning: 200
+  error: 400
+
+cyclomatic_complexity:
+  warning: 10
+  error: 20
+
+# MARK: - Safety
+
+force_cast:
+  severity: warning
+
+force_unwrapping:
+  severity: warning
+
+# MARK: - Naming
+
+type_name:
+  min_length: 3
+  max_length: 50

@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct iOS_FakeNFT_ExtendedApp: App {
+struct IOSFakeNFTExtendedApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
