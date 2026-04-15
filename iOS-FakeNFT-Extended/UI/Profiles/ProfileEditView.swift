@@ -10,12 +10,14 @@ import SwiftUI
 struct ProfileEditView: View {
     let profile: ProfileScreen
     var body: some View {
-        Spacer()
-            .padding(.top, 160)
-        Text("Экран редактирования профиля")
-        Color.clear
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color(.whiteTheme).ignoresSafeArea())
+        VStack {
+            Spacer()
+                .padding(.top, 160)
+            Text("Экран редактирования профиля")
+            Color.clear
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .background(Color(.dayNightWhite).ignoresSafeArea())
     }
 }
 

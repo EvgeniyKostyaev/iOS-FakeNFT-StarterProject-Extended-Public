@@ -13,7 +13,7 @@ struct MyNFTView: View {
     var body: some View {
         Color.clear
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color(.whiteTheme).ignoresSafeArea())
+            .background(.dayNightWhite)
             .navigationTitle(NSLocalizedString("Profile.myNFTsNavTitle", comment: ""))
             .navigationBarTitleDisplayMode(.inline)
     }
