@@ -57,7 +57,7 @@ est: 0.5 часа; fact: x часов
 
 **Открытие сайта в WebView**
 
-- Отдельный `ProfileWebView` (SwiftUI)  
+- Отдельный `WebViewRepresentable` (SwiftUI)  
 - Внутри: `UIViewRepresentable` + `WKWebView`  
 - Передача `URL` из модели профиля  
 
