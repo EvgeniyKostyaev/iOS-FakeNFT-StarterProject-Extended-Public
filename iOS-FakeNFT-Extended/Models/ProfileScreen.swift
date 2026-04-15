@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ProfileScreen: Equatable {
+struct ProfileScreen: Equatable, Sendable {
     let id: String
     let name: String
     let description: String

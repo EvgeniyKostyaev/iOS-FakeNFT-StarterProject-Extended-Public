@@ -17,7 +17,7 @@ struct ProfileDTO: Decodable, Sendable {
     let likes: [String]
 }
 
-enum ProfileMappingError: Error {
+enum ProfileMappingError: Error, Sendable {
     case invalidWebsiteURL
 }
 
