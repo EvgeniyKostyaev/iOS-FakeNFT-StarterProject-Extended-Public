@@ -30,6 +30,7 @@ extension ProfileScreen {
         let websiteTitle = URL(string: dto.website)?.host ?? dto.website
 
         self.init(
+            id: dto.id,
             name: dto.name,
             description: dto.description,
             websiteTitle: websiteTitle,
