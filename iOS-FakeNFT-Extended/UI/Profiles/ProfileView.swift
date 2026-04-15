@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct ProfileView: View {
     @Environment(ServicesAssembly.self) private var services
     @State private var viewModel = ProfileViewModel()
@@ -164,7 +163,7 @@ struct ProfileView: View {
 
     private func websiteSection(profile: ProfileScreen) -> some View {
         NavigationLink {
-            ProfileWebView(url: profile.websiteURL)
+            WebViewRepresentable(url: profile.websiteURL)
         } label: {
             Text(profile.websiteTitle)
                 .font(.system(size: 15, weight: .regular))

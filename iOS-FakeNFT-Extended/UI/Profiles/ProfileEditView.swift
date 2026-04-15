@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-/// Экран редактирования профиля (форма и сохранение — следующие задачи эпика).
+
 struct ProfileEditView: View {
     let profile: ProfileScreen
     var body: some View {
@@ -18,9 +18,9 @@ struct ProfileEditView: View {
             .background(Color(.whiteTheme).ignoresSafeArea())
     }
 }
+
 #Preview {
     NavigationStack {
         ProfileEditView(profile: .profileScreenMock)
     }
 }
-

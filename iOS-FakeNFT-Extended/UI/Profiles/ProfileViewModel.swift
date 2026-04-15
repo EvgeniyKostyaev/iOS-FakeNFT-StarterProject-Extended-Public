@@ -19,7 +19,6 @@ final class ProfileViewModel {
     }
     
     private(set) var state: State = .idle
-    /// Пока без API: короткая задержка + мок. Позже: `try await profileService.loadProfile()`.
     
     func loadProfile(profileService: ProfileService) async {
         if case .loading = state { return }
