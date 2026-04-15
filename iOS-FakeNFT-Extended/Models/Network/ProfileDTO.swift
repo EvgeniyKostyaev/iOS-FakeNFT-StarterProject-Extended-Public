@@ -26,7 +26,9 @@ extension ProfileScreen {
         guard let websiteURL = URL(string: dto.website) else {
             throw ProfileMappingError.invalidWebsiteURL
         }
+
         let websiteTitle = URL(string: dto.website)?.host ?? dto.website
+
         self.init(
             name: dto.name,
             description: dto.description,

@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+
 struct FavoriteNFTView: View {
     let profile: ProfileScreen
+
     var body: some View {
         Color.clear
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -16,6 +18,7 @@ struct FavoriteNFTView: View {
             .navigationBarTitleDisplayMode(.inline)
     }
 }
+
 #Preview {
     NavigationStack {
         FavoriteNFTView(profile: .profileScreenMock)

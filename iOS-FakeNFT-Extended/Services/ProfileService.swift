@@ -14,12 +14,15 @@ protocol ProfileService {
 @MainActor
 final class ProfileServiceImpl: ProfileService {
     private let networkClient: NetworkClient
+
     init(networkClient: NetworkClient) {
         self.networkClient = networkClient
     }
+
     func loadProfile() async throws -> ProfileScreen {
         let request = ProfileGetRequest()
         let dto: ProfileDTO = try await networkClient.send(request: request)
+
         return try ProfileScreen(dto: dto)
     }
 }
