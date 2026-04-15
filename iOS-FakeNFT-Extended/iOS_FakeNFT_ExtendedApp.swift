@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct IOSFakeNFTExtendedApp: App {
+struct FakeNFTApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

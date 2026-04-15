@@ -9,7 +9,7 @@ public final class NftDetailAssembly {
         self.servicesAssembler = servicesAssembler
     }
 
-    public func build(with input: NftDetailInput) -> UIViewController {
+    func build(with input: NftDetailInput) -> NftDetailViewController {
         let presenter = NftDetailPresenterImpl(
             input: input,
             service: servicesAssembler.nftService

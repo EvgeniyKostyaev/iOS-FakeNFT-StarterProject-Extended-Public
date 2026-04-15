@@ -8,7 +8,7 @@ struct NftDetailBridgeView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> NftDetailViewController {
         let assembly = NftDetailAssembly(servicesAssembler: servicesAssembly)
         let nftInput = NftDetailInput(id: Constants.testNftId)
-        let nftViewController = assembly.build(with: nftInput) as! NftDetailViewController
+        let nftViewController = assembly.build(with: nftInput)
         return nftViewController
     }
 
