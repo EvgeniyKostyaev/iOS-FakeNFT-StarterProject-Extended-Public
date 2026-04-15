@@ -8,6 +8,7 @@
 import Foundation
 
 struct ProfileScreen: Equatable {
+    let id: String
     let name: String
     let description: String
     let websiteTitle: String
@@ -17,6 +18,7 @@ struct ProfileScreen: Equatable {
     let favoriteNFTCount: Int
     
     static let profileScreenMock = ProfileScreen(
+        id: "1",
         name: "Joaquin Phoenix",
         description: """
         Дизайнер из Казани, люблю цифровое искусство  и бейглы. В моей коллекции уже 100+ NFT,  и еще больше — на моём сайте. Открыт к коллаборациям..
