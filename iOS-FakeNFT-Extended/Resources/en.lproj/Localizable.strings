@@ -1,4 +1,11 @@
+"Tab.profile" = "Profile";
 "Tab.catalog" = "Catalog";
+"Profile.myNFTsFormat" = "My NFTs (%lld)";
+"Profile.favoritesFormat" = "Favorite NFTs (%lld)";
+"Profile.edit" = "Edit";
+"Profile.myNFTsNavTitle" = "My NFTs";
+"Profile.favoritesNavTitle" = "Favorite NFTs";
+"Profile.loadFailed" = "Failed to load profile";
 "Catalog.openNft" = "Open NFT";
 "Error.network" = "A network error occurred";
 "Error.unknown" = "An unknown error occurred";

@@ -1,5 +1,12 @@
+"Tab.profile" = "Профиль";
 "Tab.catalog" = "Каталог";
-"Catalog.openNft" = "Открыть NFT";
+"Profile.myNFTsFormat" = "Мои NFT (%lld)";
+"Profile.favoritesFormat" = "Избранные NFT (%lld)";
+"Profile.edit" = "Редактировать";
+"Profile.myNFTsNavTitle" = "Мои NFT";
+"Profile.favoritesNavTitle" = "Избранные NFT";
+"Profile.loadFailed" = "Не удалось загрузить профиль";
+"Catalog.openNft" = "Открыть Nft";
 "Error.network" = "Произошла ошибка сети";
 "Error.unknown" = "Произошла неизвестная ошибка";
 "Error.repeat" = "Повторить";
