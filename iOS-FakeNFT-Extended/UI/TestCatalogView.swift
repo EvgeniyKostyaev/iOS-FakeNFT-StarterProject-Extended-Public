@@ -8,7 +8,7 @@ struct TestCatalogView: View {
         Button {
             showNft()
         } label: {
-            Text(Constants.openNftTitle)
+            Text(.catalogOpenNft)
                 .tint(.blue)
         }
         .backgroundStyle(.background)
@@ -20,8 +20,4 @@ struct TestCatalogView: View {
     func showNft() {
         presentingNft = true
     }
-}
-
-private enum Constants {
-    static let openNftTitle = NSLocalizedString("Catalog.openNft", comment: "")
 }
