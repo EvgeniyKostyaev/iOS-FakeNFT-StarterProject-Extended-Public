@@ -7,8 +7,14 @@
 
 import Foundation
 
+extension Notification.Name {
+    /// После успешного PUT профиля — подписчики могут перезагрузить данные.
+    static let profileDidUpdate = Notification.Name("profileDidUpdate")
+}
+
 protocol ProfileService {
-    func loadProfile() async throws -> ProfileScreen
+    func loadProfile(userId: String) async throws -> ProfileScreen
+    func updateProfile(_ payload: ProfileUpdatePayload) async throws
 }
 
 @MainActor
@@ -19,10 +25,15 @@ final class ProfileServiceImpl: ProfileService {
         self.networkClient = networkClient
     }
 
-    func loadProfile() async throws -> ProfileScreen {
-        let request = ProfileGetRequest()
+    func loadProfile(userId: String) async throws -> ProfileScreen {
+        let request = ProfileGetRequest(userId: userId)
         let dto: ProfileDTO = try await networkClient.send(request: request)
 
         return try ProfileScreen(dto: dto)
+    }
+
+    func updateProfile(_ payload: ProfileUpdatePayload) async throws {
+        let request = ProfilePutRequest(payload: payload)
+        _ = try await networkClient.send(request: request)
     }
 }

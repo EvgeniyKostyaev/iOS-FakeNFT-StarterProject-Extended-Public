@@ -13,16 +13,27 @@ final class ProfileViewModel {
 
     private(set) var state: ProfileState = .idle
 
-    func loadProfile(profileService: ProfileService) async {
-        if case .loading = state { return }
-        state = .loading
+    func loadProfile(profileService: ProfileService, showsLoadingIndicator: Bool = true) async {
+        if showsLoadingIndicator {
+            if case .loading = state { return }
+            state = .loading
+        } else if case .loaded = state {
+            // тихое обновление после сохранения профиля
+        } else {
+            return
+        }
+
         do {
-            let profile = try await profileService.loadProfile()
+            let profile = try await profileService.loadProfile(userId: "1")
             state = .loaded(profile)
         } catch let error as NetworkClientError {
-            state = .failed(message(for: error))
+            if showsLoadingIndicator {
+                state = .failed(message(for: error))
+            }
         } catch {
-            state = .failed(NSLocalizedString("Profile.loadFailed", comment: ""))
+            if showsLoadingIndicator {
+                state = .failed(NSLocalizedString("Profile.loadFailed", comment: ""))
+            }
         }
     }
 

@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ProfileLoadedContentView: View {
+    @Environment(ServicesAssembly.self) private var services
+
     let profile: ProfileScreen
 
     var body: some View {
@@ -54,7 +56,7 @@ struct ProfileLoadedContentView: View {
             HStack {
                 Spacer()
                 NavigationLink {
-                    ProfileEditView(profile: profile)
+                    ProfileEditView(profile: profile, profileService: services.profileService)
                 } label: {
                     Image(.edit)
                         .renderingMode(.template)
@@ -72,4 +74,5 @@ struct ProfileLoadedContentView: View {
     NavigationStack {
         ProfileLoadedContentView(profile: .profileScreenMock)
     }
+    .environment(ServicesAssembly(networkClient: DefaultNetworkClient(), nftStorage: NftStorageImpl()))
 }

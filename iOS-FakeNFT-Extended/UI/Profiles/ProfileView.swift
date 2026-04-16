@@ -29,6 +29,14 @@ struct ProfileView: View {
                 await viewModel.loadProfile(profileService: services.profileService)
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: .profileDidUpdate)) { _ in
+            Task {
+                await viewModel.loadProfile(
+                    profileService: services.profileService,
+                    showsLoadingIndicator: false
+                )
+            }
+        }
     }
 }
 

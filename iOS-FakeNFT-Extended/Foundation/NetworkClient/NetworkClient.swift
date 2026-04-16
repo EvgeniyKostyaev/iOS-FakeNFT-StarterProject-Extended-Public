@@ -45,8 +45,6 @@ actor DefaultNetworkClient: NetworkClient {
         return try await parse(data: data)
     }
 
-    // MARK: - Private
-
     private func create(request: NetworkRequest) throws -> URLRequest {
         guard let endpoint = request.endpoint else {
             throw NetworkClientError.incorrectRequest("Empty endpoint")
@@ -55,8 +53,18 @@ actor DefaultNetworkClient: NetworkClient {
         var urlRequest = URLRequest(url: endpoint)
         urlRequest.httpMethod = request.httpMethod.rawValue
 
-        if let dto = request.dto,
-           let dtoEncoded = try? encoder.encode(dto) {
+        let formFields = request.urlEncodedFormFields
+        if !formFields.isEmpty {
+            urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+            var components = URLComponents()
+            components.queryItems = formFields.map { URLQueryItem(name: $0.name, value: $0.value) }
+            guard let encoded = components.percentEncodedQuery,
+                  let bodyData = encoded.data(using: .utf8) else {
+                throw NetworkClientError.incorrectRequest("Failed to encode form body")
+            }
+            urlRequest.httpBody = bodyData
+        } else if let dto = request.dto,
+                  let dtoEncoded = try? encoder.encode(dto) {
             urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
             urlRequest.httpBody = dtoEncoded
         }

@@ -36,8 +36,8 @@ extension ProfileScreen {
             websiteTitle: websiteTitle,
             websiteURL: websiteURL,
             avatarURL: URL(string: dto.avatar),
-            ownedNFTCount: dto.nfts.count,
-            favoriteNFTCount: dto.likes.count
+            likes: dto.likes,
+            nfts: dto.nfts
         )
     }
 }

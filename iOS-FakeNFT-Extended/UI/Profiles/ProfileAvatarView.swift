@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ProfileAvatarView: View {
     let avatarURL: URL?
+    var sideLength: CGFloat = 70
 
     var body: some View {
         Group {
@@ -17,7 +18,7 @@ struct ProfileAvatarView: View {
                     switch phase {
                     case .empty:
                         ProgressView()
-                            .frame(width: 70, height: 70)
+                            .frame(width: sideLength, height: sideLength)
                     case let .success(image):
                         image
                             .resizable()
@@ -32,7 +33,7 @@ struct ProfileAvatarView: View {
                 placeholder
             }
         }
-        .frame(width: 70, height: 70)
+        .frame(width: sideLength, height: sideLength)
         .clipShape(Circle())
     }
 
@@ -46,7 +47,6 @@ struct ProfileAvatarView: View {
 
 #Preview {
     VStack(spacing: 16) {
-
         ProfileAvatarView(avatarURL: nil)
         
         ProfileAvatarView(
