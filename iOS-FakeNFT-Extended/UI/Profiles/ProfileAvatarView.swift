@@ -43,3 +43,15 @@ struct ProfileAvatarView: View {
             .foregroundStyle(.dayNightLightGray)
     }
 }
+
+#Preview {
+    VStack(spacing: 16) {
+
+        ProfileAvatarView(avatarURL: nil)
+        
+        ProfileAvatarView(
+            avatarURL: ProfileScreen.profileScreenMock.avatarURL
+        )
+    }
+    .padding()
+}

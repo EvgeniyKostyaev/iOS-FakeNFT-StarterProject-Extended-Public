@@ -10,16 +10,9 @@ import Foundation
 @MainActor
 @Observable
 final class ProfileViewModel {
-    
-    enum State: Equatable {
-        case idle
-        case loading
-        case loaded(ProfileScreen)
-        case failed(String)
-    }
-    
-    private(set) var state: State = .idle
-    
+
+    private(set) var state: ProfileState = .idle
+
     func loadProfile(profileService: ProfileService) async {
         if case .loading = state { return }
         state = .loading
@@ -32,11 +25,11 @@ final class ProfileViewModel {
             state = .failed(NSLocalizedString("Profile.loadFailed", comment: ""))
         }
     }
-    
+
     func retryLoading(profileService: ProfileService) {
         Task { await loadProfile(profileService: profileService) }
     }
-    
+
     private func message(for error: NetworkClientError) -> String {
         switch error {
         case .httpStatusCode, .urlRequestError, .urlSessionError, .parsingError, .incorrectRequest:

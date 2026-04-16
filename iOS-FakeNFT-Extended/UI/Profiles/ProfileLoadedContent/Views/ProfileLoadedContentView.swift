@@ -13,12 +13,12 @@ struct ProfileLoadedContentView: View {
     var body: some View {
         List {
             Section {
-                ProfileHeaderBlock(profile: profile)
+                ProfileHeaderBlockView(profile: profile)
                     .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color.clear)
 
-                ProfileWebsiteLinkRow(profile: profile)
+                ProfileWebsiteLinkRowView(profile: profile)
                     .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color.clear)
@@ -28,7 +28,7 @@ struct ProfileLoadedContentView: View {
                 NavigationLink {
                     MyNFTView(profile: profile)
                 } label: {
-                    ProfileMenuRowTitle(formatKey: "Profile.myNFTsFormat", count: profile.ownedNFTCount)
+                    ProfileMenuRowTitleView(formatKey: "Profile.myNFTsFormat", count: profile.ownedNFTCount)
                 }
                 .navigationLinkIndicatorVisibility(.hidden)
                 .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
@@ -38,7 +38,7 @@ struct ProfileLoadedContentView: View {
                 NavigationLink {
                     FavoriteNFTView(profile: profile)
                 } label: {
-                    ProfileMenuRowTitle(formatKey: "Profile.favoritesFormat", count: profile.favoriteNFTCount)
+                    ProfileMenuRowTitleView(formatKey: "Profile.favoritesFormat", count: profile.favoriteNFTCount)
                 }
                 .navigationLinkIndicatorVisibility(.hidden)
                 .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
@@ -68,57 +68,8 @@ struct ProfileLoadedContentView: View {
     }
 }
 
-
-private struct ProfileHeaderBlock: View {
-    let profile: ProfileScreen
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            HStack(alignment: .center, spacing: 16) {
-                ProfileAvatarView(avatarURL: profile.avatarURL)
-
-                Text(profile.name)
-                    .font(.system(size: 22, weight: .bold))
-                    .foregroundStyle(.dayNightBlack)
-            }
-
-            Text(profile.description)
-                .font(.system(size: 13, weight: .regular))
-                .foregroundStyle(.dayNightBlack)
-                .lineSpacing(4)
-        }
-    }
-}
-
-private struct ProfileWebsiteLinkRow: View {
-    let profile: ProfileScreen
-
-    var body: some View {
-        NavigationLink {
-            WebViewRepresentable(url: profile.websiteURL)
-        } label: {
-            Text(profile.websiteTitle)
-                .font(.system(size: 15, weight: .regular))
-                .foregroundStyle(.universalBlue)
-                .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .navigationLinkIndicatorVisibility(.hidden)
-    }
-}
-
-private struct ProfileMenuRowTitle: View {
-    let formatKey: String
-    let count: Int
-
-    var body: some View {
-        HStack {
-            Text(String(format: NSLocalizedString(formatKey, comment: ""), count))
-                .font(.system(size: 17, weight: .bold))
-                .foregroundStyle(.dayNightBlack)
-            Spacer()
-            Image(systemName: "chevron.right")
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(.dayNightBlack)
-        }
+#Preview {
+    NavigationStack {
+        ProfileLoadedContentView(profile: .profileScreenMock)
     }
 }

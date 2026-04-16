@@ -25,7 +25,7 @@ struct ProfileScreen: Equatable, Sendable {
         """,
         websiteTitle: "Joaquin Phoenix.com",
         websiteURL: URL(string: "https://practicum.yandex.ru/ios-developer/?from=catalog")!,
-        avatarURL: URL(string: "https://picsum.photos/id/64/200/200"),
+        avatarURL: URL(string: "https://ui-avatars.com/api/?name=Joaquin+Phoenix&size=150"),
         ownedNFTCount: 112,
         favoriteNFTCount: 11
     )

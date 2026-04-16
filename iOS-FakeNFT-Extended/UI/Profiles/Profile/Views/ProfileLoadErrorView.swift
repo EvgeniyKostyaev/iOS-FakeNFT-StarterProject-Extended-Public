@@ -1,23 +1,11 @@
 //
-//  ProfileStateViews.swift
+//  ProfileLoadErrorView.swift
 //  iOS-FakeNFT-Extended
 //
 //  Created by Дмитрий Андрианов on 13.04.2026.
 //
 
 import SwiftUI
-
-struct ProfileLoadingView: View {
-    var body: some View {
-        VStack {
-            Spacer()
-            ProgressView()
-            Spacer()
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.dayNightWhite.ignoresSafeArea())
-    }
-}
 
 struct ProfileLoadErrorView: View {
     let message: String
@@ -34,4 +22,8 @@ struct ProfileLoadErrorView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.dayNightWhite.ignoresSafeArea())
     }
+}
+
+#Preview {
+    ProfileLoadErrorView(message: "Preview error message") {}
 }
