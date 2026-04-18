@@ -11,7 +11,7 @@ struct ProfileGetRequest: NetworkRequest {
 
     let userId: String
 
-    init(userId: String = "1") {
+    init(userId: String = ProfileAPIPath.gatewayProfilePathSegment) {
         self.userId = userId
     }
 

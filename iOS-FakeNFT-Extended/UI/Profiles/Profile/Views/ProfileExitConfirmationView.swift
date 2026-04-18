@@ -72,7 +72,7 @@ struct ProfileExitConfirmationView: View {
             .fixedSize(horizontal: false, vertical: true)
             .background(
                 RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .fill(Color.universalWhite.opacity(0.80))
+                    .fill(Color.universalWhite)
             )
         }
         .transition(.opacity)

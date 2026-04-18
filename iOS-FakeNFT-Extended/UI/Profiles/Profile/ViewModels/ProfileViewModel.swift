@@ -17,14 +17,12 @@ final class ProfileViewModel {
         if showsLoadingIndicator {
             if case .loading = state { return }
             state = .loading
-        } else if case .loaded = state {
-            // тихое обновление после сохранения профиля
         } else {
-            return
+            guard case .loaded = state else { return }
         }
 
         do {
-            let profile = try await profileService.loadProfile(userId: "1")
+            let profile = try await profileService.loadProfile(userId: ProfileAPIPath.gatewayProfilePathSegment)
             state = .loaded(profile)
         } catch let error as NetworkClientError {
             if showsLoadingIndicator {

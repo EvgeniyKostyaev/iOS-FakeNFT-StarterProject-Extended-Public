@@ -12,6 +12,8 @@ struct ProfileLoadedContentView: View {
 
     let profile: ProfileScreen
 
+    @State private var navigationTarget: ProfileNavigationTarget?
+
     var body: some View {
         List {
             Section {
@@ -20,29 +22,34 @@ struct ProfileLoadedContentView: View {
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color.clear)
 
-                ProfileWebsiteLinkRowView(profile: profile)
-                    .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
-                    .listRowSeparator(.hidden)
-                    .listRowBackground(Color.clear)
+                Button {
+                    navigationTarget = .website
+                } label: {
+                    ProfileWebsiteLinkRowView(profile: profile)
+                }
+                .buttonStyle(.plain)
+                .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
             }
 
             Section {
-                NavigationLink {
-                    MyNFTView(profile: profile)
+                Button {
+                    navigationTarget = .myNFT
                 } label: {
                     ProfileMenuRowTitleView(formatKey: "Profile.myNFTsFormat", count: profile.ownedNFTCount)
                 }
-                .navigationLinkIndicatorVisibility(.hidden)
+                .buttonStyle(.plain)
                 .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
 
-                NavigationLink {
-                    FavoriteNFTView(profile: profile)
+                Button {
+                    navigationTarget = .favorites
                 } label: {
                     ProfileMenuRowTitleView(formatKey: "Profile.favoritesFormat", count: profile.favoriteNFTCount)
                 }
-                .navigationLinkIndicatorVisibility(.hidden)
+                .buttonStyle(.plain)
                 .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
@@ -52,6 +59,16 @@ struct ProfileLoadedContentView: View {
         .listSectionSpacing(20)
         .scrollContentBackground(.hidden)
         .background(Color.dayNightWhite.ignoresSafeArea())
+        .navigationDestination(item: $navigationTarget) { target in
+            switch target {
+            case .website:
+                WebViewRepresentable(url: profile.websiteURL)
+            case .myNFT:
+                MyNFTView(profile: profile)
+            case .favorites:
+                FavoriteNFTView(profile: profile)
+            }
+        }
         .safeAreaInset(edge: .top) {
             HStack {
                 Spacer()
@@ -68,6 +85,12 @@ struct ProfileLoadedContentView: View {
             .padding(.top, 8)
         }
     }
+}
+
+private enum ProfileNavigationTarget: Hashable {
+    case website
+    case myNFT
+    case favorites
 }
 
 #Preview {

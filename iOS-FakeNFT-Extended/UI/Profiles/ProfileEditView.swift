@@ -31,8 +31,8 @@ struct ProfileEditView: View {
                     showAvatarActions = true
                 }
 
-                if hasUnsavedChanges {
-                    ProfileEditSaveButton(isSaving: viewModel.isSaving) {
+                if hasUnsavedChanges, !viewModel.isSaving {
+                    ProfileEditSaveButton {
                         Task {
                             if await viewModel.performSave() {
                                 dismiss()
@@ -42,6 +42,8 @@ struct ProfileEditView: View {
                     .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
             }
+            .animation(.easeInOut(duration: 0.2), value: viewModel.isSaving)
+            .animation(.easeInOut(duration: 0.2), value: hasUnsavedChanges)
             .background(Color.dayNightWhite.ignoresSafeArea())
 
             if showExitConfirmation {

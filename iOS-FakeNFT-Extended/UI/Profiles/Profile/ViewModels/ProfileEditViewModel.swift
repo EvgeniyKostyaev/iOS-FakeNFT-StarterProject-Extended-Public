@@ -1,3 +1,10 @@
+//
+//  ProfileViewModel.swift
+//  iOS-FakeNFT-Extended
+//
+//  Created by Дмитрий Андрианов on 16.04.2026.
+//
+
 import Foundation
 import Observation
 
@@ -5,30 +12,21 @@ import Observation
 @Observable
 final class ProfileEditViewModel {
 
-    // MARK: - Черновик полей (редактируемые до «Сохранить»)
-
     var name: String
     var description: String
-    /// Полный URL сайта для редактирования (на экране профиля показывается `websiteTitle`).
     var websiteText: String
 
-    /// Ссылка на аватар (строка для API `avatar` и превью).
     var manualAvatarURLString: String
 
-    /// Пользователь удалил аватар (для PUT передать пустую строку — по контракту API).
     var avatarDeleted: Bool
-
-    // MARK: - Сохранение и подгрузка формы
 
     private(set) var isSaving = false
     private(set) var saveErrorMessage: String?
 
-    /// Ошибки валидации полей (показываются под соответствующими полями).
     private(set) var nameValidationMessage: String?
     private(set) var websiteValidationMessage: String?
 
     private let profileService: ProfileService
-    private let profileId: String
 
     private var canonicalWebsiteURL: URL
     private var preservedLikes: [String]
@@ -42,7 +40,6 @@ final class ProfileEditViewModel {
 
     init(profile: ProfileScreen, profileService: ProfileService) {
         self.profileService = profileService
-        self.profileId = profile.id
         self.canonicalWebsiteURL = profile.websiteURL
         self.preservedLikes = profile.likes
         self.preservedNfts = profile.nfts
@@ -66,17 +63,12 @@ final class ProfileEditViewModel {
         self.avatarDeleted = false
     }
 
-    /// Подставляет в форму актуальные данные с сервера (при ошибке остаётся переданный при входе профиль).
     func loadFormDataFromServer() async {
-        do {
-            let fresh = try await profileService.loadProfile(userId: profileId)
+        if let fresh = try? await profileService.loadProfile(userId: ProfileAPIPath.gatewayProfilePathSegment) {
             applyFreshProfile(fresh)
-        } catch {
-            // оставляем черновик из init(profile:)
         }
     }
 
-    /// URL для превью: введённая ссылка или исходный аватар профиля.
     var avatarPreviewURL: URL? {
         if avatarDeleted { return nil }
         let trimmed = normalized(manualAvatarURLString)
@@ -97,7 +89,6 @@ final class ProfileEditViewModel {
             || normalized(manualAvatarURLString) != normalized(initialAvatarURLString)
     }
 
-    /// Значение поля `avatar` для тела PUT (только строка ссылки).
     func avatarValueForPutRequest() -> String {
         if avatarDeleted {
             return ""
@@ -140,7 +131,6 @@ final class ProfileEditViewModel {
         avatarDeleted = false
     }
 
-    /// Сохраняет черновик на сервер. При успехе синхронизирует baseline и шлёт `profileDidUpdate`.
     @discardableResult
     func performSave() async -> Bool {
         guard !isSaving else { return false }
@@ -153,7 +143,6 @@ final class ProfileEditViewModel {
 
         do {
             let payload = ProfileUpdatePayload(
-                userId: profileId,
                 name: normalized(name),
                 description: normalized(description),
                 website: websiteValueForPutRequest(),
@@ -190,7 +179,6 @@ final class ProfileEditViewModel {
         clearFieldValidationErrors()
     }
 
-    /// Для API: нормализованный URL из поля (после успешной валидации).
     private func websiteValueForPutRequest() -> String {
         let trimmed = normalized(websiteText)
         return Self.resolveWebsiteURLString(trimmed) ?? canonicalWebsiteURL.absoluteString
@@ -213,7 +201,6 @@ final class ProfileEditViewModel {
         return isValid
     }
 
-    /// Нормализует строку к абсолютному http(s)-URL или возвращает `nil`.
     private static func resolveWebsiteURLString(_ trimmed: String) -> String? {
         guard !trimmed.isEmpty else { return nil }
         if let url = URL(string: trimmed),

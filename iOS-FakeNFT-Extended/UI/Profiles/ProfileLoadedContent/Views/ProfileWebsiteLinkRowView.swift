@@ -11,15 +11,10 @@ struct ProfileWebsiteLinkRowView: View {
     let profile: ProfileScreen
 
     var body: some View {
-        NavigationLink {
-            WebViewRepresentable(url: profile.websiteURL)
-        } label: {
-            Text(profile.websiteTitle)
-                .font(.system(size: 15, weight: .regular))
-                .foregroundStyle(.universalBlue)
-                .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .navigationLinkIndicatorVisibility(.hidden)
+        Text(profile.websiteTitle)
+            .font(.system(size: 15, weight: .regular))
+            .foregroundStyle(.universalBlue)
+            .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 

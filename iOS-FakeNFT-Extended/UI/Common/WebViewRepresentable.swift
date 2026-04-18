@@ -37,12 +37,27 @@ struct WKWebViewRepresentable: UIViewRepresentable {
 }
 
 struct WebViewRepresentable: View {
+    @Environment(\.dismiss) private var dismiss
+
     let url: URL
 
     var body: some View {
         WKWebViewRepresentable(url: url)
             .ignoresSafeArea(edges: .bottom)
             .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundStyle(.dayNightBlack)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
     }
 }
 

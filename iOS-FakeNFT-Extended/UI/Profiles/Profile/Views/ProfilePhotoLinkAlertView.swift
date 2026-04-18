@@ -2,6 +2,8 @@
 //  ProfilePhotoLinkAlertView.swift
 //  iOS-FakeNFT-Extended
 //
+//  Created by Дмитрий Андрианов on 17.04.2026.
+//
 
 import SwiftUI
 
@@ -87,8 +89,9 @@ struct ProfilePhotoLinkAlertView: View {
             .fixedSize(horizontal: false, vertical: true)
             .background(
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(Color.dayNightLightGray.opacity(0.80))
+                    .fill(Color.dayNightLightGray)
             )
+            .compositingGroup()
         }
         .transition(.opacity)
     }

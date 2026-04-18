@@ -8,7 +8,6 @@
 import Foundation
 
 struct ProfileUpdatePayload: Sendable {
-    let userId: String
     let name: String
     let description: String
     let website: String

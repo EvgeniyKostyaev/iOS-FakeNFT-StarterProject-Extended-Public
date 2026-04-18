@@ -43,6 +43,7 @@
 		364BEE792F91653100A7FD67 /* ProfileEditLabeledField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364BEE7F2F91653700A7FD67 /* ProfileEditLabeledField.swift */; };
 		364BEE7A2F91653200A7FD67 /* ProfileEditSaveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364BEE802F91653800A7FD67 /* ProfileEditSaveButton.swift */; };
 		364BEE772F91652300A7FD67 /* ProfileEditFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364BEE752F91652100A7FD67 /* ProfileEditFormView.swift */; };
+		367338672F915001006E6848 /* ProfileAPIPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367338662F915001006E6848 /* ProfileAPIPath.swift */; };
 		3673385A2F8E9577006E6848 /* ProfileGetRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367338592F8E9577006E6848 /* ProfileGetRequest.swift */; };
 		367338612F8E9581006E6848 /* ProfilePutRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367338602F8E9580006E6848 /* ProfilePutRequest.swift */; };
 		367338632F8E9583006E6848 /* ProfileServiceStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367338622F8E9582006E6848 /* ProfileServiceStub.swift */; };
@@ -127,6 +128,7 @@
 		364BEE7F2F91653700A7FD67 /* ProfileEditLabeledField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditLabeledField.swift; sourceTree = "<group>"; };
 		364BEE802F91653800A7FD67 /* ProfileEditSaveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditSaveButton.swift; sourceTree = "<group>"; };
 		364BEE752F91652100A7FD67 /* ProfileEditFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditFormView.swift; sourceTree = "<group>"; };
+		367338662F915001006E6848 /* ProfileAPIPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileAPIPath.swift; sourceTree = "<group>"; };
 		367338592F8E9577006E6848 /* ProfileGetRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileGetRequest.swift; sourceTree = "<group>"; };
 		367338602F8E9580006E6848 /* ProfilePutRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePutRequest.swift; sourceTree = "<group>"; };
 		367338622F8E9582006E6848 /* ProfileServiceStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileServiceStub.swift; sourceTree = "<group>"; };
@@ -479,6 +481,7 @@
 			children = (
 				ABC5E1B12C31FBD4002B4068 /* ExampleRequest.swift */,
 				ABC5E1AD2C31FB7F002B4068 /* NftByIdRequest.swift */,
+				367338662F915001006E6848 /* ProfileAPIPath.swift */,
 				ABC5E1AF2C31FB90002B4068 /* RequestConstants.swift */,
 				367338592F8E9577006E6848 /* ProfileGetRequest.swift */,
 				367338602F8E9580006E6848 /* ProfilePutRequest.swift */,
@@ -664,6 +667,7 @@
 				ABC5E1AB2C31FACD002B4068 /* NftService.swift in Sources */,
 				ABC5E1B22C31FBD4002B4068 /* ExampleRequest.swift in Sources */,
 				3673385E2F8E962F006E6848 /* ProfileService.swift in Sources */,
+				367338672F915001006E6848 /* ProfileAPIPath.swift in Sources */,
 				3673385A2F8E9577006E6848 /* ProfileGetRequest.swift in Sources */,
 				367338612F8E9581006E6848 /* ProfilePutRequest.swift in Sources */,
 				367338632F8E9583006E6848 /* ProfileServiceStub.swift in Sources */,
