@@ -7,9 +7,14 @@
 
 import SwiftUI
 
+private enum ProfileAvatarViewTheme {
+    static let defaultSideLength: CGFloat = 70
+    static let previewStackSpacing: CGFloat = 16
+}
+
 struct ProfileAvatarView: View {
     let avatarURL: URL?
-    var sideLength: CGFloat = 70
+    var sideLength: CGFloat = ProfileAvatarViewTheme.defaultSideLength
 
     var body: some View {
         Group {
@@ -46,7 +51,7 @@ struct ProfileAvatarView: View {
 }
 
 #Preview {
-    VStack(spacing: 16) {
+    VStack(spacing: ProfileAvatarViewTheme.previewStackSpacing) {
         ProfileAvatarView(avatarURL: nil)
         
         ProfileAvatarView(

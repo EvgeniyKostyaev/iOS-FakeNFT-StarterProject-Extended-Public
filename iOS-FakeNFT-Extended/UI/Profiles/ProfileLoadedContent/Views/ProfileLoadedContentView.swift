@@ -7,95 +7,116 @@
 
 import SwiftUI
 
+private enum ProfileLoadedContentViewTheme {
+    static let listHorizontalInset: CGFloat = 16
+    static var listRowInsets: EdgeInsets {
+        EdgeInsets(top: 0, leading: listHorizontalInset, bottom: 0, trailing: listHorizontalInset)
+    }
+
+    static let listSectionSpacing: CGFloat = 20
+    static let editButtonTrailingPadding: CGFloat = 8
+    static let editButtonTopPadding: CGFloat = 8
+}
+
 struct ProfileLoadedContentView: View {
-    @Environment(ServicesAssembly.self) private var services
+    @Bindable var viewModel: ProfileLoadedContentViewModel
 
-    let profile: ProfileScreen
-
-    @State private var navigationTarget: ProfileNavigationTarget?
+    @State private var stackDestination: ProfileStackDestination?
+    @State private var isWebsiteFullScreenPresented = false
+    @State private var profileEditPresentationID: UUID?
 
     var body: some View {
         List {
             Section {
-                ProfileHeaderBlockView(profile: profile)
-                    .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                ProfileHeaderBlockView(profile: viewModel.profile)
+                    .listRowInsets(ProfileLoadedContentViewTheme.listRowInsets)
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color.clear)
 
                 Button {
-                    navigationTarget = .website
+                    isWebsiteFullScreenPresented = true
                 } label: {
-                    ProfileWebsiteLinkRowView(profile: profile)
+                    ProfileWebsiteLinkRowView(profile: viewModel.profile)
                 }
                 .buttonStyle(.plain)
-                .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                .listRowInsets(ProfileLoadedContentViewTheme.listRowInsets)
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.clear)
             }
 
             Section {
                 Button {
-                    navigationTarget = .myNFT
+                    stackDestination = .myNFT
                 } label: {
-                    ProfileMenuRowTitleView(formatKey: "Profile.myNFTsFormat", count: profile.ownedNFTCount)
+                    ProfileMenuRowTitleView(formatKey: "Profile.myNFTsFormat", count: viewModel.profile.ownedNFTCount)
                 }
                 .buttonStyle(.plain)
-                .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                .listRowInsets(ProfileLoadedContentViewTheme.listRowInsets)
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
 
                 Button {
-                    navigationTarget = .favorites
+                    stackDestination = .favorites
                 } label: {
-                    ProfileMenuRowTitleView(formatKey: "Profile.favoritesFormat", count: profile.favoriteNFTCount)
+                    ProfileMenuRowTitleView(formatKey: "Profile.favoritesFormat", count: viewModel.profile.favoriteNFTCount)
                 }
                 .buttonStyle(.plain)
-                .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                .listRowInsets(ProfileLoadedContentViewTheme.listRowInsets)
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
             }
         }
         .listStyle(.plain)
-        .listSectionSpacing(20)
+        .listSectionSpacing(ProfileLoadedContentViewTheme.listSectionSpacing)
         .scrollContentBackground(.hidden)
         .background(Color.dayNightWhite.ignoresSafeArea())
-        .navigationDestination(item: $navigationTarget) { target in
+        .navigationDestination(item: $stackDestination) { target in
             switch target {
-            case .website:
-                WebViewRepresentable(url: profile.websiteURL)
             case .myNFT:
-                MyNFTView(profile: profile)
+                MyNFTView(profile: viewModel.profile)
             case .favorites:
-                FavoriteNFTView(profile: profile)
+                FavoriteNFTView(profile: viewModel.profile)
             }
+        }
+        .navigationDestination(item: $profileEditPresentationID) { _ in
+            ProfileEditView(profile: viewModel.profile, profileService: viewModel.profileService)
+                .onDisappear {
+                    profileEditPresentationID = nil
+                }
+        }
+        .fullScreenCover(isPresented: $isWebsiteFullScreenPresented) {
+            WebViewFullScreenModal(url: viewModel.profile.websiteURL)
         }
         .safeAreaInset(edge: .top) {
             HStack {
                 Spacer()
-                NavigationLink {
-                    ProfileEditView(profile: profile, profileService: services.profileService)
+                Button {
+                    profileEditPresentationID = UUID()
                 } label: {
                     Image(.edit)
                         .renderingMode(.template)
                         .foregroundStyle(.dayNightBlack)
                 }
                 .buttonStyle(.plain)
-                .padding(.trailing, 8)
+                .padding(.trailing, ProfileLoadedContentViewTheme.editButtonTrailingPadding)
             }
-            .padding(.top, 8)
+            .padding(.top, ProfileLoadedContentViewTheme.editButtonTopPadding)
         }
     }
 }
 
-private enum ProfileNavigationTarget: Hashable {
-    case website
+private enum ProfileStackDestination: Hashable {
     case myNFT
     case favorites
 }
 
 #Preview {
     NavigationStack {
-        ProfileLoadedContentView(profile: .profileScreenMock)
+        ProfileLoadedContentView(
+            viewModel: ProfileLoadedContentViewModel(
+                profile: .profileScreenMock,
+                profileService: ProfileServiceStub()
+            )
+        )
     }
-    .environment(ServicesAssembly(networkClient: DefaultNetworkClient(), nftStorage: NftStorageImpl()))
 }

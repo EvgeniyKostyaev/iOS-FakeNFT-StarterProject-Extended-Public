@@ -37,27 +37,40 @@ struct WKWebViewRepresentable: UIViewRepresentable {
 }
 
 struct WebViewRepresentable: View {
-    @Environment(\.dismiss) private var dismiss
-
     let url: URL
 
     var body: some View {
         WKWebViewRepresentable(url: url)
             .ignoresSafeArea(edges: .bottom)
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 17, weight: .semibold))
-                            .foregroundStyle(.dayNightBlack)
+    }
+}
+
+/// Полноэкранное модальное окно с сайтом (поверх таббара). Шеврон «назад» как на остальных экранах, без заголовка в баре.
+struct WebViewFullScreenModal: View {
+    @Environment(\.dismiss) private var dismiss
+
+    let url: URL
+
+    var body: some View {
+        NavigationStack {
+            WebViewRepresentable(url: url)
+                .navigationTitle("")
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarBackButtonHidden(true)
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button {
+                            dismiss()
+                        } label: {
+                            Image(systemName: "chevron.left")
+                                .font(.system(size: 17, weight: .semibold))
+                                .foregroundStyle(.dayNightBlack)
+                        }
                     }
-                    .buttonStyle(.plain)
                 }
-            }
+        }
+        .toolbar(.hidden, for: .tabBar)
     }
 }
 

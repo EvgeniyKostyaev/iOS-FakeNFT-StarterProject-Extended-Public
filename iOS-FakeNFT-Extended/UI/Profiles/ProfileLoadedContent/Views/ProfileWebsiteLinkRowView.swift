@@ -7,12 +7,16 @@
 
 import SwiftUI
 
+private enum ProfileWebsiteLinkRowViewTheme {
+    static let previewListHorizontalInset: CGFloat = 16
+}
+
 struct ProfileWebsiteLinkRowView: View {
     let profile: ProfileScreen
 
     var body: some View {
         Text(profile.websiteTitle)
-            .font(.system(size: 15, weight: .regular))
+            .font(.dsCaption1)
             .foregroundStyle(.universalBlue)
             .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -22,7 +26,14 @@ struct ProfileWebsiteLinkRowView: View {
     NavigationStack {
         List {
             ProfileWebsiteLinkRowView(profile: .profileScreenMock)
-                .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                .listRowInsets(
+                    EdgeInsets(
+                        top: 0,
+                        leading: ProfileWebsiteLinkRowViewTheme.previewListHorizontalInset,
+                        bottom: 0,
+                        trailing: ProfileWebsiteLinkRowViewTheme.previewListHorizontalInset
+                    )
+                )
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.clear)
         }

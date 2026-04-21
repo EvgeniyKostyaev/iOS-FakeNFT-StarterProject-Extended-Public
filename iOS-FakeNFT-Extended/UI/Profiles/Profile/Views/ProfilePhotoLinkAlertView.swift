@@ -7,88 +7,110 @@
 
 import SwiftUI
 
-struct ProfilePhotoLinkAlertView: View {
-    @Binding var isPresented: Bool
-    @Binding var urlString: String
-    let onCancel: () -> Void
-    let onSave: () -> Void
+private enum ProfilePhotoLinkAlertViewTheme {
+    static let dimmedOverlayOpacity: CGFloat = 0.4
+    static let separatorOpacity: CGFloat = 0.12
+    static let titleHorizontalPadding: CGFloat = 16
+    static let titleTopPadding: CGFloat = 20
+    static let titleBottomPadding: CGFloat = 12
+    static let textFieldHorizontalPadding: CGFloat = 12
+    static let textFieldVerticalPadding: CGFloat = 10
+    static let textFieldCornerRadius: CGFloat = 11
+    static let textFieldOuterHorizontalPadding: CGFloat = 16
+    static let textFieldOuterBottomPadding: CGFloat = 16
+    static let horizontalSeparatorHeight: CGFloat = 1
+    static let verticalSeparatorWidth: CGFloat = 1
+    static let buttonRowHeight: CGFloat = 48
+    static let cardMaxWidth: CGFloat = 300
+    static let cardCornerRadius: CGFloat = 16
+}
 
-    private let buttonRowHeight: CGFloat = 48
-    private var separatorColor: Color { Color.dayNightBlack.opacity(0.12) }
+struct ProfilePhotoLinkAlertView: View {
+    @Bindable var viewModel: ProfileEditViewModel
+
+    private var separatorColor: Color {
+        Color.dayNightBlack.opacity(ProfilePhotoLinkAlertViewTheme.separatorOpacity)
+    }
 
     var body: some View {
         ZStack {
-            Color.black.opacity(0.4)
+            Color.black.opacity(ProfilePhotoLinkAlertViewTheme.dimmedOverlayOpacity)
                 .ignoresSafeArea()
                 .onTapGesture {
-                    isPresented = false
-                    onCancel()
+                    viewModel.cancelPhotoLinkEditing()
                 }
 
             VStack(spacing: 0) {
                 Text(NSLocalizedString("Profile.avatarLinkTitle", comment: ""))
-                    .font(.system(size: 17, weight: .semibold))
+                    .font(.dsBodySemibold)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(Color.dayNightBlack)
-                    .padding(.horizontal, 16)
-                    .padding(.top, 20)
-                    .padding(.bottom, 12)
+                    .padding(.horizontal, ProfilePhotoLinkAlertViewTheme.titleHorizontalPadding)
+                    .padding(.top, ProfilePhotoLinkAlertViewTheme.titleTopPadding)
+                    .padding(.bottom, ProfilePhotoLinkAlertViewTheme.titleBottomPadding)
 
-                TextField("https://", text: $urlString)
-                    .font(.system(size: 17, weight: .regular))
+                TextField("https://", text: $viewModel.photoLinkDraftURL)
+                    .font(.dsBodyRegular)
                     .foregroundStyle(.dayNightBlack)
                     .keyboardType(.URL)
                     .textContentType(.URL)
                     .autocorrectionDisabled()
                     .textInputAutocapitalization(.never)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 10)
+                    .padding(.horizontal, ProfilePhotoLinkAlertViewTheme.textFieldHorizontalPadding)
+                    .padding(.vertical, ProfilePhotoLinkAlertViewTheme.textFieldVerticalPadding)
                     .background(
-                        RoundedRectangle(cornerRadius: 11, style: .continuous)
-                            .fill(Color.dayNightWhite)
+                        RoundedRectangle(
+                            cornerRadius: ProfilePhotoLinkAlertViewTheme.textFieldCornerRadius,
+                            style: .continuous
+                        )
+                        .fill(Color.dayNightWhite)
                     )
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 16)
+                    .padding(.horizontal, ProfilePhotoLinkAlertViewTheme.textFieldOuterHorizontalPadding)
+                    .padding(.bottom, ProfilePhotoLinkAlertViewTheme.textFieldOuterBottomPadding)
 
                 Rectangle()
                     .fill(separatorColor)
-                    .frame(height: 1)
+                    .frame(height: ProfilePhotoLinkAlertViewTheme.horizontalSeparatorHeight)
                     .frame(maxWidth: .infinity)
 
                 HStack(spacing: 0) {
                     Button {
-                        isPresented = false
-                        onCancel()
+                        viewModel.cancelPhotoLinkEditing()
                     } label: {
-                        Text(NSLocalizedString("Profile.avatarLinkCancel", comment: ""))
-                            .font(.system(size: 17, weight: .regular))
+                        Text(NSLocalizedString("Common.cancel", comment: ""))
+                            .font(.dsBodyRegular)
                             .foregroundStyle(.blue)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                     .buttonStyle(.plain)
-                    .frame(height: buttonRowHeight)
+                    .frame(height: ProfilePhotoLinkAlertViewTheme.buttonRowHeight)
 
                     Rectangle()
                         .fill(separatorColor)
-                        .frame(width: 1, height: buttonRowHeight)
+                        .frame(
+                            width: ProfilePhotoLinkAlertViewTheme.verticalSeparatorWidth,
+                            height: ProfilePhotoLinkAlertViewTheme.buttonRowHeight
+                        )
 
                     Button {
-                        isPresented = false
-                        onSave()
+                        viewModel.savePhotoLinkDraft()
                     } label: {
-                        Text(NSLocalizedString("Profile.avatarLinkSave", comment: ""))
-                            .font(.system(size: 17, weight: .bold))
+                        Text(NSLocalizedString("Common.save", comment: ""))
+                            .font(.dsBodyBold)
                             .foregroundStyle(.blue)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                     .buttonStyle(.plain)
-                    .frame(height: buttonRowHeight)
+                    .frame(height: ProfilePhotoLinkAlertViewTheme.buttonRowHeight)
                 }
             }
-            .frame(maxWidth: 300)
+            .frame(maxWidth: ProfilePhotoLinkAlertViewTheme.cardMaxWidth)
             .fixedSize(horizontal: false, vertical: true)
             .background(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                RoundedRectangle(
+                    cornerRadius: ProfilePhotoLinkAlertViewTheme.cardCornerRadius,
+                    style: .continuous
+                )
                     .fill(Color.dayNightLightGray)
             )
             .compositingGroup()
@@ -98,13 +120,17 @@ struct ProfilePhotoLinkAlertView: View {
 }
 
 #Preview {
+    @Previewable @State var viewModel = ProfileEditViewModel(
+        profile: .profileScreenMock,
+        profileService: ProfileServiceStub()
+    )
+
     ZStack {
         Color.dayNightLightGray.ignoresSafeArea()
-        ProfilePhotoLinkAlertView(
-            isPresented: .constant(true),
-            urlString: .constant("https://example.com/photo.jpg"),
-            onCancel: {},
-            onSave: {}
-        )
+        ProfilePhotoLinkAlertView(viewModel: viewModel)
+    }
+    .onAppear {
+        viewModel.beginPhotoLinkEditing()
+        viewModel.photoLinkDraftURL = "https://example.com/photo.jpg"
     }
 }

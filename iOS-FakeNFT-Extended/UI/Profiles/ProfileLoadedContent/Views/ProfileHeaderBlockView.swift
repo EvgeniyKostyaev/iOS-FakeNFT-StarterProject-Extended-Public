@@ -7,23 +7,30 @@
 
 import SwiftUI
 
+private enum ProfileHeaderBlockViewTheme {
+    static let blockVerticalSpacing: CGFloat = 20
+    static let avatarNameSpacing: CGFloat = 16
+    static let descriptionLineSpacing: CGFloat = 4
+    static let previewListHorizontalInset: CGFloat = 16
+}
+
 struct ProfileHeaderBlockView: View {
     let profile: ProfileScreen
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            HStack(alignment: .center, spacing: 16) {
+        VStack(alignment: .leading, spacing: ProfileHeaderBlockViewTheme.blockVerticalSpacing) {
+            HStack(alignment: .center, spacing: ProfileHeaderBlockViewTheme.avatarNameSpacing) {
                 ProfileAvatarView(avatarURL: profile.avatarURL)
 
                 Text(profile.name)
-                    .font(.system(size: 22, weight: .bold))
+                    .font(.dsHeadline3)
                     .foregroundStyle(.dayNightBlack)
             }
 
             Text(profile.description)
-                .font(.system(size: 13, weight: .regular))
+                .font(.dsCaption2)
                 .foregroundStyle(.dayNightBlack)
-                .lineSpacing(4)
+                .lineSpacing(ProfileHeaderBlockViewTheme.descriptionLineSpacing)
         }
     }
 }
@@ -31,7 +38,14 @@ struct ProfileHeaderBlockView: View {
 #Preview {
     List {
         ProfileHeaderBlockView(profile: .profileScreenMock)
-            .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+            .listRowInsets(
+                EdgeInsets(
+                    top: 0,
+                    leading: ProfileHeaderBlockViewTheme.previewListHorizontalInset,
+                    bottom: 0,
+                    trailing: ProfileHeaderBlockViewTheme.previewListHorizontalInset
+                )
+            )
             .listRowSeparator(.hidden)
             .listRowBackground(Color.clear)
     }

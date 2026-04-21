@@ -1,5 +1,5 @@
 //
-//  ProfileViewModel.swift
+//  ProfileEditViewModel.swift
 //  iOS-FakeNFT-Extended
 //
 //  Created by Дмитрий Андрианов on 16.04.2026.
@@ -20,6 +20,16 @@ final class ProfileEditViewModel {
 
     var avatarDeleted: Bool
 
+    /// Показать диалог действий с аватаром (смена / удаление).
+    var showAvatarActions = false
+
+    /// Диалог выхода при несохранённых изменениях.
+    var showExitConfirmation = false
+
+    /// Оверлей ввода ссылки на фото.
+    var showPhotoLinkAlert = false
+    var photoLinkDraftURL = ""
+
     private(set) var isSaving = false
     private(set) var saveErrorMessage: String?
 
@@ -28,39 +38,20 @@ final class ProfileEditViewModel {
 
     private let profileService: ProfileService
 
-    private var canonicalWebsiteURL: URL
-    private var preservedLikes: [String]
-    private var preservedNfts: [String]
+    /// Эталон для сравнения «есть ли несохранённые изменения» и источник likes/nfts / канонического URL сайта.
+    private var baselineProfile: ProfileScreen
 
-    private var initialName: String
-    private var initialDescription: String
-    private var initialWebsiteText: String
-    private var initialAvatarURLString: String
-    private var initialProfileAvatarURL: URL?
+    private var dismissEditor: (() -> Void)?
 
     init(profile: ProfileScreen, profileService: ProfileService) {
         self.profileService = profileService
-        self.canonicalWebsiteURL = profile.websiteURL
-        self.preservedLikes = profile.likes
-        self.preservedNfts = profile.nfts
+        baselineProfile = profile
+        avatarDeleted = false
 
-        let name = profile.name
-        let description = profile.description
-        let websiteURLString = profile.websiteURL.absoluteString
-        let avatarURL = profile.avatarURL?.absoluteString ?? ""
-
-        self.name = name
-        self.description = description
-        self.websiteText = websiteURLString
-        self.manualAvatarURLString = avatarURL
-
-        self.initialName = name
-        self.initialDescription = description
-        self.initialWebsiteText = websiteURLString
-        self.initialAvatarURLString = avatarURL
-        self.initialProfileAvatarURL = profile.avatarURL
-
-        self.avatarDeleted = false
+        name = profile.name
+        description = profile.description
+        websiteText = profile.websiteURL.absoluteString
+        manualAvatarURLString = profile.avatarURL?.absoluteString ?? ""
     }
 
     func loadFormDataFromServer() async {
@@ -75,18 +66,26 @@ final class ProfileEditViewModel {
         if let url = URL(string: trimmed), !trimmed.isEmpty {
             return url
         }
-        return initialProfileAvatarURL
+        return baselineProfile.avatarURL
+    }
+
+    /// Пункт «Удалить фото» в `confirmationDialog` — только если есть превью (с сервера или по ссылке).
+    var canOfferAvatarDeletion: Bool {
+        avatarPreviewURL != nil
     }
 
     var hasUnsavedTextChanges: Bool {
-        name != initialName
-            || description != initialDescription
-            || websiteText != initialWebsiteText
+        normalized(name) != normalized(baselineProfile.name)
+            || normalized(description) != normalized(baselineProfile.description)
+            || normalized(websiteText) != normalized(baselineProfile.websiteURL.absoluteString)
     }
 
     var hasUnsavedAvatarChanges: Bool {
-        avatarDeleted
-            || normalized(manualAvatarURLString) != normalized(initialAvatarURLString)
+        if avatarDeleted {
+            return baselineProfile.avatarURL != nil
+        }
+        return normalized(manualAvatarURLString)
+            != normalized(baselineProfile.avatarURL?.absoluteString ?? "")
     }
 
     func avatarValueForPutRequest() -> String {
@@ -99,6 +98,50 @@ final class ProfileEditViewModel {
     func removeAvatar() {
         avatarDeleted = true
         manualAvatarURLString = ""
+    }
+
+    func avatarButtonTapped() {
+        showAvatarActions = true
+    }
+
+    func handleEditorBackNavigation() {
+        if hasUnsavedTextChanges || hasUnsavedAvatarChanges {
+            showExitConfirmation = true
+        } else {
+            dismissEditor?()
+        }
+    }
+
+    func exitConfirmationChooseStay() {
+        showExitConfirmation = false
+    }
+
+    func exitConfirmationChooseExit() {
+        showExitConfirmation = false
+        dismissEditor?()
+    }
+
+    func setEditorDismissAction(_ action: @escaping () -> Void) {
+        dismissEditor = action
+    }
+
+    func beginPhotoLinkEditing() {
+        photoLinkDraftURL = manualAvatarURLString
+        showPhotoLinkAlert = true
+    }
+
+    func cancelPhotoLinkEditing() {
+        showPhotoLinkAlert = false
+    }
+
+    func savePhotoLinkDraft() {
+        applyManualAvatarURL(photoLinkDraftURL)
+        showPhotoLinkAlert = false
+    }
+
+    func saveEditorAndDismissIfSucceeded() async {
+        guard await performSave() else { return }
+        dismissEditor?()
     }
 
     func applyManualAvatarURL(_ raw: String) {
@@ -123,14 +166,6 @@ final class ProfileEditViewModel {
         websiteValidationMessage = nil
     }
 
-    func markSavedFromCurrentDraft() {
-        initialName = name
-        initialDescription = description
-        initialWebsiteText = websiteText
-        initialAvatarURLString = normalized(manualAvatarURLString)
-        avatarDeleted = false
-    }
-
     @discardableResult
     func performSave() async -> Bool {
         guard !isSaving else { return false }
@@ -147,8 +182,8 @@ final class ProfileEditViewModel {
                 description: normalized(description),
                 website: websiteValueForPutRequest(),
                 avatar: avatarValueForPutRequest(),
-                likes: preservedLikes,
-                nfts: preservedNfts
+                likes: baselineProfile.likes,
+                nfts: baselineProfile.nfts
             )
             try await profileService.updateProfile(payload)
             markSavedFromCurrentDraft()
@@ -161,27 +196,42 @@ final class ProfileEditViewModel {
     }
 
     private func applyFreshProfile(_ profile: ProfileScreen) {
-        canonicalWebsiteURL = profile.websiteURL
-        preservedLikes = profile.likes
-        preservedNfts = profile.nfts
-
-        name = profile.name
-        description = profile.description
-        websiteText = profile.websiteURL.absoluteString
-        manualAvatarURLString = profile.avatarURL?.absoluteString ?? ""
-        avatarDeleted = false
-        initialProfileAvatarURL = profile.avatarURL
-
-        initialName = name
-        initialDescription = description
-        initialWebsiteText = websiteText
-        initialAvatarURLString = normalized(manualAvatarURLString)
+        baselineProfile = profile
+        syncDraftFromBaseline()
         clearFieldValidationErrors()
+    }
+
+    private func markSavedFromCurrentDraft() {
+        let websiteStr = websiteValueForPutRequest()
+        let websiteURL = URL(string: websiteStr) ?? baselineProfile.websiteURL
+        let websiteTitle = websiteURL.host ?? baselineProfile.websiteTitle
+        let avatarStr = avatarValueForPutRequest()
+        let newAvatarURL = avatarStr.isEmpty ? nil : URL(string: avatarStr)
+
+        baselineProfile = ProfileScreen(
+            id: baselineProfile.id,
+            name: normalized(name),
+            description: normalized(description),
+            websiteTitle: websiteTitle,
+            websiteURL: websiteURL,
+            avatarURL: newAvatarURL,
+            likes: baselineProfile.likes,
+            nfts: baselineProfile.nfts
+        )
+        avatarDeleted = false
+        syncDraftFromBaseline()
+    }
+
+    private func syncDraftFromBaseline() {
+        name = baselineProfile.name
+        description = baselineProfile.description
+        websiteText = baselineProfile.websiteURL.absoluteString
+        manualAvatarURLString = baselineProfile.avatarURL?.absoluteString ?? ""
     }
 
     private func websiteValueForPutRequest() -> String {
         let trimmed = normalized(websiteText)
-        return Self.resolveWebsiteURLString(trimmed) ?? canonicalWebsiteURL.absoluteString
+        return Self.resolveWebsiteURLString(trimmed) ?? baselineProfile.websiteURL.absoluteString
     }
 
     private func validateForSave() -> Bool {

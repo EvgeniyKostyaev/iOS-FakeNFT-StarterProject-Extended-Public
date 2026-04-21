@@ -7,14 +7,16 @@
 
 import SwiftUI
 
+private enum ProfileEditViewTheme {
+    static let contentAnimationDuration: Double = 0.2
+    static let overlayZIndexExitConfirmation: CGFloat = 1
+    static let overlayZIndexPhotoLink: CGFloat = 2
+}
+
 struct ProfileEditView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var viewModel: ProfileEditViewModel
-    @State private var showExitConfirmation = false
-    @State private var showAvatarActions = false
-    @State private var showPhotoLinkAlert = false
-    @State private var linkDraftURL = ""
 
     init(profile: ProfileScreen, profileService: ProfileService) {
         _viewModel = State(wrappedValue: ProfileEditViewModel(profile: profile, profileService: profileService))
@@ -27,48 +29,46 @@ struct ProfileEditView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                ProfileEditFormView(viewModel: viewModel) {
-                    showAvatarActions = true
-                }
+                ProfileEditFormView(viewModel: viewModel)
 
                 if hasUnsavedChanges, !viewModel.isSaving {
-                    ProfileEditSaveButton {
-                        Task {
-                            if await viewModel.performSave() {
-                                dismiss()
-                            }
-                        }
-                    }
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                    ProfileEditSaveButtonView(viewModel: viewModel)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
             }
-            .animation(.easeInOut(duration: 0.2), value: viewModel.isSaving)
-            .animation(.easeInOut(duration: 0.2), value: hasUnsavedChanges)
+            .animation(
+                .easeInOut(duration: ProfileEditViewTheme.contentAnimationDuration),
+                value: viewModel.isSaving
+            )
+            .animation(
+                .easeInOut(duration: ProfileEditViewTheme.contentAnimationDuration),
+                value: hasUnsavedChanges
+            )
             .background(Color.dayNightWhite.ignoresSafeArea())
 
-            if showExitConfirmation {
-                ProfileExitConfirmationView(
-                    isPresented: $showExitConfirmation,
-                    onStay: {},
-                    onExit: { dismiss() }
-                )
-                .zIndex(1)
+            if viewModel.showExitConfirmation {
+                ProfileExitConfirmationView(viewModel: viewModel)
+                    .zIndex(ProfileEditViewTheme.overlayZIndexExitConfirmation)
             }
 
-            if showPhotoLinkAlert {
-                ProfilePhotoLinkAlertView(
-                    isPresented: $showPhotoLinkAlert,
-                    urlString: $linkDraftURL,
-                    onCancel: {},
-                    onSave: { viewModel.applyManualAvatarURL(linkDraftURL) }
-                )
-                .zIndex(2)
+            if viewModel.showPhotoLinkAlert {
+                ProfilePhotoLinkAlertView(viewModel: viewModel)
+                    .zIndex(ProfileEditViewTheme.overlayZIndexPhotoLink)
             }
         }
-        .animation(.easeInOut(duration: 0.2), value: showExitConfirmation)
-        .animation(.easeInOut(duration: 0.2), value: showPhotoLinkAlert)
+        .animation(
+            .easeInOut(duration: ProfileEditViewTheme.contentAnimationDuration),
+            value: viewModel.showExitConfirmation
+        )
+        .animation(
+            .easeInOut(duration: ProfileEditViewTheme.contentAnimationDuration),
+            value: viewModel.showPhotoLinkAlert
+        )
         .task {
             await viewModel.loadFormDataFromServer()
+        }
+        .onAppear {
+            viewModel.setEditorDismissAction { dismiss() }
         }
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
@@ -77,11 +77,7 @@ struct ProfileEditView: View {
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button {
-                    if hasUnsavedChanges {
-                        showExitConfirmation = true
-                    } else {
-                        dismiss()
-                    }
+                    viewModel.handleEditorBackNavigation()
                 } label: {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 17, weight: .semibold))
@@ -91,17 +87,18 @@ struct ProfileEditView: View {
         }
         .confirmationDialog(
             NSLocalizedString("Profile.avatarSheetTitle", comment: ""),
-            isPresented: $showAvatarActions,
+            isPresented: $viewModel.showAvatarActions,
             titleVisibility: .visible
         ) {
             Button(NSLocalizedString("Profile.avatarChangePhoto", comment: "")) {
-                linkDraftURL = viewModel.manualAvatarURLString
-                showPhotoLinkAlert = true
+                viewModel.beginPhotoLinkEditing()
             }
-            Button(NSLocalizedString("Profile.avatarDeletePhoto", comment: ""), role: .destructive) {
-                viewModel.removeAvatar()
+            if viewModel.canOfferAvatarDeletion {
+                Button(NSLocalizedString("Profile.avatarDeletePhoto", comment: ""), role: .destructive) {
+                    viewModel.removeAvatar()
+                }
             }
-            Button(NSLocalizedString("Profile.avatarSheetDismiss", comment: ""), role: .cancel) {}
+            Button(NSLocalizedString("Common.cancel", comment: ""), role: .cancel) {}
         }
         .alert(
             NSLocalizedString("Error.title", comment: ""),

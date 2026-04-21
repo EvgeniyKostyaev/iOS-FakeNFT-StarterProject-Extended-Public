@@ -13,23 +13,41 @@ final class ProfileViewModel {
 
     private(set) var state: ProfileState = .idle
 
+    private(set) var loadedContentViewModel: ProfileLoadedContentViewModel?
+
     func loadProfile(profileService: ProfileService, showsLoadingIndicator: Bool = true) async {
+        // Повторный заход на экран (таб / возврат из стека): не сбрасываем UI и не гоняем сеть.
+        if showsLoadingIndicator, case .loaded = state, loadedContentViewModel != nil {
+            return
+        }
+
         if showsLoadingIndicator {
             if case .loading = state { return }
             state = .loading
+            loadedContentViewModel = nil
         } else {
             guard case .loaded = state else { return }
         }
 
         do {
             let profile = try await profileService.loadProfile(userId: ProfileAPIPath.gatewayProfilePathSegment)
+            if let vm = loadedContentViewModel, vm.profile.id == profile.id {
+                vm.profile = profile
+            } else {
+                loadedContentViewModel = ProfileLoadedContentViewModel(
+                    profile: profile,
+                    profileService: profileService
+                )
+            }
             state = .loaded(profile)
         } catch let error as NetworkClientError {
             if showsLoadingIndicator {
+                loadedContentViewModel = nil
                 state = .failed(message(for: error))
             }
         } catch {
             if showsLoadingIndicator {
+                loadedContentViewModel = nil
                 state = .failed(NSLocalizedString("Profile.loadFailed", comment: ""))
             }
         }
