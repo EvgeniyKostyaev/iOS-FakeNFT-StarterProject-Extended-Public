@@ -20,13 +20,10 @@ final class ProfileEditViewModel {
 
     var avatarDeleted: Bool
 
-    /// Показать диалог действий с аватаром (смена / удаление).
     var showAvatarActions = false
 
-    /// Диалог выхода при несохранённых изменениях.
     var showExitConfirmation = false
 
-    /// Оверлей ввода ссылки на фото.
     var showPhotoLinkAlert = false
     var photoLinkDraftURL = ""
 
@@ -38,7 +35,6 @@ final class ProfileEditViewModel {
 
     private let profileService: ProfileService
 
-    /// Эталон для сравнения «есть ли несохранённые изменения» и источник likes/nfts / канонического URL сайта.
     private var baselineProfile: ProfileScreen
 
     private var dismissEditor: (() -> Void)?
@@ -69,7 +65,6 @@ final class ProfileEditViewModel {
         return baselineProfile.avatarURL
     }
 
-    /// Пункт «Удалить фото» в `confirmationDialog` — только если есть превью (с сервера или по ссылке).
     var canOfferAvatarDeletion: Bool {
         avatarPreviewURL != nil
     }

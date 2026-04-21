@@ -46,7 +46,6 @@ struct WebViewRepresentable: View {
     }
 }
 
-/// Полноэкранное модальное окно с сайтом (поверх таббара). Шеврон «назад» как на остальных экранах, без заголовка в баре.
 struct WebViewFullScreenModal: View {
     @Environment(\.dismiss) private var dismiss
 
@@ -57,18 +56,7 @@ struct WebViewFullScreenModal: View {
             WebViewRepresentable(url: url)
                 .navigationTitle("")
                 .navigationBarTitleDisplayMode(.inline)
-                .navigationBarBackButtonHidden(true)
-                .toolbar {
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button {
-                            dismiss()
-                        } label: {
-                            Image(systemName: "chevron.left")
-                                .font(.system(size: 17, weight: .semibold))
-                                .foregroundStyle(.dayNightBlack)
-                        }
-                    }
-                }
+                .navigationBarBackButton { dismiss() }
         }
         .toolbar(.hidden, for: .tabBar)
     }

@@ -8,7 +8,6 @@
 import Foundation
 
 extension Notification.Name {
-    /// После успешного PUT профиля — подписчики могут перезагрузить данные.
     static let profileDidUpdate = Notification.Name("profileDidUpdate")
 }
 

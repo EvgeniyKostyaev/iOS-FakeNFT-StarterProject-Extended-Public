@@ -7,7 +7,6 @@
 
 import Foundation
 
-/// Заглушка для SwiftUI Preview и тестов без сети.
 final class ProfileServiceStub: ProfileService {
     var updateProfileError: Error?
 

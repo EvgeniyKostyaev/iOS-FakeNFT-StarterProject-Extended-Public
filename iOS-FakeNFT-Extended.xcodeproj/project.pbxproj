@@ -53,6 +53,7 @@
 		367338642F8E9584006E6848 /* ProfileUpdatePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367338652F8E9585006E6848 /* ProfileUpdatePayload.swift */; };
 		367338672F915001006E6848 /* ProfileAPIPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367338662F915001006E6848 /* ProfileAPIPath.swift */; };
 		36B19E282F8D1E800084D8B3 /* ProfileScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B19E272F8D1E800084D8B3 /* ProfileScreen.swift */; };
+		36BBB6D72F97E30600202ADE /* NavigationBarBackButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BBB6D62F97E30600202ADE /* NavigationBarBackButtonView.swift */; };
 		ABC5E16C2C31F5AF002B4068 /* iOS_FakeNFT_ExtendedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E16B2C31F5AF002B4068 /* iOS_FakeNFT_ExtendedApp.swift */; };
 		ABC5E1702C31F5AF002B4068 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ABC5E16F2C31F5AF002B4068 /* Assets.xcassets */; };
 		ABC5E1732C31F5AF002B4068 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ABC5E1722C31F5AF002B4068 /* Preview Assets.xcassets */; };
@@ -140,6 +141,7 @@
 		367338652F8E9585006E6848 /* ProfileUpdatePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileUpdatePayload.swift; sourceTree = "<group>"; };
 		367338662F915001006E6848 /* ProfileAPIPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileAPIPath.swift; sourceTree = "<group>"; };
 		36B19E272F8D1E800084D8B3 /* ProfileScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileScreen.swift; sourceTree = "<group>"; };
+		36BBB6D62F97E30600202ADE /* NavigationBarBackButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarBackButtonView.swift; sourceTree = "<group>"; };
 		6B69A2C32F8E9077008C3BD9 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		ABC5E1682C31F5AF002B4068 /* iOS-FakeNFT-Extended.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iOS-FakeNFT-Extended.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABC5E16B2C31F5AF002B4068 /* iOS_FakeNFT_ExtendedApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOS_FakeNFT_ExtendedApp.swift; sourceTree = "<group>"; };
@@ -216,6 +218,7 @@
 			isa = PBXGroup;
 			children = (
 				364BED4A2F90F29C00A7FD67 /* WebViewRepresentable.swift */,
+				36BBB6D62F97E30600202ADE /* NavigationBarBackButtonView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -690,6 +693,7 @@
 				364BEE672F91492E00A7FD67 /* ProfileEditViewModel.swift in Sources */,
 				364BEE972F91656300A7FD67 /* ProfileLoadErrorViewModel.swift in Sources */,
 				364BEE992F91656500A7FD67 /* ProfileLoadedContentViewModel.swift in Sources */,
+				36BBB6D72F97E30600202ADE /* NavigationBarBackButtonView.swift in Sources */,
 				364BED6D2F90F29C00A7FD67 /* WebViewRepresentable.swift in Sources */,
 				364BED6E2F90F29C00A7FD67 /* ProfileAvatarView.swift in Sources */,
 				364BED6F2F90F29C00A7FD67 /* ContentView.swift in Sources */,

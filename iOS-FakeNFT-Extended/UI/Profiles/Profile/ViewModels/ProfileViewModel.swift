@@ -16,7 +16,6 @@ final class ProfileViewModel {
     private(set) var loadedContentViewModel: ProfileLoadedContentViewModel?
 
     func loadProfile(profileService: ProfileService, showsLoadingIndicator: Bool = true) async {
-        // Повторный заход на экран (таб / возврат из стека): не сбрасываем UI и не гоняем сеть.
         if showsLoadingIndicator, case .loaded = state, loadedContentViewModel != nil {
             return
         }

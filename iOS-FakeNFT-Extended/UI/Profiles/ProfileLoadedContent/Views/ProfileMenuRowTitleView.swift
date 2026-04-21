@@ -25,6 +25,8 @@ struct ProfileMenuRowTitleView: View {
                 .font(.dsCaption1Semibold)
                 .foregroundStyle(.dayNightBlack)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(Rectangle())
     }
 }
 

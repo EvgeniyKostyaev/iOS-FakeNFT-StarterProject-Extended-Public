@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct FavoriteNFTView: View {
+    @Environment(\.dismiss) private var dismiss
+
     let profile: ProfileScreen
 
     var body: some View {
@@ -16,6 +18,9 @@ struct FavoriteNFTView: View {
             .background(.dayNightWhite)
             .navigationTitle(NSLocalizedString("Profile.favoritesNavTitle", comment: ""))
             .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButton {
+                dismiss()
+            }
     }
 }
 

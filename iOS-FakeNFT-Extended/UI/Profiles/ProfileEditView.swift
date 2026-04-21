@@ -72,18 +72,9 @@ struct ProfileEditView: View {
         }
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .tabBar)
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button {
-                    viewModel.handleEditorBackNavigation()
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundStyle(.dayNightBlack)
-                }
-            }
+        .navigationBarBackButton {
+            viewModel.handleEditorBackNavigation()
         }
         .confirmationDialog(
             NSLocalizedString("Profile.avatarSheetTitle", comment: ""),
