@@ -9,7 +9,17 @@ import SwiftUI
 
 struct CatalogView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack {
+            List {
+                Text("TEST1")
+                Text("TEST2")
+                Text("TEST3")
+                Text("TEST4")
+                Text("TEST5")
+                Text("TEST6")
+                Text("TEST7")
+            }
+        }
     }
 }
 
