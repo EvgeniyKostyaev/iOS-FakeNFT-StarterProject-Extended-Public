@@ -1,3 +1,10 @@
+//
+//  NavigationBarBackButtonView.swift
+//  iOS-FakeNFT-Extended
+//
+//  Created by Дмитрий Андрианов on 21.04.2026.
+//
+
 import SwiftUI
 
 private enum CustomNavigationBarLayout {
