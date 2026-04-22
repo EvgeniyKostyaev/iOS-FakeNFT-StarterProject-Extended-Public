@@ -7,12 +7,47 @@
 
 import SwiftUI
 
+private enum CollectionCellViewTheme {
+    static let cornerRadius: CGFloat = 12
+}
+
 struct CollectionCellView: View {
+    let viewData: CatalogCollectionItemViewData
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack(alignment: .leading) {
+            Group {
+                switch viewData.coverImageType {
+                case .local(let imageResource):
+                    Image(imageResource)
+                        .resizable()
+                case .remote(let url):
+                    AsyncImage(url: url) { image in
+                        image
+                            .resizable()
+                    } placeholder: {
+                        Image(systemName: "photo.fill")
+                            .resizable()
+                    }
+                }
+            }
+            .scaledToFill()
+            .frame(height: 140, alignment: .top)
+            .clipShape(RoundedRectangle(cornerRadius: CollectionCellViewTheme.cornerRadius))
+            Text("\(viewData.title) \(viewData.subtitle)")
+                .font(.system(size: 20, weight: .bold, design: .default))
+        }
+        .padding()
     }
 }
 
 #Preview {
-    CollectionCellView()
+    CollectionCellView(
+        viewData: CatalogCollectionItemViewData(
+            id: "1",
+            title: "Peach",
+            coverImageType: .local(.collectionPeach),
+            subtitle: "(11)"
+        )
+    )
 }

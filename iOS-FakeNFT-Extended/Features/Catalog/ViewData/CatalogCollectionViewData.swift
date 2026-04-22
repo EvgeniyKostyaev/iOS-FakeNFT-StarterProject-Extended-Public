@@ -6,10 +6,16 @@
 //
 
 import Foundation
+import SwiftUI
+
+enum ImageSourceType {
+    case remote(URL)
+    case local(ImageResource)
+}
 
 struct CatalogCollectionItemViewData: Identifiable {
     let id: String
     let title: String
-    let images: [URL]
+    let coverImageType: ImageSourceType
     let subtitle: String
 }
