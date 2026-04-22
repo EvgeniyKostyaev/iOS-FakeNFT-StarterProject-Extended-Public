@@ -16,9 +16,9 @@ struct FavoriteNFTView: View {
         Color.clear
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(.dayNightWhite)
-            .navigationTitle(NSLocalizedString("Profile.favoritesNavTitle", comment: ""))
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButton {
+            .customNavigationBar(
+                title: NSLocalizedString("Profile.favoritesNavTitle", comment: "")
+            ) {
                 dismiss()
             }
     }

@@ -18,7 +18,9 @@ struct MyNFTView: View {
             .background(.dayNightWhite)
             .navigationTitle(NSLocalizedString("Profile.myNFTsNavTitle", comment: ""))
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButton {
+            .customNavigationBar(
+                title: NSLocalizedString("Profile.myNFTsNavTitle", comment: "")
+            ) {
                 dismiss()
             }
     }

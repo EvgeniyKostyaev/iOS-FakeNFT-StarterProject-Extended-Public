@@ -73,7 +73,7 @@ struct ProfileEditView: View {
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.hidden, for: .tabBar)
-        .navigationBarBackButton {
+        .customNavigationBar {
             viewModel.handleEditorBackNavigation()
         }
         .confirmationDialog(
