@@ -15,7 +15,7 @@ final class ProfileViewModel {
 
     private(set) var loadedContentViewModel: ProfileLoadedContentViewModel?
 
-    func loadProfile(profileService: ProfileService, showsLoadingIndicator: Bool = true) async {
+    func loadProfile(profileService: ProfileServiceProtocol, showsLoadingIndicator: Bool = true) async {
         if showsLoadingIndicator, case .loaded = state, loadedContentViewModel != nil {
             return
         }
@@ -52,7 +52,7 @@ final class ProfileViewModel {
         }
     }
 
-    func retryLoading(profileService: ProfileService) {
+    func retryLoading(profileService: ProfileServiceProtocol) {
         Task { await loadProfile(profileService: profileService) }
     }
 

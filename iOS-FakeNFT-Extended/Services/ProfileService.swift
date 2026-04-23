@@ -11,13 +11,13 @@ extension Notification.Name {
     static let profileDidUpdate = Notification.Name("profileDidUpdate")
 }
 
-protocol ProfileService {
+protocol ProfileServiceProtocol {
     func loadProfile(userId: String) async throws -> ProfileScreen
     func updateProfile(_ payload: ProfileUpdatePayload) async throws
 }
 
 @MainActor
-final class ProfileServiceImpl: ProfileService {
+final class ProfileServiceImpl: ProfileServiceProtocol {
     private let networkClient: NetworkClient
 
     init(networkClient: NetworkClient) {

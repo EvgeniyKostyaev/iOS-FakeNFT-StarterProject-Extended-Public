@@ -18,7 +18,7 @@ struct ProfileEditView: View {
 
     @State private var viewModel: ProfileEditViewModel
 
-    init(profile: ProfileScreen, profileService: ProfileService) {
+    init(profile: ProfileScreen, profileService: ProfileServiceProtocol) {
         _viewModel = State(wrappedValue: ProfileEditViewModel(profile: profile, profileService: profileService))
     }
 

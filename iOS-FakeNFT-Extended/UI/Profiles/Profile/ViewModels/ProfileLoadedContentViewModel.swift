@@ -13,9 +13,9 @@ import Observation
 final class ProfileLoadedContentViewModel {
 
     var profile: ProfileScreen
-    let profileService: ProfileService
+    let profileService: ProfileServiceProtocol
 
-    init(profile: ProfileScreen, profileService: ProfileService) {
+    init(profile: ProfileScreen, profileService: ProfileServiceProtocol) {
         self.profile = profile
         self.profileService = profileService
     }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class ProfileServiceStub: ProfileService {
+final class ProfileServiceStub: ProfileServiceProtocol {
     var updateProfileError: Error?
 
     func loadProfile(userId: String) async throws -> ProfileScreen {

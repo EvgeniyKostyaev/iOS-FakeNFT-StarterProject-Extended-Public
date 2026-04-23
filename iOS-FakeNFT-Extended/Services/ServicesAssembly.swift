@@ -22,7 +22,7 @@ final class ServicesAssembly {
         )
     }
     
-    var profileService: ProfileService {
+    var profileService: ProfileServiceProtocol {
         ProfileServiceImpl(networkClient: networkClient)
     }
 }

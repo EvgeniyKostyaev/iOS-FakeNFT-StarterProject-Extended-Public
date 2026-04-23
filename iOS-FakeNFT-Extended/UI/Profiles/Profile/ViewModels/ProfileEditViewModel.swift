@@ -12,6 +12,8 @@ import Observation
 @Observable
 final class ProfileEditViewModel {
 
+    // MARK: - Properties
+
     var name: String
     var description: String
     var websiteText: String
@@ -27,19 +29,25 @@ final class ProfileEditViewModel {
     var showPhotoLinkAlert = false
     var photoLinkDraftURL = ""
 
+    // MARK: - State
+
     private(set) var isSaving = false
     private(set) var saveErrorMessage: String?
 
     private(set) var nameValidationMessage: String?
     private(set) var websiteValidationMessage: String?
 
-    private let profileService: ProfileService
+    // MARK: - Dependencies
+
+    private let profileService: ProfileServiceProtocol
 
     private var baselineProfile: ProfileScreen
 
     private var dismissEditor: (() -> Void)?
 
-    init(profile: ProfileScreen, profileService: ProfileService) {
+    // MARK: - Init
+
+    init(profile: ProfileScreen, profileService: ProfileServiceProtocol) {
         self.profileService = profileService
         baselineProfile = profile
         avatarDeleted = false
@@ -50,11 +58,7 @@ final class ProfileEditViewModel {
         manualAvatarURLString = profile.avatarURL?.absoluteString ?? ""
     }
 
-    func loadFormDataFromServer() async {
-        if let fresh = try? await profileService.loadProfile(userId: ProfileAPIPath.gatewayProfilePathSegment) {
-            applyFreshProfile(fresh)
-        }
-    }
+    // MARK: - Computed Properties
 
     var avatarPreviewURL: URL? {
         if avatarDeleted { return nil }
@@ -83,6 +87,14 @@ final class ProfileEditViewModel {
             != normalized(baselineProfile.avatarURL?.absoluteString ?? "")
     }
 
+    // MARK: - Public Methods
+
+    func loadFormDataFromServer() async {
+        if let fresh = try? await profileService.loadProfile(userId: ProfileAPIPath.gatewayProfilePathSegment) {
+            applyFreshProfile(fresh)
+        }
+    }
+
     func avatarValueForPutRequest() -> String {
         if avatarDeleted {
             return ""
@@ -90,75 +102,13 @@ final class ProfileEditViewModel {
         return normalized(manualAvatarURLString)
     }
 
-    func removeAvatar() {
-        avatarDeleted = true
-        manualAvatarURLString = ""
-    }
-
-    func avatarButtonTapped() {
-        showAvatarActions = true
-    }
-
-    func handleEditorBackNavigation() {
-        if hasUnsavedTextChanges || hasUnsavedAvatarChanges {
-            showExitConfirmation = true
-        } else {
-            dismissEditor?()
-        }
-    }
-
-    func exitConfirmationChooseStay() {
-        showExitConfirmation = false
-    }
-
-    func exitConfirmationChooseExit() {
-        showExitConfirmation = false
-        dismissEditor?()
-    }
-
-    func setEditorDismissAction(_ action: @escaping () -> Void) {
-        dismissEditor = action
-    }
-
-    func beginPhotoLinkEditing() {
-        photoLinkDraftURL = manualAvatarURLString
-        showPhotoLinkAlert = true
-    }
-
-    func cancelPhotoLinkEditing() {
-        showPhotoLinkAlert = false
-    }
-
-    func savePhotoLinkDraft() {
-        applyManualAvatarURL(photoLinkDraftURL)
-        showPhotoLinkAlert = false
-    }
-
-    func saveEditorAndDismissIfSucceeded() async {
-        guard await performSave() else { return }
-        dismissEditor?()
-    }
-
     func applyManualAvatarURL(_ raw: String) {
         manualAvatarURLString = raw.trimmingCharacters(in: .whitespacesAndNewlines)
         avatarDeleted = false
     }
 
-    func clearSaveError() {
-        saveErrorMessage = nil
-    }
-
-    func clearFieldValidationErrors() {
-        nameValidationMessage = nil
-        websiteValidationMessage = nil
-    }
-
-    func clearNameValidationMessage() {
-        nameValidationMessage = nil
-    }
-
-    func clearWebsiteValidationMessage() {
-        websiteValidationMessage = nil
+    func setEditorDismissAction(_ action: @escaping () -> Void) {
+        dismissEditor = action
     }
 
     @discardableResult
@@ -189,6 +139,91 @@ final class ProfileEditViewModel {
             return false
         }
     }
+
+    func saveEditorAndDismissIfSucceeded() async {
+        guard await performSave() else { return }
+        dismissEditor?()
+    }
+
+    // MARK: - UI Actions
+
+    func removeAvatar() {
+        avatarDeleted = true
+        manualAvatarURLString = ""
+    }
+
+    func avatarButtonTapped() {
+        showAvatarActions = true
+    }
+
+    func handleEditorBackNavigation() {
+        if hasUnsavedTextChanges || hasUnsavedAvatarChanges {
+            showExitConfirmation = true
+        } else {
+            dismissEditor?()
+        }
+    }
+
+    func exitConfirmationChooseStay() {
+        showExitConfirmation = false
+    }
+
+    func exitConfirmationChooseExit() {
+        showExitConfirmation = false
+        dismissEditor?()
+    }
+
+    func beginPhotoLinkEditing() {
+        photoLinkDraftURL = manualAvatarURLString
+        showPhotoLinkAlert = true
+    }
+
+    func cancelPhotoLinkEditing() {
+        showPhotoLinkAlert = false
+    }
+
+    func savePhotoLinkDraft() {
+        applyManualAvatarURL(photoLinkDraftURL)
+        showPhotoLinkAlert = false
+    }
+
+    func clearSaveError() {
+        saveErrorMessage = nil
+    }
+
+    func clearFieldValidationErrors() {
+        nameValidationMessage = nil
+        websiteValidationMessage = nil
+    }
+
+    func clearNameValidationMessage() {
+        nameValidationMessage = nil
+    }
+
+    func clearWebsiteValidationMessage() {
+        websiteValidationMessage = nil
+    }
+
+    // MARK: - Validation
+
+    private func validateForSave() -> Bool {
+        var isValid = true
+        if normalized(name).isEmpty {
+            nameValidationMessage = NSLocalizedString("Profile.editValidationNameEmpty", comment: "")
+            isValid = false
+        }
+        let websiteTrimmed = normalized(websiteText)
+        if websiteTrimmed.isEmpty {
+            websiteValidationMessage = NSLocalizedString("Profile.editValidationWebsiteEmpty", comment: "")
+            isValid = false
+        } else if Self.resolveWebsiteURLString(websiteTrimmed) == nil {
+            websiteValidationMessage = NSLocalizedString("Profile.editValidationWebsiteInvalid", comment: "")
+            isValid = false
+        }
+        return isValid
+    }
+
+    // MARK: - Private Methods
 
     private func applyFreshProfile(_ profile: ProfileScreen) {
         baselineProfile = profile
@@ -229,21 +264,8 @@ final class ProfileEditViewModel {
         return Self.resolveWebsiteURLString(trimmed) ?? baselineProfile.websiteURL.absoluteString
     }
 
-    private func validateForSave() -> Bool {
-        var isValid = true
-        if normalized(name).isEmpty {
-            nameValidationMessage = NSLocalizedString("Profile.editValidationNameEmpty", comment: "")
-            isValid = false
-        }
-        let websiteTrimmed = normalized(websiteText)
-        if websiteTrimmed.isEmpty {
-            websiteValidationMessage = NSLocalizedString("Profile.editValidationWebsiteEmpty", comment: "")
-            isValid = false
-        } else if Self.resolveWebsiteURLString(websiteTrimmed) == nil {
-            websiteValidationMessage = NSLocalizedString("Profile.editValidationWebsiteInvalid", comment: "")
-            isValid = false
-        }
-        return isValid
+    private func normalized(_ raw: String) -> String {
+        raw.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     private static func resolveWebsiteURLString(_ trimmed: String) -> String? {
@@ -259,9 +281,5 @@ final class ProfileEditViewModel {
             return url.absoluteString
         }
         return nil
-    }
-
-    private func normalized(_ raw: String) -> String {
-        raw.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
