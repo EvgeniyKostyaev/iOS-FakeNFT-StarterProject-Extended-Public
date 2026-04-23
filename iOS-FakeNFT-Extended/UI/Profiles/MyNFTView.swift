@@ -79,7 +79,8 @@ struct MyNFTView: View {
         Button {
             isSortDialogPresented = true
         } label: {
-            Image("sort")
+            Image(.sort)
+                .renderingMode(.template)
                 .foregroundStyle(.dayNightBlack)
         }
         .buttonStyle(.plain)

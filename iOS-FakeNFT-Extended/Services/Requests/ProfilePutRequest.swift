@@ -23,9 +23,12 @@ struct ProfilePutRequest: NetworkRequest {
             URLEncodedFormField(name: "website", value: payload.website),
             URLEncodedFormField(name: "avatar", value: payload.avatar)
         ]
-        // Пустые массивы тоже отправляем (очистка избранного / «Мои NFT» на сервере).
-        fields.append(URLEncodedFormField(name: "likes", value: payload.likes.joined(separator: ",")))
-        fields.append(URLEncodedFormField(name: "nfts", value: payload.nfts.joined(separator: ",")))
+        fields.append(URLEncodedFormField(name: "likes", value: Self.formEncodedIdList(payload.likes)))
+        fields.append(URLEncodedFormField(name: "nfts", value: Self.formEncodedIdList(payload.nfts)))
         return fields
+    }
+
+    private static func formEncodedIdList(_ ids: [String]) -> String {
+        ids.isEmpty ? "null" : ids.joined(separator: ",")
     }
 }

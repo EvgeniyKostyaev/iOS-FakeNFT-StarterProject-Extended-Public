@@ -11,7 +11,7 @@ enum FavoriteNFTGridLayout {
     static let horizontalPadding: CGFloat = 16
     static let columnSpacing: CGFloat = 7
     static let rowSpacing: CGFloat = 20
-    static let cellContentSpacing: CGFloat = 12
+    static let cellContentSpacing: CGFloat = 8
     static let imageSide: CGFloat = 80
     static let imageCornerRadius: CGFloat = 12
 }

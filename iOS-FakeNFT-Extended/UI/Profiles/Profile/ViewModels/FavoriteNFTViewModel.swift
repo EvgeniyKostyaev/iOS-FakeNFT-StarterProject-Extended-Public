@@ -55,7 +55,6 @@ final class FavoriteNFTViewModel {
         removeFavoriteError = nil
     }
 
-    /// Убирает NFT из избранного на сервере и из локального списка после успешного ответа.
     func removeFromFavorites(
         nftId: String,
         profile: ProfileScreen,

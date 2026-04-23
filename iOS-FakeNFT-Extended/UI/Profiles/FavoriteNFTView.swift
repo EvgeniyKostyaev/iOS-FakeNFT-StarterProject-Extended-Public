@@ -15,7 +15,6 @@ struct FavoriteNFTView: View {
 
     @State private var viewModel = FavoriteNFTViewModel()
 
-    /// Заголовок только когда есть избранные NFT (пустое состояние — без заголовка).
     private var favoritesNavigationTitle: String? {
         if case .ready(let nfts) = viewModel.phase, !nfts.isEmpty {
             return NSLocalizedString("Profile.favoritesNavTitle", comment: "")
