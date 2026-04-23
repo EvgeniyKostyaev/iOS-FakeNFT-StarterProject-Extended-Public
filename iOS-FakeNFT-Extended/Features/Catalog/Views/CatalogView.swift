@@ -19,8 +19,10 @@ struct CatalogView: View {
     var body: some View {
         NavigationStack {
             List(viewModel.items) { item in
-                CollectionCellView(itemViewData: item)
-                    .listRowSeparator(.hidden)
+                NavigationLink(value: item) {
+                    CollectionCellView(itemViewData: item)
+                }
+                .listRowSeparator(.hidden)
             }
             .listStyle(.plain)
             .overlay {
@@ -39,7 +41,16 @@ struct CatalogView: View {
                         Image(.sort)
                     }
                 }
+                ToolbarItem(placement: .principal) {
+                    Text(String())
+                }
             }
+            .navigationTitle("Catalog.title")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationLinkIndicatorVisibility(.hidden)
+            .navigationDestination(for: CatalogCollectionItemViewData.self, destination: { item in
+                CollectionDetailView()
+            })
             .confirmationDialog("Catalog.sorting", isPresented: $showConfirmationDialog) {
                 Button("Catalog.sortingByName") { viewModel.sortByName() }
                 Button("Catalog.sortingByCountNFT") { viewModel.sortByCountNFT() }

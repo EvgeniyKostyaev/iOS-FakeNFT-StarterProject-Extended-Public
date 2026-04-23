@@ -2,6 +2,7 @@
 
 "Tab.catalog" = "Catalog";
 
+"Catalog.title" = "Catalog";
 "Catalog.openNft" = "Open NFT";
 "Catalog.sorting" = "Sorting";
 "Catalog.sortingByName" = "By name";

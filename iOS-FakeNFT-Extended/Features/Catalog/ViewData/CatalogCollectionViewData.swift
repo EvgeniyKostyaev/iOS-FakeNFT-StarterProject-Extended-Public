@@ -8,12 +8,12 @@
 import Foundation
 import SwiftUI
 
-enum ImageSourceType {
+enum ImageSourceType: Hashable {
     case remote(URL)
     case local(ImageResource)
 }
 
-struct CatalogCollectionItemViewData: Identifiable {
+struct CatalogCollectionItemViewData: Identifiable, Hashable {
     let id: String
     let title: String
     let coverImageType: ImageSourceType
