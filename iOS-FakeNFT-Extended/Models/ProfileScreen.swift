@@ -30,7 +30,8 @@ struct ProfileScreen: Equatable, Sendable {
         avatarURL: URL(string: "https://ui-avatars.com/api/?name=Joaquin+Phoenix&size=150"),
         likes: [
             "7773e33c-ec15-4230-a102-92426a3a6d5a",
-            "ca34d35a-4507-47d9-9312-5ea7053994c0"
+            "ca34d35a-4507-47d9-9312-5ea7053994c0",
+            "ca9130a1-8ec6-4a3a-9769-d6d7958b90e3"
         ],
         nfts: [
             "7773e33c-ec15-4230-a102-92426a3a6d5a",

@@ -16,10 +16,6 @@ struct MyNFTView: View {
     @State private var viewModel = MyNFTViewModel()
     @State private var isSortDialogPresented = false
 
-    private var likedNFTIds: Set<String> {
-        Set(profile.likes)
-    }
-
     private var myNFTsNavigationTitle: String? {
         if case .ready(let nfts) = viewModel.phase, !nfts.isEmpty {
             return NSLocalizedString("Profile.myNFTsNavTitle", comment: "")
@@ -37,7 +33,7 @@ struct MyNFTView: View {
                 if nfts.isEmpty {
                     emptyState
                 } else {
-                    nftList(nfts)
+                    nftList
                 }
             case .failed(let message):
                 loadFailedView(message: message)
@@ -46,7 +42,11 @@ struct MyNFTView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.dayNightWhite.ignoresSafeArea())
         .task {
-            await viewModel.load(nftIds: profile.nfts, nftService: services.nftService)
+            await viewModel.load(
+                nftIds: profile.nfts,
+                likedNFTIds: Set(profile.likes),
+                nftService: services.nftService
+            )
         }
         .customNavigationBar(
             title: myNFTsNavigationTitle,
@@ -103,7 +103,11 @@ struct MyNFTView: View {
                 .multilineTextAlignment(.center)
             Button(NSLocalizedString("Error.repeat", comment: "")) {
                 Task {
-                    await viewModel.load(nftIds: profile.nfts, nftService: services.nftService)
+                    await viewModel.load(
+                        nftIds: profile.nfts,
+                        likedNFTIds: Set(profile.likes),
+                        nftService: services.nftService
+                    )
                 }
             }
             .font(.dsBodySemibold)
@@ -112,23 +116,20 @@ struct MyNFTView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    private func nftList(_ nfts: [Nft]) -> some View {
+    private var nftList: some View {
         List {
-            ForEach(nfts) { nft in
-                MyNFTListRowView(
-                    nft: nft,
-                    isLiked: likedNFTIds.contains(nft.id)
-                )
-                .listRowInsets(
-                    EdgeInsets(
-                        top: MyNFTListRowViewLayout.listVerticalPadding,
-                        leading: MyNFTListRowViewLayout.listLeadingPadding,
-                        bottom: MyNFTListRowViewLayout.listVerticalPadding,
-                        trailing: MyNFTListRowViewLayout.listTrailingPadding
+            ForEach(viewModel.listRowModels) { model in
+                MyNFTListRowView(model: model)
+                    .listRowInsets(
+                        EdgeInsets(
+                            top: MyNFTListRowViewLayout.listVerticalPadding,
+                            leading: MyNFTListRowViewLayout.listLeadingPadding,
+                            bottom: MyNFTListRowViewLayout.listVerticalPadding,
+                            trailing: MyNFTListRowViewLayout.listTrailingPadding
+                        )
                     )
-                )
-                .listRowSeparator(.hidden)
-                .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
             }
         }
         .listStyle(.plain)

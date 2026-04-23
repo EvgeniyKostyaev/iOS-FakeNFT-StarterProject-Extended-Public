@@ -74,11 +74,20 @@ final class MyNFTViewModel {
     private(set) var phase: Phase = .idle
     private(set) var sortCriterion: MyNFTSortCriterion
 
+    private var likedNFTIds: Set<String> = []
+
+    var listRowModels: [MyNFTListRowModel] {
+        guard case .ready(let nfts) = phase else { return [] }
+        return nfts.map { MyNFTListRowModel(nft: $0, likedNFTIds: likedNFTIds) }
+    }
+
     init() {
         sortCriterion = MyNFTSortCriterion.loadSaved()
     }
 
-    func load(nftIds: [String], nftService: NftService) async {
+    func load(nftIds: [String], likedNFTIds: Set<String>, nftService: NftService) async {
+        self.likedNFTIds = likedNFTIds
+
         guard !nftIds.isEmpty else {
             phase = .ready([])
             return

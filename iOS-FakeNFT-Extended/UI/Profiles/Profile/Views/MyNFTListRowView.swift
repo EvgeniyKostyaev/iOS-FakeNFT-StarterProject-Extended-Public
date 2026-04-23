@@ -13,18 +13,15 @@ enum MyNFTListRowViewLayout {
     static let listLeadingPadding: CGFloat = 16
     static let listTrailingPadding: CGFloat = 39
     static let listVerticalPadding: CGFloat = 10
-    static let starFilled = Color(.universalYellow)
-    static let starEmpty = Color(.dayNightLightGray)
 }
 
 struct MyNFTListRowView: View {
-    let nft: Nft
-    let isLiked: Bool
-    
+    let model: MyNFTListRowModel
+
     @Environment(\.locale) private var locale
 
     private var clampedRating: Int {
-        min(5, max(0, nft.rating))
+        min(5, max(0, model.rating))
     }
 
     var body: some View {
@@ -44,19 +41,19 @@ struct MyNFTListRowView: View {
 
             Image(systemName: "heart.fill")
                 .font(.dsBodySemibold)
-                .foregroundStyle(isLiked ? Color.universalRed : Color.universalWhite)
+                .foregroundStyle(model.isLiked ? Color.universalRed : Color.universalWhite)
                 .padding(6)
         }
     }
 
     private var middleColumn: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(nft.name)
+            Text(model.name)
                 .font(.dsBodyBold)
                 .foregroundStyle(.dayNightBlack)
                 .lineLimit(1)
 
-            MyNFTRatingStarsView(rating: clampedRating)
+            NftRatingStarsView(rating: clampedRating)
 
             Text(authorLine)
                 .font(.dsCaption1)
@@ -68,7 +65,7 @@ struct MyNFTListRowView: View {
 
     private var authorLine: String {
         let prefix = NSLocalizedString("MyNFT.authorPrefix", comment: "")
-        return "\(prefix) \(nft.author)"
+        return "\(prefix) \(model.author)"
     }
 
     private var priceColumn: some View {
@@ -91,15 +88,15 @@ struct MyNFTListRowView: View {
         formatter.maximumFractionDigits = 2
         formatter.numberStyle = .decimal
 
-        let numberPart = formatter.string(from: NSNumber(value: nft.price))
-            ?? String(format: "%.2f", locale: locale, arguments: [nft.price])
+        let numberPart = formatter.string(from: NSNumber(value: model.price))
+            ?? String(format: "%.2f", locale: locale, arguments: [model.price])
 
         let currency = NSLocalizedString("MyNFT.priceCurrency", comment: "")
         return "\(numberPart) \(currency)"
     }
 
     private var previewImage: some View {
-        AsyncImage(url: nft.previewImageURL) { phase in
+        AsyncImage(url: model.previewImageURL) { phase in
             switch phase {
             case .success(let image):
                 image
@@ -119,52 +116,23 @@ struct MyNFTListRowView: View {
     }
 }
 
-// MARK: - Rating
-
-private struct MyNFTRatingStarsView: View {
-    let rating: Int
-
-    private let maxStars = 5
-
-    var body: some View {
-        HStack(spacing: 2) {
-            ForEach(0 ..< maxStars, id: \.self) { index in
-                Image(systemName: "star.fill")
-                    .font(.system(size: 12, weight: .medium))
-                    .foregroundStyle(
-                        index < rating
-                            ? MyNFTListRowViewLayout.starFilled
-                            : MyNFTListRowViewLayout.starEmpty
-                    )
-            }
-        }
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(
-            String(
-                format: NSLocalizedString("MyNFT.ratingAccessibilityFormat", comment: ""),
-                locale: .current,
-                rating,
-                maxStars
-            )
-        )
-    }
-}
-
 #Preview("MyNFTListRowView") {
     List {
         MyNFTListRowView(
-            nft: Nft(
-                id: "1",
-                name: "Lilo",
-                images: [URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Beige/Finn/1.png")!],
-                rating: 3,
-                description: "",
-                price: 1.78,
-                author: "John Doe",
-                website: nil,
-                createdAt: nil
-            ),
-            isLiked: true
+            model: MyNFTListRowModel(
+                nft: Nft(
+                    id: "1",
+                    name: "Lilo",
+                    images: [URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Beige/Finn/1.png")!],
+                    rating: 3,
+                    description: "",
+                    price: 1.78,
+                    author: "John Doe",
+                    website: nil,
+                    createdAt: nil
+                ),
+                likedNFTIds: ["1"]
+            )
         )
         .listRowInsets(
             EdgeInsets(

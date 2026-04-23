@@ -49,6 +49,13 @@
 "MyNFT.sortByRating" = "By rating";
 "MyNFT.sortByName" = "By name";
 
+// MARK: - Favorite NFT
+
+"FavoriteNFT.empty" = "You don't have any favorite NFT yet";
+"FavoriteNFT.loadFailed" = "Could not load favorites. Check your connection and try again.";
+"FavoriteNFT.removeFailed" = "Could not update favorites. Check your connection and try again.";
+"FavoriteNFT.removeFromFavoritesAccessibility" = "Remove from favorites";
+
 // MARK: - Catalog
 
 "Catalog.openNft" = "Open NFT";
