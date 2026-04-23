@@ -9,25 +9,136 @@ import SwiftUI
 
 struct MyNFTView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(ServicesAssembly.self) private var services
 
     let profile: ProfileScreen
 
+    @State private var viewModel = MyNFTViewModel()
+    @State private var isSortDialogPresented = false
+
+    private var likedNFTIds: Set<String> {
+        Set(profile.likes)
+    }
+
+    private var myNFTsNavigationTitle: String? {
+        if case .ready(let nfts) = viewModel.phase, !nfts.isEmpty {
+            return NSLocalizedString("Profile.myNFTsNavTitle", comment: "")
+        }
+        return nil
+    }
+
     var body: some View {
-        Color.clear
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(.dayNightWhite)
-            .navigationTitle(NSLocalizedString("Profile.myNFTsNavTitle", comment: ""))
-            .navigationBarTitleDisplayMode(.inline)
-            .customNavigationBar(
-                title: NSLocalizedString("Profile.myNFTsNavTitle", comment: "")
-            ) {
-                dismiss()
+        Group {
+            switch viewModel.phase {
+            case .idle, .loading:
+                ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            case .ready(let nfts):
+                if nfts.isEmpty {
+                    emptyState
+                } else {
+                    nftList(nfts)
+                }
+            case .failed(let message):
+                loadFailedView(message: message)
             }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.dayNightWhite.ignoresSafeArea())
+        .task {
+            await viewModel.load(nftIds: profile.nfts, nftService: services.nftService)
+        }
+        .customNavigationBar(
+            title: myNFTsNavigationTitle,
+            action: { dismiss() },
+            trailing: {
+                if case .ready(let nfts) = viewModel.phase, !nfts.isEmpty {
+                    sortToolbarButton
+                }
+            }
+        )
+        .confirmationDialog(
+            NSLocalizedString("MyNFT.sortDialogTitle", comment: ""),
+            isPresented: $isSortDialogPresented,
+            titleVisibility: .visible
+        ) {
+            Button(NSLocalizedString("MyNFT.sortByPrice", comment: "")) {
+                viewModel.setSortCriterion(.price)
+            }
+            Button(NSLocalizedString("MyNFT.sortByRating", comment: "")) {
+                viewModel.setSortCriterion(.rating)
+            }
+            Button(NSLocalizedString("MyNFT.sortByName", comment: "")) {
+                viewModel.setSortCriterion(.name)
+            }
+            Button(NSLocalizedString("MyNFT.sortClose", comment: ""), role: .cancel) {}
+        }
+    }
+
+    private var sortToolbarButton: some View {
+        Button {
+            isSortDialogPresented = true
+        } label: {
+            Image("sort")
+                .foregroundStyle(.dayNightBlack)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(NSLocalizedString("MyNFT.sortAccessibility", comment: ""))
+    }
+
+    private var emptyState: some View {
+        Text(NSLocalizedString("MyNFT.empty", comment: ""))
+            .font(.dsBodyBold)
+            .foregroundStyle(.dayNightBlack)
+            .multilineTextAlignment(.center)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .padding(.horizontal, MyNFTListRowViewLayout.listLeadingPadding)
+    }
+
+    private func loadFailedView(message: String) -> some View {
+        VStack(spacing: 16) {
+            Text(message)
+                .font(.dsBodyRegular)
+                .foregroundStyle(.dayNightBlack)
+                .multilineTextAlignment(.center)
+            Button(NSLocalizedString("Error.repeat", comment: "")) {
+                Task {
+                    await viewModel.load(nftIds: profile.nfts, nftService: services.nftService)
+                }
+            }
+            .font(.dsBodySemibold)
+        }
+        .padding(.horizontal, MyNFTListRowViewLayout.listLeadingPadding)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private func nftList(_ nfts: [Nft]) -> some View {
+        List {
+            ForEach(nfts) { nft in
+                MyNFTListRowView(
+                    nft: nft,
+                    isLiked: likedNFTIds.contains(nft.id)
+                )
+                .listRowInsets(
+                    EdgeInsets(
+                        top: MyNFTListRowViewLayout.listVerticalPadding,
+                        leading: MyNFTListRowViewLayout.listLeadingPadding,
+                        bottom: MyNFTListRowViewLayout.listVerticalPadding,
+                        trailing: MyNFTListRowViewLayout.listTrailingPadding
+                    )
+                )
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
+            }
+        }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
     }
 }
 
-#Preview {
+#Preview("MyNFTView — loaded") {
     NavigationStack {
         MyNFTView(profile: .profileScreenMock)
     }
+    .environment(ServicesAssembly(networkClient: DefaultNetworkClient(), nftStorage: NftStorageImpl()))
 }
