@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct MyNFTView: View {
+    @Environment(\.dismiss) private var dismiss
+
     let profile: ProfileScreen
 
     var body: some View {
@@ -16,6 +18,11 @@ struct MyNFTView: View {
             .background(.dayNightWhite)
             .navigationTitle(NSLocalizedString("Profile.myNFTsNavTitle", comment: ""))
             .navigationBarTitleDisplayMode(.inline)
+            .customNavigationBar(
+                title: NSLocalizedString("Profile.myNFTsNavTitle", comment: "")
+            ) {
+                dismiss()
+            }
     }
 }
 

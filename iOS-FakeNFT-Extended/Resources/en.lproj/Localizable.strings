@@ -1,13 +1,47 @@
+// MARK: - Tab
+
 "Tab.profile" = "Profile";
 "Tab.catalog" = "Catalog";
+
+// MARK: - Common
+
+"Common.name" = "Name";
+"Common.description" = "Description";
+"Common.website" = "Website";
+"Common.save" = "Save";
+"Common.cancel" = "Cancel";
+"Common.exit" = "Exit";
+
+// MARK: - Profile
+
 "Profile.myNFTsFormat" = "My NFTs (%lld)";
 "Profile.favoritesFormat" = "Favorite NFTs (%lld)";
 "Profile.edit" = "Edit";
 "Profile.myNFTsNavTitle" = "My NFTs";
 "Profile.favoritesNavTitle" = "Favorite NFTs";
 "Profile.loadFailed" = "Failed to load profile";
+"Profile.editSaveFailed" = "Could not save changes. Check your connection and try again.";
+"Profile.editValidationNameEmpty" = "Enter a name.";
+"Profile.editValidationWebsiteEmpty" = "Enter a website URL.";
+"Profile.editValidationWebsiteInvalid" = "Enter a valid URL (for example, https://example.com).";
+"Profile.editExitTitle" = "Are you sure you want to\nexit?";
+"Profile.editExitStay" = "Stay";
+
+// MARK: - Profile Avatar
+
+"Profile.avatarSheetTitle" = "Profile photo";
+"Profile.avatarChangePhoto" = "Change photo";
+"Profile.avatarDeletePhoto" = "Delete photo";
+"Profile.avatarLinkTitle" = "Photo link";
+
+// MARK: - Catalog
+
 "Catalog.openNft" = "Open NFT";
+
+// MARK: - Error
+
 "Error.network" = "A network error occurred";
 "Error.unknown" = "An unknown error occurred";
 "Error.repeat" = "Retry";
 "Error.title" = "Error";
+"Error.ok" = "OK";

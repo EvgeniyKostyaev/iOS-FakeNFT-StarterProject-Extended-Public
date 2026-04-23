@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+private enum ProfileMenuRowTitleViewTheme {
+    static let previewListHorizontalInset: CGFloat = 16
+}
+
 struct ProfileMenuRowTitleView: View {
     let formatKey: String
     let count: Int
@@ -14,25 +18,41 @@ struct ProfileMenuRowTitleView: View {
     var body: some View {
         HStack {
             Text(String(format: NSLocalizedString(formatKey, comment: ""), count))
-                .font(.system(size: 17, weight: .bold))
+                .font(.dsBodyBold)
                 .foregroundStyle(.dayNightBlack)
             Spacer()
             Image(systemName: "chevron.right")
-                .font(.system(size: 14, weight: .semibold))
+                .font(.dsCaption1Semibold)
                 .foregroundStyle(.dayNightBlack)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(Rectangle())
     }
 }
 
 #Preview {
     List {
         ProfileMenuRowTitleView(formatKey: "Profile.myNFTsFormat", count: 112)
-            .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+            .listRowInsets(
+                EdgeInsets(
+                    top: 0,
+                    leading: ProfileMenuRowTitleViewTheme.previewListHorizontalInset,
+                    bottom: 0,
+                    trailing: ProfileMenuRowTitleViewTheme.previewListHorizontalInset
+                )
+            )
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)
         
         ProfileMenuRowTitleView(formatKey: "Profile.favoritesFormat", count: 11)
-            .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+            .listRowInsets(
+                EdgeInsets(
+                    top: 0,
+                    leading: ProfileMenuRowTitleViewTheme.previewListHorizontalInset,
+                    bottom: 0,
+                    trailing: ProfileMenuRowTitleViewTheme.previewListHorizontalInset
+                )
+            )
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)
     }

@@ -7,69 +7,116 @@
 
 import SwiftUI
 
+private enum ProfileLoadedContentViewTheme {
+    static let listHorizontalInset: CGFloat = 16
+    static var listRowInsets: EdgeInsets {
+        EdgeInsets(top: 0, leading: listHorizontalInset, bottom: 0, trailing: listHorizontalInset)
+    }
+
+    static let listSectionSpacing: CGFloat = 20
+    static let editButtonTrailingPadding: CGFloat = 8
+    static let editButtonTopPadding: CGFloat = 8
+}
+
 struct ProfileLoadedContentView: View {
-    let profile: ProfileScreen
+    @Bindable var viewModel: ProfileLoadedContentViewModel
+
+    @State private var stackDestination: ProfileStackDestination?
+    @State private var isWebsiteFullScreenPresented = false
+    @State private var profileEditPresentationID: UUID?
 
     var body: some View {
         List {
             Section {
-                ProfileHeaderBlockView(profile: profile)
-                    .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                ProfileHeaderBlockView(profile: viewModel.profile)
+                    .listRowInsets(ProfileLoadedContentViewTheme.listRowInsets)
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color.clear)
 
-                ProfileWebsiteLinkRowView(profile: profile)
-                    .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
-                    .listRowSeparator(.hidden)
-                    .listRowBackground(Color.clear)
+                Button {
+                    isWebsiteFullScreenPresented = true
+                } label: {
+                    ProfileWebsiteLinkRowView(profile: viewModel.profile)
+                }
+                .buttonStyle(.plain)
+                .listRowInsets(ProfileLoadedContentViewTheme.listRowInsets)
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
             }
 
             Section {
-                NavigationLink {
-                    MyNFTView(profile: profile)
+                Button {
+                    stackDestination = .myNFT
                 } label: {
-                    ProfileMenuRowTitleView(formatKey: "Profile.myNFTsFormat", count: profile.ownedNFTCount)
+                    ProfileMenuRowTitleView(formatKey: "Profile.myNFTsFormat", count: viewModel.profile.ownedNFTCount)
                 }
-                .navigationLinkIndicatorVisibility(.hidden)
-                .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                .buttonStyle(.plain)
+                .listRowInsets(ProfileLoadedContentViewTheme.listRowInsets)
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
 
-                NavigationLink {
-                    FavoriteNFTView(profile: profile)
+                Button {
+                    stackDestination = .favorites
                 } label: {
-                    ProfileMenuRowTitleView(formatKey: "Profile.favoritesFormat", count: profile.favoriteNFTCount)
+                    ProfileMenuRowTitleView(formatKey: "Profile.favoritesFormat", count: viewModel.profile.favoriteNFTCount)
                 }
-                .navigationLinkIndicatorVisibility(.hidden)
-                .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                .buttonStyle(.plain)
+                .listRowInsets(ProfileLoadedContentViewTheme.listRowInsets)
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
             }
         }
         .listStyle(.plain)
-        .listSectionSpacing(20)
+        .listSectionSpacing(ProfileLoadedContentViewTheme.listSectionSpacing)
         .scrollContentBackground(.hidden)
         .background(Color.dayNightWhite.ignoresSafeArea())
+        .navigationDestination(item: $stackDestination) { target in
+            switch target {
+            case .myNFT:
+                MyNFTView(profile: viewModel.profile)
+            case .favorites:
+                FavoriteNFTView(profile: viewModel.profile)
+            }
+        }
+        .navigationDestination(item: $profileEditPresentationID) { _ in
+            ProfileEditView(profile: viewModel.profile, profileService: viewModel.profileService)
+                .onDisappear {
+                    profileEditPresentationID = nil
+                }
+        }
+        .fullScreenCover(isPresented: $isWebsiteFullScreenPresented) {
+            WebViewFullScreenModal(url: viewModel.profile.websiteURL)
+        }
         .safeAreaInset(edge: .top) {
             HStack {
                 Spacer()
-                NavigationLink {
-                    ProfileEditView(profile: profile)
+                Button {
+                    profileEditPresentationID = UUID()
                 } label: {
                     Image(.edit)
                         .renderingMode(.template)
                         .foregroundStyle(.dayNightBlack)
                 }
                 .buttonStyle(.plain)
-                .padding(.trailing, 8)
+                .padding(.trailing, ProfileLoadedContentViewTheme.editButtonTrailingPadding)
             }
-            .padding(.top, 8)
+            .padding(.top, ProfileLoadedContentViewTheme.editButtonTopPadding)
         }
     }
 }
 
+private enum ProfileStackDestination: Hashable {
+    case myNFT
+    case favorites
+}
+
 #Preview {
     NavigationStack {
-        ProfileLoadedContentView(profile: .profileScreenMock)
+        ProfileLoadedContentView(
+            viewModel: ProfileLoadedContentViewModel(
+                profile: .profileScreenMock,
+                profileService: ProfileServiceStub()
+            )
+        )
     }
 }

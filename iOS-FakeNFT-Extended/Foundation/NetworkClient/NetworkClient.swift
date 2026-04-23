@@ -45,8 +45,6 @@ actor DefaultNetworkClient: NetworkClient {
         return try await parse(data: data)
     }
 
-    // MARK: - Private
-
     private func create(request: NetworkRequest) throws -> URLRequest {
         guard let endpoint = request.endpoint else {
             throw NetworkClientError.incorrectRequest("Empty endpoint")
@@ -55,14 +53,42 @@ actor DefaultNetworkClient: NetworkClient {
         var urlRequest = URLRequest(url: endpoint)
         urlRequest.httpMethod = request.httpMethod.rawValue
 
-        if let dto = request.dto,
-           let dtoEncoded = try? encoder.encode(dto) {
+        let formFields = request.urlEncodedFormFields
+        if !formFields.isEmpty {
+            urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+            guard let bodyData = Self.applicationXWWWFormURLEncodedBody(from: formFields) else {
+                throw NetworkClientError.incorrectRequest("Failed to encode form body")
+            }
+            urlRequest.httpBody = bodyData
+        } else if let dto = request.dto,
+                  let dtoEncoded = try? encoder.encode(dto) {
             urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
             urlRequest.httpBody = dtoEncoded
         }
         urlRequest.addValue(RequestConstants.token, forHTTPHeaderField: "X-Practicum-Mobile-Token")
 
         return urlRequest
+    }
+
+    private static let formUnreservedUTF8Bytes: Set<UInt8> = {
+        Set("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~".utf8)
+    }()
+
+    private static func applicationXWWWFormURLEncodedBody(from fields: [URLEncodedFormField]) -> Data? {
+        let pairs = fields.map { field in
+            "\(percentEncodeFormComponent(field.name))=\(percentEncodeFormComponent(field.value))"
+        }
+        return pairs.joined(separator: "&").data(using: .utf8)
+    }
+
+    private static func percentEncodeFormComponent(_ string: String) -> String {
+        string.utf8.map { byte -> String in
+            if formUnreservedUTF8Bytes.contains(byte) {
+                String(UnicodeScalar(byte))
+            } else {
+                String(format: "%%%02X", byte)
+            }
+        }.joined()
     }
 
     private func parse<T: Decodable>(data: Data) async throws -> T {

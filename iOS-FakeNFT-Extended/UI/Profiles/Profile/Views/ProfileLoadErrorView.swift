@@ -7,16 +7,21 @@
 
 import SwiftUI
 
+private enum ProfileLoadErrorViewTheme {
+    static let contentSpacing: CGFloat = 16
+}
+
 struct ProfileLoadErrorView: View {
-    let message: String
-    let onRepeat: () -> Void
+    @Bindable var viewModel: ProfileLoadErrorViewModel
 
     var body: some View {
-        VStack(spacing: 16) {
-            Text(message)
+        VStack(spacing: ProfileLoadErrorViewTheme.contentSpacing) {
+            Text(viewModel.message)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.dayNightBlack)
-            Button(NSLocalizedString("Error.repeat", comment: ""), action: onRepeat)
+            Button(NSLocalizedString("Error.repeat", comment: "")) {
+                viewModel.repeatTapped()
+            }
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -25,5 +30,7 @@ struct ProfileLoadErrorView: View {
 }
 
 #Preview {
-    ProfileLoadErrorView(message: "Preview error message") {}
+    ProfileLoadErrorView(
+        viewModel: ProfileLoadErrorViewModel(message: "Preview error message") {}
+    )
 }

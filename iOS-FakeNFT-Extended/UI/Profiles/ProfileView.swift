@@ -16,17 +16,31 @@ struct ProfileView: View {
             switch viewModel.state {
             case .idle, .loading:
                 ProfileLoadingView()
-            case .loaded(let profile):
-                ProfileLoadedContentView(profile: profile)
-            case .failed(let message):
-                ProfileLoadErrorView(message: message) {
-                    viewModel.retryLoading(profileService: services.profileService)
+            case .loaded:
+                if let contentViewModel = viewModel.loadedContentViewModel {
+                    ProfileLoadedContentView(viewModel: contentViewModel)
+                } else {
+                    ProfileLoadingView()
                 }
+            case .failed(let message):
+                ProfileLoadErrorView(
+                    viewModel: ProfileLoadErrorViewModel(message: message) {
+                        viewModel.retryLoading(profileService: services.profileService)
+                    }
+                )
             }
         }
         .onAppear {
             Task {
                 await viewModel.loadProfile(profileService: services.profileService)
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .profileDidUpdate)) { _ in
+            Task {
+                await viewModel.loadProfile(
+                    profileService: services.profileService,
+                    showsLoadingIndicator: false
+                )
             }
         }
     }

@@ -7,22 +7,32 @@
 
 import Foundation
 
-protocol ProfileService {
-    func loadProfile() async throws -> ProfileScreen
+extension Notification.Name {
+    static let profileDidUpdate = Notification.Name("profileDidUpdate")
+}
+
+protocol ProfileServiceProtocol {
+    func loadProfile(userId: String) async throws -> ProfileScreen
+    func updateProfile(_ payload: ProfileUpdatePayload) async throws
 }
 
 @MainActor
-final class ProfileServiceImpl: ProfileService {
+final class ProfileServiceImpl: ProfileServiceProtocol {
     private let networkClient: NetworkClient
 
     init(networkClient: NetworkClient) {
         self.networkClient = networkClient
     }
 
-    func loadProfile() async throws -> ProfileScreen {
-        let request = ProfileGetRequest()
+    func loadProfile(userId: String) async throws -> ProfileScreen {
+        let request = ProfileGetRequest(userId: userId)
         let dto: ProfileDTO = try await networkClient.send(request: request)
 
         return try ProfileScreen(dto: dto)
+    }
+
+    func updateProfile(_ payload: ProfileUpdatePayload) async throws {
+        let request = ProfilePutRequest(payload: payload)
+        _ = try await networkClient.send(request: request)
     }
 }

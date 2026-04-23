@@ -8,14 +8,19 @@
 import SwiftUI
 
 struct FavoriteNFTView: View {
+    @Environment(\.dismiss) private var dismiss
+
     let profile: ProfileScreen
 
     var body: some View {
         Color.clear
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(.dayNightWhite)
-            .navigationTitle(NSLocalizedString("Profile.favoritesNavTitle", comment: ""))
-            .navigationBarTitleDisplayMode(.inline)
+            .customNavigationBar(
+                title: NSLocalizedString("Profile.favoritesNavTitle", comment: "")
+            ) {
+                dismiss()
+            }
     }
 }
 
