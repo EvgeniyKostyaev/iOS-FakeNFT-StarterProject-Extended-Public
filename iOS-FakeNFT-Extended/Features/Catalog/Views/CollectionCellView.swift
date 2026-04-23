@@ -12,12 +12,12 @@ private enum CollectionCellViewTheme {
 }
 
 struct CollectionCellView: View {
-    let viewData: CatalogCollectionItemViewData
+    let itemViewData: CatalogCollectionItemViewData
     
     var body: some View {
         VStack(alignment: .leading) {
             Group {
-                switch viewData.coverImageType {
+                switch itemViewData.coverImageType {
                 case .local(let imageResource):
                     Image(imageResource)
                         .resizable()
@@ -34,16 +34,15 @@ struct CollectionCellView: View {
             .scaledToFill()
             .frame(height: 140, alignment: .top)
             .clipShape(RoundedRectangle(cornerRadius: CollectionCellViewTheme.cornerRadius))
-            Text("\(viewData.title) \(viewData.subtitle)")
+            Text("\(itemViewData.title) \(itemViewData.subtitle)")
                 .font(Font.dsBodyBold)
         }
-        .padding()
     }
 }
 
 #Preview {
     CollectionCellView(
-        viewData: CatalogCollectionItemViewData(
+        itemViewData: CatalogCollectionItemViewData(
             id: "1",
             title: "Peach",
             coverImageType: .local(.collectionPeach),
