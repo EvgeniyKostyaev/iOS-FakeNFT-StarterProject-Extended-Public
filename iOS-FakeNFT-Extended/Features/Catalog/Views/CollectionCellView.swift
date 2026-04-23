@@ -34,7 +34,7 @@ struct CollectionCellView: View {
             .scaledToFill()
             .frame(height: 140, alignment: .top)
             .clipShape(RoundedRectangle(cornerRadius: CollectionCellViewTheme.cornerRadius))
-            Text("\(itemViewData.title) \(itemViewData.subtitle)")
+            Text("\(itemViewData.title) (\(itemViewData.nftCount))")
                 .font(Font.dsBodyBold)
         }
     }
@@ -46,7 +46,7 @@ struct CollectionCellView: View {
             id: "1",
             title: "Peach",
             coverImageType: .local(.collectionPeach),
-            subtitle: "(11)"
+            nftCount: 11
         )
     )
 }

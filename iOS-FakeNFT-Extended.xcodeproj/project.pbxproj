@@ -144,9 +144,9 @@
 		6B53AF372F97C46200ABE0C5 /* Catalog */ = {
 			isa = PBXGroup;
 			children = (
-				6BD67C732F9A2ACE00896195 /* ViewModel */,
 				6BD67C662F98FF6F00896195 /* ViewData */,
 				6BD67C652F98FF6100896195 /* Views */,
+				6BD67C732F9A2ACE00896195 /* ViewModel */,
 			);
 			path = Catalog;
 			sourceTree = "<group>";

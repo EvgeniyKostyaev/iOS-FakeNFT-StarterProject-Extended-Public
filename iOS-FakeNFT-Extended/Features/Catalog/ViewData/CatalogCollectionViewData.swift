@@ -17,5 +17,5 @@ struct CatalogCollectionItemViewData: Identifiable {
     let id: String
     let title: String
     let coverImageType: ImageSourceType
-    let subtitle: String
+    let nftCount: Int
 }

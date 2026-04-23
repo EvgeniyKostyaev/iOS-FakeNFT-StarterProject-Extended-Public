@@ -1,5 +1,12 @@
+"Common.close" = "Close";
+
 "Tab.catalog" = "Catalog";
+
 "Catalog.openNft" = "Open NFT";
+"Catalog.sorting" = "Sorting";
+"Catalog.sortingByName" = "By name";
+"Catalog.sortingByCountNFT" = "By count NFT";
+
 "Error.network" = "A network error occurred";
 "Error.unknown" = "An unknown error occurred";
 "Error.repeat" = "Retry";
