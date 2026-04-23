@@ -35,7 +35,7 @@ struct CollectionCellView: View {
             .frame(height: 140, alignment: .top)
             .clipShape(RoundedRectangle(cornerRadius: CollectionCellViewTheme.cornerRadius))
             Text("\(viewData.title) \(viewData.subtitle)")
-                .font(.system(size: 20, weight: .bold, design: .default))
+                .font(Font.dsBodyBold)
         }
         .padding()
     }
