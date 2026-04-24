@@ -45,7 +45,9 @@ struct CollectionDetailView: View {
                     spacing: CollectionDetailViewTheme.gridVerticalSpacing
                 ) {
                     ForEach(itemViewData.nftItems) { item in
-                        NFTItemCellView(itemViewData: item)
+                        NavigationLink(value: item) {
+                            NFTItemCellView(itemViewData: item)
+                        }
                     }
                 }
                 .padding(.horizontal, CollectionDetailViewTheme.gridHorizontalPadding)
@@ -59,6 +61,9 @@ struct CollectionDetailView: View {
             if let authorURL = item.authorURL {
                 WebViewRepresentable(url: authorURL)
             }
+        }
+        .navigationDestination(for: CollectionNFTViewData.self) { item in
+            Text("Show NFT: \(item.title)")
         }
     }
     
