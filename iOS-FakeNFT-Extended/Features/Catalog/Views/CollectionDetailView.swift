@@ -55,6 +55,11 @@ struct CollectionDetailView: View {
         .background(Color(.dayNightWhite).ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
         .ignoresSafeArea(edges: .top)
+        .navigationDestination(for: CollectionDetailViewData.self) { item in
+            if let authorURL = item.authorURL {
+                WebViewRepresentable(url: authorURL)
+            }
+        }
     }
     
     @ViewBuilder
@@ -97,15 +102,9 @@ struct CollectionDetailView: View {
                     .font(.dsCaption2)
                     .foregroundStyle(Color(.dayNightBlack))
                 
-                if let authorURL = itemViewData.authorURL {
-                    Link(itemViewData.authorName, destination: authorURL)
-                        .font(.dsCaption1)
-                        .foregroundStyle(Color(.universalBlue))
-                } else {
-                    Text(itemViewData.authorName)
-                        .font(.dsCaption1)
-                        .foregroundStyle(Color(.universalBlue))
-                }
+                NavigationLink(itemViewData.authorName, value: itemViewData)
+                    .font(.dsCaption1)
+                    .foregroundStyle(Color(.universalBlue))
             }
             
             Text(itemViewData.description)
