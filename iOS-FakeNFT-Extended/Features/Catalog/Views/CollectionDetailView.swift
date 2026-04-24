@@ -15,7 +15,6 @@ private enum CollectionDetailViewTheme {
     static let coverCornerRadius: CGFloat = 12
     static let horizontalPadding: CGFloat = 16
     static let gridHorizontalPadding: CGFloat = 12
-    static let topPadding: CGFloat = 8
     static let bottomPadding: CGFloat = 24
     static let headerSpacing: CGFloat = 8
     static let authorSpacing: CGFloat = 4
@@ -29,17 +28,17 @@ struct CollectionDetailView: View {
         GridItem(.flexible(), spacing: CollectionDetailViewTheme.gridSpacing),
         GridItem(.flexible(), spacing: CollectionDetailViewTheme.gridSpacing)
     ]
-
+    
     init(itemViewData: CollectionDetailViewData) {
         self.itemViewData = itemViewData
     }
-
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: CollectionDetailViewTheme.contentSpacing) {
                 coverView
                 headerView
-
+                
                 LazyVGrid(
                     columns: gridItems,
                     alignment: .center,
@@ -55,8 +54,9 @@ struct CollectionDetailView: View {
         }
         .background(Color(.dayNightWhite).ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
+        .ignoresSafeArea(edges: .top)
     }
-
+    
     @ViewBuilder
     private var coverView: some View {
         Group {
@@ -82,9 +82,8 @@ struct CollectionDetailView: View {
         .frame(height: CollectionDetailViewTheme.coverHeight)
         .frame(maxWidth: .infinity)
         .clipShape(RoundedRectangle(cornerRadius: CollectionDetailViewTheme.coverCornerRadius))
-        .padding(.top, CollectionDetailViewTheme.topPadding)
     }
-
+    
     @ViewBuilder
     private var headerView: some View {
         VStack(alignment: .leading, spacing: CollectionDetailViewTheme.headerSpacing) {
@@ -92,12 +91,12 @@ struct CollectionDetailView: View {
                 .font(.dsHeadline3)
                 .foregroundStyle(Color(.dayNightBlack))
                 .padding(.bottom, CollectionDetailViewTheme.headerTextBottomPadding)
-
+            
             HStack(spacing: CollectionDetailViewTheme.authorSpacing) {
                 Text("Collection.author")
                     .font(.dsCaption2)
                     .foregroundStyle(Color(.dayNightBlack))
-
+                
                 if let authorURL = itemViewData.authorURL {
                     Link(itemViewData.authorName, destination: authorURL)
                         .font(.dsCaption1)
@@ -108,7 +107,7 @@ struct CollectionDetailView: View {
                         .foregroundStyle(Color(.universalBlue))
                 }
             }
-
+            
             Text(itemViewData.description)
                 .font(.dsCaption2)
                 .foregroundStyle(Color(.dayNightBlack))

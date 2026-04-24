@@ -50,6 +50,7 @@ struct CatalogView: View {
             .navigationLinkIndicatorVisibility(.hidden)
             .navigationDestination(for: CollectionViewData.self, destination: { item in
                 CollectionDetailView(itemViewData: .mock(from: item))
+                    .toolbar(.hidden, for: .tabBar)
             })
             .confirmationDialog("Catalog.sorting", isPresented: $showConfirmationDialog) {
                 Button("Catalog.sortingByName") { viewModel.sortByName() }
