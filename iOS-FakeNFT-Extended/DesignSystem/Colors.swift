@@ -1,4 +1,3 @@
-import SwiftUI
 import UIKit
 
 extension UIColor {
@@ -65,32 +64,4 @@ extension UIColor {
         ? .yaBlackDark
         : .yaBlackLight
     }
-
-    static let dayNightBlackColor = UIColor(named: "DayNightBlackColor") ?? .label
-    static let dayNightWhiteColor = UIColor(named: "DayNightWhiteColor") ?? .systemBackground
-    static let dayNightLightGrayColor = UIColor(named: "DayNightLightGrayColor") ?? .secondarySystemBackground
-
-    static let universalBackgroundColor = UIColor(named: "UniversalBackgroundColor") ?? .black.withAlphaComponent(0.5)
-    static let universalBlackColor = UIColor(named: "UniversalBlackColor") ?? .black
-    static let universalWhiteColor = UIColor(named: "UniversalWhiteColor") ?? .white
-    static let universalBlueColor = UIColor(named: "UniversalBlueColor") ?? .systemBlue
-    static let universalGrayColor = UIColor(named: "UniversalGrayColor") ?? .systemGray
-    static let universalGreenColor = UIColor(named: "UniversalGreenColor") ?? .systemGreen
-    static let universalRedColor = UIColor(named: "UniversalRedColor") ?? .systemRed
-    static let universalYellowColor = UIColor(named: "UniversalYellowColor") ?? .systemYellow
-}
-
-extension Color {
-    static let dsDayNightBlack = Color(uiColor: .dayNightBlackColor)
-    static let dsDayNightWhite = Color(uiColor: .dayNightWhiteColor)
-    static let dsDayNightLightGray = Color(uiColor: .dayNightLightGrayColor)
-
-    static let dsUniversalBackground = Color(uiColor: .universalBackgroundColor)
-    static let dsUniversalBlack = Color(uiColor: .universalBlackColor)
-    static let dsUniversalWhite = Color(uiColor: .universalWhiteColor)
-    static let dsUniversalBlue = Color(uiColor: .universalBlueColor)
-    static let dsUniversalGray = Color(uiColor: .universalGrayColor)
-    static let dsUniversalGreen = Color(uiColor: .universalGreenColor)
-    static let dsUniversalRed = Color(uiColor: .universalRedColor)
-    static let dsUniversalYellow = Color(uiColor: .universalYellowColor)
 }

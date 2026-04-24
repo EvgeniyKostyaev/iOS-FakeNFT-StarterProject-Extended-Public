@@ -20,7 +20,7 @@ struct NFTItemCellView: View {
 
                 Image(systemName: itemViewData.isFavorite ? "heart.fill" : "heart")
                     .font(.system(size: 20, weight: .semibold))
-                    .foregroundStyle(Color.dsUniversalWhite)
+                    .foregroundStyle(Color(.universalWhite))
                     .padding(8)
             }
 
@@ -30,29 +30,29 @@ struct NFTItemCellView: View {
                         .font(.system(size: 10))
                         .foregroundStyle(
                             index < itemViewData.rating
-                            ? Color.dsUniversalYellow
-                            : Color.dsDayNightLightGray
+                            ? Color(.universalYellow)
+                            : Color(.dayNightLightGray)
                         )
                 }
             }
 
             Text(itemViewData.title)
                 .font(.dsHeadline3)
-                .foregroundStyle(Color.dsDayNightBlack)
+                .foregroundStyle(Color(.dayNightBlack))
                 .lineLimit(1)
 
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("\(itemViewData.price.formattedPriceETH) \(String(localized: "NFT.currency.eth"))")
                         .font(.dsCaption1)
-                        .foregroundStyle(Color.dsDayNightBlack)
+                        .foregroundStyle(Color(.dayNightBlack))
                 }
 
                 Spacer(minLength: 8)
 
                 Image(systemName: itemViewData.isInCart ? "cart.badge.minus" : "cart")
                     .font(.system(size: 20, weight: .regular))
-                    .foregroundStyle(Color.dsDayNightBlack)
+                    .foregroundStyle(Color(.dayNightBlack))
             }
         }
     }
@@ -71,7 +71,7 @@ struct NFTItemCellView: View {
                     .scaledToFill()
             } placeholder: {
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(Color.dsDayNightLightGray)
+                    .fill(Color(.dayNightLightGray))
                     .overlay {
                         ProgressView()
                     }

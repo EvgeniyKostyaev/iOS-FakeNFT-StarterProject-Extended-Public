@@ -33,7 +33,7 @@ struct CollectionDetailView: View {
             }
             .padding(.bottom, 24)
         }
-        .background(Color.dsDayNightWhite.ignoresSafeArea())
+        .background(Color(.dayNightWhite).ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
     }
 
@@ -52,7 +52,7 @@ struct CollectionDetailView: View {
                         .scaledToFill()
                 } placeholder: {
                     Rectangle()
-                        .fill(Color.dsDayNightLightGray)
+                        .fill(Color(.dayNightLightGray))
                         .overlay {
                             ProgressView()
                         }
@@ -70,27 +70,27 @@ struct CollectionDetailView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(itemViewData.title)
                 .font(.system(size: 34, weight: .bold))
-                .foregroundStyle(Color.dsDayNightBlack)
+                .foregroundStyle(Color(.dayNightBlack))
 
             HStack(spacing: 4) {
                 Text("Collection.author")
                     .font(.dsBodyRegular)
-                    .foregroundStyle(Color.dsDayNightBlack)
+                    .foregroundStyle(Color(.dayNightBlack))
 
                 if let authorURL = itemViewData.authorURL {
                     Link(itemViewData.authorName, destination: authorURL)
                         .font(.dsBodyRegular)
-                        .foregroundStyle(Color.dsUniversalBlue)
+                        .foregroundStyle(Color(.universalBlue))
                 } else {
                     Text(itemViewData.authorName)
                         .font(.dsBodyRegular)
-                        .foregroundStyle(Color.dsUniversalBlue)
+                        .foregroundStyle(Color(.universalBlue))
                 }
             }
 
             Text(itemViewData.description)
                 .font(.dsBodyRegular)
-                .foregroundStyle(Color.dsDayNightBlack)
+                .foregroundStyle(Color(.dayNightBlack))
         }
         .padding(.horizontal, 16)
     }
