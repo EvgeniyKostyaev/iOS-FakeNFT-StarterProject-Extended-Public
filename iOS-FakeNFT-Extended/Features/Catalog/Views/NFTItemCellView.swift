@@ -7,27 +7,49 @@
 
 import SwiftUI
 
+private enum NFTItemCellViewTheme {
+    static let contentSpacing: CGFloat = 8
+    static let imageHeight: CGFloat = 108
+    static let imageCornerRadius: CGFloat = 12
+    static let iconPadding: CGFloat = 8
+    static let iconSize: CGFloat = 20
+    static let starsSpacing: CGFloat = 2
+    static let starSize: CGFloat = 10
+    static let priceSpacing: CGFloat = 2
+    static let minSpacerLength: CGFloat = 8
+}
+
 struct NFTItemCellView: View {
     let itemViewData: CollectionNFTViewData
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: NFTItemCellViewTheme.contentSpacing) {
             ZStack(alignment: .topTrailing) {
                 nftImage
                     .frame(maxWidth: .infinity)
-                    .frame(height: 108)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .frame(height: NFTItemCellViewTheme.imageHeight)
+                    .clipShape(RoundedRectangle(cornerRadius: NFTItemCellViewTheme.imageCornerRadius))
 
                 Image(systemName: itemViewData.isFavorite ? "heart.fill" : "heart")
-                    .font(.system(size: 20, weight: .semibold))
+                    .resizable()
+                    .scaledToFit()
+                    .frame(
+                        width: NFTItemCellViewTheme.iconSize,
+                        height: NFTItemCellViewTheme.iconSize
+                    )
                     .foregroundStyle(Color(.universalWhite))
-                    .padding(8)
+                    .padding(NFTItemCellViewTheme.iconPadding)
             }
 
-            HStack(spacing: 2) {
+            HStack(spacing: NFTItemCellViewTheme.starsSpacing) {
                 ForEach(0..<5, id: \.self) { index in
                     Image(systemName: index < itemViewData.rating ? "star.fill" : "star")
-                        .font(.system(size: 10))
+                        .resizable()
+                        .scaledToFit()
+                        .frame(
+                            width: NFTItemCellViewTheme.starSize,
+                            height: NFTItemCellViewTheme.starSize
+                        )
                         .foregroundStyle(
                             index < itemViewData.rating
                             ? Color(.universalYellow)
@@ -42,16 +64,21 @@ struct NFTItemCellView: View {
                 .lineLimit(1)
 
             HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 2) {
+                VStack(alignment: .leading, spacing: NFTItemCellViewTheme.priceSpacing) {
                     Text("\(itemViewData.price.formattedPriceETH) \(String(localized: "NFT.currency.eth"))")
                         .font(.dsCaption1)
                         .foregroundStyle(Color(.dayNightBlack))
                 }
 
-                Spacer(minLength: 8)
+                Spacer(minLength: NFTItemCellViewTheme.minSpacerLength)
 
                 Image(systemName: itemViewData.isInCart ? "cart.badge.minus" : "cart")
-                    .font(.system(size: 20, weight: .regular))
+                    .resizable()
+                    .scaledToFit()
+                    .frame(
+                        width: NFTItemCellViewTheme.iconSize,
+                        height: NFTItemCellViewTheme.iconSize
+                    )
                     .foregroundStyle(Color(.dayNightBlack))
             }
         }
@@ -70,7 +97,7 @@ struct NFTItemCellView: View {
                     .resizable()
                     .scaledToFill()
             } placeholder: {
-                RoundedRectangle(cornerRadius: 12)
+                RoundedRectangle(cornerRadius: NFTItemCellViewTheme.imageCornerRadius)
                     .fill(Color(.dayNightLightGray))
                     .overlay {
                         ProgressView()

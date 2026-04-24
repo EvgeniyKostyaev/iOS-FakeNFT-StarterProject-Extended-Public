@@ -7,12 +7,25 @@
 
 import SwiftUI
 
+private enum CollectionDetailViewTheme {
+    static let gridSpacing: CGFloat = 8
+    static let contentSpacing: CGFloat = 20
+    static let gridVerticalSpacing: CGFloat = 24
+    static let coverHeight: CGFloat = 310
+    static let coverCornerRadius: CGFloat = 12
+    static let horizontalPadding: CGFloat = 16
+    static let topPadding: CGFloat = 8
+    static let bottomPadding: CGFloat = 24
+    static let headerSpacing: CGFloat = 8
+    static let authorSpacing: CGFloat = 4
+}
+
 struct CollectionDetailView: View {
     private let itemViewData: CollectionDetailViewData
     private let gridItems = [
-        GridItem(.flexible(), spacing: 8),
-        GridItem(.flexible(), spacing: 8),
-        GridItem(.flexible(), spacing: 8)
+        GridItem(.flexible(), spacing: CollectionDetailViewTheme.gridSpacing),
+        GridItem(.flexible(), spacing: CollectionDetailViewTheme.gridSpacing),
+        GridItem(.flexible(), spacing: CollectionDetailViewTheme.gridSpacing)
     ]
 
     init(itemViewData: CollectionDetailViewData) {
@@ -21,17 +34,21 @@ struct CollectionDetailView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: CollectionDetailViewTheme.contentSpacing) {
                 coverView
                 headerView
 
-                LazyVGrid(columns: gridItems, alignment: .leading, spacing: 24) {
+                LazyVGrid(
+                    columns: gridItems,
+                    alignment: .leading,
+                    spacing: CollectionDetailViewTheme.gridVerticalSpacing
+                ) {
                     ForEach(itemViewData.nftItems) { item in
                         NFTItemCellView(itemViewData: item)
                     }
                 }
             }
-            .padding(.bottom, 24)
+            .padding(.bottom, CollectionDetailViewTheme.bottomPadding)
         }
         .background(Color(.dayNightWhite).ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
@@ -59,20 +76,20 @@ struct CollectionDetailView: View {
                 }
             }
         }
-        .frame(height: 310)
+        .frame(height: CollectionDetailViewTheme.coverHeight)
         .frame(maxWidth: .infinity)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .padding(.horizontal, 16)
-        .padding(.top, 8)
+        .clipShape(RoundedRectangle(cornerRadius: CollectionDetailViewTheme.coverCornerRadius))
+        .padding(.horizontal, CollectionDetailViewTheme.horizontalPadding)
+        .padding(.top, CollectionDetailViewTheme.topPadding)
     }
 
     private var headerView: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: CollectionDetailViewTheme.headerSpacing) {
             Text(itemViewData.title)
-                .font(.system(size: 34, weight: .bold))
+                .font(.dsHeadline1)
                 .foregroundStyle(Color(.dayNightBlack))
 
-            HStack(spacing: 4) {
+            HStack(spacing: CollectionDetailViewTheme.authorSpacing) {
                 Text("Collection.author")
                     .font(.dsBodyRegular)
                     .foregroundStyle(Color(.dayNightBlack))
@@ -92,7 +109,7 @@ struct CollectionDetailView: View {
                 .font(.dsBodyRegular)
                 .foregroundStyle(Color(.dayNightBlack))
         }
-        .padding(.horizontal, 16)
+        .padding(.horizontal, CollectionDetailViewTheme.horizontalPadding)
     }
 }
 

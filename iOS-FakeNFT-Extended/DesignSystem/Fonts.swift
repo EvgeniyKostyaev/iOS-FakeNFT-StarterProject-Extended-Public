@@ -26,6 +26,7 @@ private extension UIFont {
 }
 
 extension Font {
+    static var dsHeadline1: Font { UIFont.headline1.swiftUIFont }
     static var dsHeadline3: Font { UIFont.headline3.swiftUIFont }
     static var dsBodyRegular: Font { UIFont.bodyRegular.swiftUIFont }
     static var dsBodyBold: Font { UIFont.bodyBold.swiftUIFont }
