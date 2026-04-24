@@ -16,10 +16,12 @@ struct FavoriteNFTView: View {
     @State private var viewModel = FavoriteNFTViewModel()
 
     private var favoritesNavigationTitle: String? {
-        if case .ready(let nfts) = viewModel.phase, !nfts.isEmpty {
+        switch viewModel.state {
+        case .ready(let nfts) where !nfts.isEmpty:
             return NSLocalizedString("Profile.favoritesNavTitle", comment: "")
+        default:
+            return nil
         }
-        return nil
     }
 
     private var gridColumns: [GridItem] {
@@ -31,7 +33,7 @@ struct FavoriteNFTView: View {
 
     var body: some View {
         Group {
-            switch viewModel.phase {
+            switch viewModel.state {
             case .idle, .loading:
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -41,19 +43,19 @@ struct FavoriteNFTView: View {
                 } else {
                     favoritesGrid
                 }
-            case .failed(let message):
+            case .failed(message: let message):
                 loadFailedView(message: message)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.dayNightWhite.ignoresSafeArea())
         .task(id: profile.likes) {
-            await viewModel.load(likedNFTIds: profile.likes, nftService: services.nftService)
+            await load()
         }
         .alert(
             NSLocalizedString("Error.title", comment: ""),
             isPresented: Binding(
-                get: { viewModel.removeFavoriteError != nil },
+                get: { viewModel.removeFavoriteErrorMessage != nil },
                 set: { if !$0 { viewModel.clearRemoveFavoriteError() } }
             ),
             actions: {
@@ -62,7 +64,7 @@ struct FavoriteNFTView: View {
                 }
             },
             message: {
-                Text(viewModel.removeFavoriteError ?? "")
+                Text(viewModel.removeFavoriteErrorMessage ?? "")
             }
         )
         .customNavigationBar(
@@ -108,13 +110,17 @@ struct FavoriteNFTView: View {
                 .multilineTextAlignment(.center)
             Button(NSLocalizedString("Error.repeat", comment: "")) {
                 Task {
-                    await viewModel.load(likedNFTIds: profile.likes, nftService: services.nftService)
+                    await load()
                 }
             }
             .font(.dsBodySemibold)
         }
         .padding(.horizontal, FavoriteNFTGridLayout.horizontalPadding)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private func load() async {
+        await viewModel.load(likedNFTIds: profile.likes, nftService: services.nftService)
     }
 }
 

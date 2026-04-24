@@ -42,11 +42,7 @@ struct MyNFTView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.dayNightWhite.ignoresSafeArea())
         .task {
-            await viewModel.load(
-                nftIds: profile.nfts,
-                likedNFTIds: Set(profile.likes),
-                nftService: services.nftService
-            )
+            await load()
         }
         .customNavigationBar(
             title: myNFTsNavigationTitle,
@@ -104,11 +100,7 @@ struct MyNFTView: View {
                 .multilineTextAlignment(.center)
             Button(NSLocalizedString("Error.repeat", comment: "")) {
                 Task {
-                    await viewModel.load(
-                        nftIds: profile.nfts,
-                        likedNFTIds: Set(profile.likes),
-                        nftService: services.nftService
-                    )
+                    await load()
                 }
             }
             .font(.dsBodySemibold)
@@ -135,6 +127,14 @@ struct MyNFTView: View {
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
+    }
+
+    private func load() async {
+        await viewModel.load(
+            nftIds: profile.nfts,
+            likedNFTIds: Set(profile.likes),
+            nftService: services.nftService
+        )
     }
 }
 

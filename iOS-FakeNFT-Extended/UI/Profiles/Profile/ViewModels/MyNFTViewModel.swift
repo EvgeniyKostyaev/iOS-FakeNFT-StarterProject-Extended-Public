@@ -28,7 +28,7 @@ enum MyNFTSortCriterion: String, CaseIterable, Sendable {
         UserDefaults.standard.set(rawValue, forKey: Self.storageKey)
     }
 
-    static func sorted(_ nfts: [Nft], by criterion: MyNFTSortCriterion) -> [Nft] {
+    static func sorted(nfts: [Nft], by criterion: MyNFTSortCriterion) -> [Nft] {
         switch criterion {
         case .name:
             return nfts.sorted {
@@ -108,7 +108,7 @@ final class MyNFTViewModel {
             }
         }
 
-        phase = .ready(MyNFTSortCriterion.sorted(ordered, by: sortCriterion))
+        phase = .ready(MyNFTSortCriterion.sorted(nfts: ordered, by: sortCriterion))
     }
 
     func setSortCriterion(_ criterion: MyNFTSortCriterion) {
@@ -116,6 +116,6 @@ final class MyNFTViewModel {
         sortCriterion = criterion
         criterion.save()
         guard case .ready(let nfts) = phase else { return }
-        phase = .ready(MyNFTSortCriterion.sorted(nfts, by: criterion))
+        phase = .ready(MyNFTSortCriterion.sorted(nfts: nfts, by: criterion))
     }
 }

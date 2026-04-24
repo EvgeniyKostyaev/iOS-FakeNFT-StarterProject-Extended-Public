@@ -20,6 +20,14 @@ struct FavoriteNFTCellView: View {
     let model: FavoriteNFTCellModel
     let onRemoveFromFavorites: () -> Void
 
+    private static let priceFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+        formatter.numberStyle = .decimal
+        return formatter
+    }()
+
     @Environment(\.locale) private var locale
 
     private var clampedRating: Int {
@@ -71,13 +79,8 @@ struct FavoriteNFTCellView: View {
     }
 
     private var formattedPriceLine: String {
-        let formatter = NumberFormatter()
-        formatter.locale = locale
-        formatter.minimumFractionDigits = 2
-        formatter.maximumFractionDigits = 2
-        formatter.numberStyle = .decimal
-
-        let numberPart = formatter.string(from: NSNumber(value: model.price))
+        Self.priceFormatter.locale = locale
+        let numberPart = Self.priceFormatter.string(from: NSNumber(value: model.price))
             ?? String(format: "%.2f", locale: locale, arguments: [model.price])
 
         let currency = NSLocalizedString("MyNFT.priceCurrency", comment: "")

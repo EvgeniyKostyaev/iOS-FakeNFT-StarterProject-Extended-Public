@@ -12,28 +12,34 @@ import Observation
 @Observable
 final class FavoriteNFTViewModel {
 
-    enum Phase: Equatable {
+    // MARK: - State
+
+    enum State: Equatable {
         case idle
         case loading
         case ready([Nft])
-        case failed(String)
+        case failed(message: String)
     }
 
-    private(set) var phase: Phase = .idle
-    private(set) var removeFavoriteError: String?
+    private(set) var state: State = .idle
+    private(set) var removeFavoriteErrorMessage: String?
+
+    // MARK: - Computed Properties
 
     var cellModels: [FavoriteNFTCellModel] {
-        guard case .ready(let nfts) = phase else { return [] }
-        return nfts.map { FavoriteNFTCellModel(nft: $0) }
+        guard case .ready(let nfts) = state else { return [] }
+        return nfts.map(FavoriteNFTCellModel.init)
     }
+
+    // MARK: - Public Methods
 
     func load(likedNFTIds: [String], nftService: NftService) async {
         guard !likedNFTIds.isEmpty else {
-            phase = .ready([])
+            state = .ready([])
             return
         }
 
-        phase = .loading
+        state = .loading
 
         var ordered: [Nft] = []
         ordered.reserveCapacity(likedNFTIds.count)
@@ -43,16 +49,16 @@ final class FavoriteNFTViewModel {
                 let nft = try await nftService.loadNft(id: id)
                 ordered.append(nft)
             } catch {
-                phase = .failed(NSLocalizedString("FavoriteNFT.loadFailed", comment: ""))
+                state = .failed(message: NSLocalizedString("FavoriteNFT.loadFailed", comment: ""))
                 return
             }
         }
 
-        phase = .ready(ordered)
+        state = .ready(ordered)
     }
 
     func clearRemoveFavoriteError() {
-        removeFavoriteError = nil
+        removeFavoriteErrorMessage = nil
     }
 
     func removeFromFavorites(
@@ -60,10 +66,10 @@ final class FavoriteNFTViewModel {
         profile: ProfileScreen,
         profileService: ProfileServiceProtocol
     ) async {
-        removeFavoriteError = nil
+        removeFavoriteErrorMessage = nil
 
-        guard case .ready(let nfts) = phase else { return }
-        guard profile.likes.contains(nftId) else { return }
+        guard case .ready(let nfts) = state,
+              profile.likes.contains(nftId) else { return }
 
         let newLikes = profile.likes.filter { $0 != nftId }
         let payload = ProfileUpdatePayload(
@@ -78,10 +84,10 @@ final class FavoriteNFTViewModel {
         do {
             try await profileService.updateProfile(payload)
             let filtered = nfts.filter { $0.id != nftId }
-            phase = .ready(filtered)
+            state = .ready(filtered)
             NotificationCenter.default.post(name: .profileDidUpdate, object: nil)
         } catch {
-            removeFavoriteError = NSLocalizedString("FavoriteNFT.removeFailed", comment: "")
+            removeFavoriteErrorMessage = NSLocalizedString("FavoriteNFT.removeFailed", comment: "")
         }
     }
 }
