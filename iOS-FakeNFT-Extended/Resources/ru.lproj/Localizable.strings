@@ -34,6 +34,28 @@
 "Profile.avatarDeletePhoto" = "Удалить фото";
 "Profile.avatarLinkTitle" = "Ссылка на фото";
 
+// MARK: - My NFT
+
+"MyNFT.empty" = "У вас ещё нет NFT";
+"MyNFT.loadFailed" = "Не удалось загрузить список NFT. Проверьте сеть и попробуйте снова.";
+"MyNFT.authorPrefix" = "от";
+"MyNFT.priceLabel" = "Цена";
+"MyNFT.priceCurrency" = "ETH";
+"MyNFT.ratingAccessibilityFormat" = "Рейтинг %d из %d";
+"MyNFT.sortAccessibility" = "Сортировка";
+"MyNFT.sortDialogTitle" = "Сортировка";
+"MyNFT.sortClose" = "Закрыть";
+"MyNFT.sortByPrice" = "По цене";
+"MyNFT.sortByRating" = "По рейтингу";
+"MyNFT.sortByName" = "По названию";
+
+// MARK: - Favorite NFT
+
+"FavoriteNFT.empty" = "У вас ещё нет избранных NFT";
+"FavoriteNFT.loadFailed" = "Не удалось загрузить избранное. Проверьте сеть и попробуйте снова.";
+"FavoriteNFT.removeFailed" = "Не удалось обновить избранное. Проверьте сеть и попробуйте снова.";
+"FavoriteNFT.removeFromFavoritesAccessibility" = "Убрать из избранного";
+
 // MARK: - Catalog
 
 "Catalog.openNft" = "Открыть Nft";

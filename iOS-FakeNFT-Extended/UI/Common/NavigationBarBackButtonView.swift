@@ -40,9 +40,10 @@ struct NavigationBarBackButtonView: View {
     }
 }
 
-private struct CustomNavigationBarView: View {
+private struct CustomNavigationBarView<Trailing: View>: View {
     let title: String?
     let action: () -> Void
+    @ViewBuilder let trailing: () -> Trailing
 
     var body: some View {
         ZStack {
@@ -55,7 +56,12 @@ private struct CustomNavigationBarView: View {
 
             HStack(spacing: 0) {
                 NavigationBarBackButtonView(action: action)
-                Spacer()
+                Spacer(minLength: 0)
+                trailing()
+                    .frame(
+                        width: CustomNavigationBarLayout.backButtonWidth,
+                        height: CustomNavigationBarLayout.backButtonHeight
+                    )
             }
         }
         .frame(maxWidth: .infinity)
@@ -64,9 +70,10 @@ private struct CustomNavigationBarView: View {
     }
 }
 
-private struct CustomNavigationBarModifier: ViewModifier {
+private struct CustomNavigationBarModifier<Trailing: View>: ViewModifier {
     let title: String?
     let action: () -> Void
+    @ViewBuilder let trailing: () -> Trailing
 
     func body(content: Content) -> some View {
         content
@@ -75,7 +82,8 @@ private struct CustomNavigationBarModifier: ViewModifier {
             .safeAreaInset(edge: .top, spacing: 0) {
                 CustomNavigationBarView(
                     title: title,
-                    action: action
+                    action: action,
+                    trailing: trailing
                 )
             }
     }
@@ -89,7 +97,22 @@ extension View {
         modifier(
             CustomNavigationBarModifier(
                 title: title,
-                action: action
+                action: action,
+                trailing: { EmptyView() }
+            )
+        )
+    }
+
+    func customNavigationBar<Trailing: View>(
+        title: String? = nil,
+        action: @escaping () -> Void,
+        @ViewBuilder trailing: @escaping () -> Trailing
+    ) -> some View {
+        modifier(
+            CustomNavigationBarModifier(
+                title: title,
+                action: action,
+                trailing: trailing
             )
         )
     }

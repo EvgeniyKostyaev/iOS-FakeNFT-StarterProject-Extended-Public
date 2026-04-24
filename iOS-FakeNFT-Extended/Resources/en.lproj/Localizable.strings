@@ -34,6 +34,28 @@
 "Profile.avatarDeletePhoto" = "Delete photo";
 "Profile.avatarLinkTitle" = "Photo link";
 
+// MARK: - My NFT
+
+"MyNFT.empty" = "You don't have any NFT yet";
+"MyNFT.loadFailed" = "Could not load NFT list. Check your connection and try again.";
+"MyNFT.authorPrefix" = "by";
+"MyNFT.priceLabel" = "Price";
+"MyNFT.priceCurrency" = "ETH";
+"MyNFT.ratingAccessibilityFormat" = "Rating %d out of %d";
+"MyNFT.sortAccessibility" = "Sort";
+"MyNFT.sortDialogTitle" = "Sorting";
+"MyNFT.sortClose" = "Close";
+"MyNFT.sortByPrice" = "By price";
+"MyNFT.sortByRating" = "By rating";
+"MyNFT.sortByName" = "By name";
+
+// MARK: - Favorite NFT
+
+"FavoriteNFT.empty" = "You don't have any favorite NFT yet";
+"FavoriteNFT.loadFailed" = "Could not load favorites. Check your connection and try again.";
+"FavoriteNFT.removeFailed" = "Could not update favorites. Check your connection and try again.";
+"FavoriteNFT.removeFromFavoritesAccessibility" = "Remove from favorites";
+
 // MARK: - Catalog
 
 "Catalog.openNft" = "Open NFT";
