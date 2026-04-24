@@ -21,6 +21,10 @@ private enum NFTItemCellViewTheme {
 
 struct NFTItemCellView: View {
     let itemViewData: CollectionNFTViewData
+    
+    init(itemViewData: CollectionNFTViewData) {
+        self.itemViewData = itemViewData
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: NFTItemCellViewTheme.contentSpacing) {

@@ -89,7 +89,7 @@ private extension CollectionNFTViewData {
             CollectionNFTViewData(
                 id: "1",
                 title: "Archie",
-                imageType: .local(.collectionWhite),
+                imageType: .local(._1),
                 rating: 2,
                 price: 1,
                 isFavorite: true,
@@ -98,7 +98,7 @@ private extension CollectionNFTViewData {
             CollectionNFTViewData(
                 id: "2",
                 title: "Ruby",
-                imageType: .local(.collectionPeach),
+                imageType: .local(._2),
                 rating: 2,
                 price: 1,
                 isFavorite: true,
@@ -107,7 +107,7 @@ private extension CollectionNFTViewData {
             CollectionNFTViewData(
                 id: "3",
                 title: "Nacho",
-                imageType: .local(.collectionBrawn),
+                imageType: .local(._3),
                 rating: 2,
                 price: 1,
                 isFavorite: true,
@@ -121,7 +121,7 @@ private extension CollectionNFTViewData {
             CollectionNFTViewData(
                 id: "4",
                 title: "Biscuit",
-                imageType: .local(.collectionBrawn),
+                imageType: .local(._4),
                 rating: 2,
                 price: 1,
                 isFavorite: false,
@@ -130,7 +130,7 @@ private extension CollectionNFTViewData {
             CollectionNFTViewData(
                 id: "5",
                 title: "Daisy",
-                imageType: .local(.collectionPeach),
+                imageType: .local(._5),
                 rating: 2,
                 price: 1,
                 isFavorite: true,
@@ -139,7 +139,7 @@ private extension CollectionNFTViewData {
             CollectionNFTViewData(
                 id: "6",
                 title: "Susan",
-                imageType: .local(.collectionWhite),
+                imageType: .local(._6),
                 rating: 2,
                 price: 1,
                 isFavorite: false,
@@ -153,7 +153,7 @@ private extension CollectionNFTViewData {
             CollectionNFTViewData(
                 id: "7",
                 title: "Oreo",
-                imageType: .local(.collectionBrawn),
+                imageType: .local(._7),
                 rating: 2,
                 price: 1,
                 isFavorite: true,
@@ -162,7 +162,7 @@ private extension CollectionNFTViewData {
             CollectionNFTViewData(
                 id: "8",
                 title: "Pixi",
-                imageType: .local(.collectionWhite),
+                imageType: .local(._8),
                 rating: 2,
                 price: 1,
                 isFavorite: true,
@@ -171,7 +171,7 @@ private extension CollectionNFTViewData {
             CollectionNFTViewData(
                 id: "9",
                 title: "Zoe",
-                imageType: .local(.collectionPeach),
+                imageType: .local(._9),
                 rating: 2,
                 price: 1,
                 isFavorite: false,
@@ -185,7 +185,7 @@ private extension CollectionNFTViewData {
             CollectionNFTViewData(
                 id: "10",
                 title: "Tater",
-                imageType: .local(.collectionPeach),
+                imageType: .local(._10),
                 rating: 2,
                 price: 1,
                 isFavorite: true,
