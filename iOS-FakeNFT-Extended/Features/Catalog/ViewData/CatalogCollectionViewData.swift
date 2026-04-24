@@ -72,8 +72,8 @@ extension CollectionDetailViewData {
             title: collection.title,
             coverImageType: collection.coverImageType,
             authorName: "John Doe",
-            authorURL: URL(string: "https://example.com/john-doe"),
-            description: NSLocalizedString("Collection.description.peach", comment: ""),
+            authorURL: URL(string: "https://practicum.yandex.ru/ios-developer/?from=catalog"),
+            description: "Персиковый - как облака над закатным солнцем в океане. В этой коллекции совмещены трогательная нежность и живая игривость сказочных зефирных зверей.",
             nftItems: CollectionNFTViewData.mockItems()
         )
     }
