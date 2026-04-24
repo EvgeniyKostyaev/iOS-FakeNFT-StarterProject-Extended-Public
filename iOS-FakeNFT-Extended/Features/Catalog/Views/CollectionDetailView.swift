@@ -63,7 +63,7 @@ struct CollectionDetailView: View {
             }
         }
         .navigationDestination(for: CollectionNFTViewData.self) { item in
-            Text("Show NFT: \(item.title)")
+            NftDetailBridgeView(nftId: item.id)
         }
     }
     
