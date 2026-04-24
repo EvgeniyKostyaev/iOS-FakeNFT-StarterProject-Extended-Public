@@ -12,7 +12,11 @@ private enum CollectionCellViewTheme {
 }
 
 struct CollectionCellView: View {
-    let itemViewData: CatalogCollectionItemViewData
+    private let itemViewData: CollectionViewData
+    
+    init(itemViewData: CollectionViewData) {
+        self.itemViewData = itemViewData
+    }
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -42,7 +46,7 @@ struct CollectionCellView: View {
 
 #Preview {
     CollectionCellView(
-        itemViewData: CatalogCollectionItemViewData(
+        itemViewData: CollectionViewData(
             id: "1",
             title: "Peach",
             coverImageType: .local(.collectionPeach),

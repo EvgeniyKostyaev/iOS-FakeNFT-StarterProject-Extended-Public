@@ -18,7 +18,7 @@ struct CatalogView: View {
     
     var body: some View {
         NavigationStack {
-            List(viewModel.items) { item in
+            List(CollectionViewData.mock()) { item in
                 NavigationLink(value: item) {
                     CollectionCellView(itemViewData: item)
                 }
@@ -48,8 +48,8 @@ struct CatalogView: View {
             .navigationTitle("Catalog.title")
             .navigationBarTitleDisplayMode(.inline)
             .navigationLinkIndicatorVisibility(.hidden)
-            .navigationDestination(for: CatalogCollectionItemViewData.self, destination: { item in
-                CollectionDetailView()
+            .navigationDestination(for: CollectionViewData.self, destination: { item in
+                CollectionDetailView(itemViewData: .mock(from: item))
             })
             .confirmationDialog("Catalog.sorting", isPresented: $showConfirmationDialog) {
                 Button("Catalog.sortingByName") { viewModel.sortByName() }
