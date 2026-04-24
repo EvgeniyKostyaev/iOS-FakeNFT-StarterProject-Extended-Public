@@ -9,14 +9,14 @@ import SwiftUI
 
 private enum NFTItemCellViewTheme {
     static let contentSpacing: CGFloat = 8
+    static let contentWidth: CGFloat = 108
+    static let actionButtonSize: CGFloat = 40
     static let imageHeight: CGFloat = 108
     static let imageCornerRadius: CGFloat = 12
-    static let iconPadding: CGFloat = 8
     static let iconSize: CGFloat = 20
     static let starsSpacing: CGFloat = 2
-    static let starSize: CGFloat = 10
-    static let priceSpacing: CGFloat = 2
-    static let minSpacerLength: CGFloat = 8
+    static let starSize: CGFloat = 12
+    static let priceSpacing: CGFloat = 4
 }
 
 struct NFTItemCellView: View {
@@ -25,7 +25,7 @@ struct NFTItemCellView: View {
     init(itemViewData: CollectionNFTViewData) {
         self.itemViewData = itemViewData
     }
-
+    
     var body: some View {
         VStack(alignment: .leading, spacing: NFTItemCellViewTheme.contentSpacing) {
             ZStack(alignment: .topTrailing) {
@@ -33,18 +33,29 @@ struct NFTItemCellView: View {
                     .frame(maxWidth: .infinity)
                     .frame(height: NFTItemCellViewTheme.imageHeight)
                     .clipShape(RoundedRectangle(cornerRadius: NFTItemCellViewTheme.imageCornerRadius))
-
-                Image(systemName: itemViewData.isFavorite ? "heart.fill" : "heart")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(
-                        width: NFTItemCellViewTheme.iconSize,
-                        height: NFTItemCellViewTheme.iconSize
-                    )
-                    .foregroundStyle(Color(.universalWhite))
-                    .padding(NFTItemCellViewTheme.iconPadding)
+                
+                Button {
+                    
+                } label: {
+                    Image(systemName: "heart.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(
+                            width: NFTItemCellViewTheme.iconSize,
+                            height: NFTItemCellViewTheme.iconSize
+                        )
+                        .foregroundStyle(
+                            itemViewData.isFavorite
+                            ? .universalRed
+                            : .universalWhite
+                        )
+                }
+                .frame(
+                    width: NFTItemCellViewTheme.actionButtonSize,
+                    height: NFTItemCellViewTheme.actionButtonSize
+                )
             }
-
+            
             HStack(spacing: NFTItemCellViewTheme.starsSpacing) {
                 ForEach(0..<5, id: \.self) { index in
                     Image(systemName: index < itemViewData.rating ? "star.fill" : "star")
@@ -61,33 +72,43 @@ struct NFTItemCellView: View {
                         )
                 }
             }
-
-            Text(itemViewData.title)
-                .font(.dsHeadline3)
-                .foregroundStyle(Color(.dayNightBlack))
-                .lineLimit(1)
-
-            HStack(alignment: .top) {
+            
+            HStack(alignment: .center) {
                 VStack(alignment: .leading, spacing: NFTItemCellViewTheme.priceSpacing) {
+                    Text(itemViewData.title)
+                        .font(.dsBodyBold)
+                        .foregroundStyle(Color(.dayNightBlack))
+                        .lineLimit(1)
+
                     Text("\(itemViewData.price.formattedPriceETH) \(String(localized: "NFT.currency.eth"))")
-                        .font(.dsCaption1)
+                        .font(.dsCaption4Medium)
+                        .foregroundStyle(Color(.dayNightBlack))
+                    
+                }
+                
+                Spacer()
+                
+                Button {
+                    
+                } label: {
+                    Image(itemViewData.isInCart ? .cartMinus : .cart)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(
+                            width: NFTItemCellViewTheme.iconSize,
+                            height: NFTItemCellViewTheme.iconSize
+                        )
                         .foregroundStyle(Color(.dayNightBlack))
                 }
-
-                Spacer(minLength: NFTItemCellViewTheme.minSpacerLength)
-
-                Image(systemName: itemViewData.isInCart ? "cart.badge.minus" : "cart")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(
-                        width: NFTItemCellViewTheme.iconSize,
-                        height: NFTItemCellViewTheme.iconSize
-                    )
-                    .foregroundStyle(Color(.dayNightBlack))
+                .frame(
+                    width: NFTItemCellViewTheme.actionButtonSize,
+                    height: NFTItemCellViewTheme.actionButtonSize
+                )
             }
         }
+        .frame(width: NFTItemCellViewTheme.contentWidth)
     }
-
+    
     @ViewBuilder
     private var nftImage: some View {
         switch itemViewData.imageType {
@@ -116,8 +137,8 @@ struct NFTItemCellView: View {
         itemViewData: CollectionNFTViewData(
             id: "1",
             title: "Archie",
-            imageType: .local(.collectionWhite),
-            rating: 2,
+            imageType: .local(._1),
+            rating: 3,
             price: 1,
             isFavorite: true,
             isInCart: false

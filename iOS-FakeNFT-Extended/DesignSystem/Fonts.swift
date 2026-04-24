@@ -19,6 +19,7 @@ extension UIFont {
     static var caption2 = UIFont.systemFont(ofSize: 13, weight: .regular)
     static var caption1Semibold = UIFont.systemFont(ofSize: 14, weight: .semibold)
     static var caption3Bold = UIFont.systemFont(ofSize: 12, weight: .bold)
+    static var caption4Medium = UIFont.systemFont(ofSize: 10, weight: .medium)
 }
 
 private extension UIFont {
@@ -35,4 +36,5 @@ extension Font {
     static var dsCaption2: Font { UIFont.caption2.swiftUIFont }
     static var dsCaption1Semibold: Font { UIFont.caption1Semibold.swiftUIFont }
     static var dsCaption3Bold: Font { UIFont.caption3Bold.swiftUIFont }
+    static var dsCaption4Medium: Font { UIFont.caption4Medium.swiftUIFont }
 }

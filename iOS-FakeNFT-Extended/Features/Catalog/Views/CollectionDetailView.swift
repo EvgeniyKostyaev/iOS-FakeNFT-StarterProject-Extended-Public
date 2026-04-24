@@ -9,15 +9,17 @@ import SwiftUI
 
 private enum CollectionDetailViewTheme {
     static let gridSpacing: CGFloat = 8
-    static let contentSpacing: CGFloat = 20
-    static let gridVerticalSpacing: CGFloat = 24
+    static let contentSpacing: CGFloat = 24
+    static let gridVerticalSpacing: CGFloat = 28
     static let coverHeight: CGFloat = 310
     static let coverCornerRadius: CGFloat = 12
     static let horizontalPadding: CGFloat = 16
+    static let gridHorizontalPadding: CGFloat = 12
     static let topPadding: CGFloat = 8
     static let bottomPadding: CGFloat = 24
     static let headerSpacing: CGFloat = 8
     static let authorSpacing: CGFloat = 4
+    static let headerTextBottomPadding: CGFloat = 6
 }
 
 struct CollectionDetailView: View {
@@ -40,13 +42,14 @@ struct CollectionDetailView: View {
 
                 LazyVGrid(
                     columns: gridItems,
-                    alignment: .leading,
+                    alignment: .center,
                     spacing: CollectionDetailViewTheme.gridVerticalSpacing
                 ) {
                     ForEach(itemViewData.nftItems) { item in
                         NFTItemCellView(itemViewData: item)
                     }
                 }
+                .padding(.horizontal, CollectionDetailViewTheme.gridHorizontalPadding)
             }
             .padding(.bottom, CollectionDetailViewTheme.bottomPadding)
         }
@@ -79,34 +82,35 @@ struct CollectionDetailView: View {
         .frame(height: CollectionDetailViewTheme.coverHeight)
         .frame(maxWidth: .infinity)
         .clipShape(RoundedRectangle(cornerRadius: CollectionDetailViewTheme.coverCornerRadius))
-        .padding(.horizontal, CollectionDetailViewTheme.horizontalPadding)
         .padding(.top, CollectionDetailViewTheme.topPadding)
     }
 
+    @ViewBuilder
     private var headerView: some View {
         VStack(alignment: .leading, spacing: CollectionDetailViewTheme.headerSpacing) {
             Text(itemViewData.title)
-                .font(.dsHeadline1)
+                .font(.dsHeadline3)
                 .foregroundStyle(Color(.dayNightBlack))
+                .padding(.bottom, CollectionDetailViewTheme.headerTextBottomPadding)
 
             HStack(spacing: CollectionDetailViewTheme.authorSpacing) {
                 Text("Collection.author")
-                    .font(.dsBodyRegular)
+                    .font(.dsCaption2)
                     .foregroundStyle(Color(.dayNightBlack))
 
                 if let authorURL = itemViewData.authorURL {
                     Link(itemViewData.authorName, destination: authorURL)
-                        .font(.dsBodyRegular)
+                        .font(.dsCaption1)
                         .foregroundStyle(Color(.universalBlue))
                 } else {
                     Text(itemViewData.authorName)
-                        .font(.dsBodyRegular)
+                        .font(.dsCaption1)
                         .foregroundStyle(Color(.universalBlue))
                 }
             }
 
             Text(itemViewData.description)
-                .font(.dsBodyRegular)
+                .font(.dsCaption2)
                 .foregroundStyle(Color(.dayNightBlack))
         }
         .padding(.horizontal, CollectionDetailViewTheme.horizontalPadding)
