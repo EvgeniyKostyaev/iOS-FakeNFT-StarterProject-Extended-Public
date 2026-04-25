@@ -56,6 +56,9 @@ struct WebViewFullScreenModal: View {
             WebViewRepresentable(url: url)
                 .navigationTitle("")
                 .navigationBarTitleDisplayMode(.inline)
+                .customNavigationBar {
+                    dismiss()
+                }
         }
         .toolbar(.hidden, for: .tabBar)
     }
