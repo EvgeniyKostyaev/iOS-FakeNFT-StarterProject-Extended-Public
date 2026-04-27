@@ -16,7 +16,7 @@ struct MyNFTListRowModel: Identifiable, Hashable, Sendable {
     let previewImageURL: URL?
     let isLiked: Bool
 
-    init(nft: Nft, likedNFTIds: Set<String>) {
+    init(nft: NftDTO, likedNFTIds: Set<String>) {
         id = nft.id
         name = nft.name
         author = nft.author

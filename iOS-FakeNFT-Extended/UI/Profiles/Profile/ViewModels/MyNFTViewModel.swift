@@ -28,7 +28,7 @@ enum MyNFTSortCriterion: String, CaseIterable, Sendable {
         UserDefaults.standard.set(rawValue, forKey: Self.storageKey)
     }
 
-    static func sorted(nfts: [Nft], by criterion: MyNFTSortCriterion) -> [Nft] {
+    static func sorted(nfts: [NftDTO], by criterion: MyNFTSortCriterion) -> [NftDTO] {
         switch criterion {
         case .name:
             return nfts.sorted {
@@ -67,7 +67,7 @@ final class MyNFTViewModel {
     enum Phase: Equatable {
         case idle
         case loading
-        case ready([Nft])
+        case ready([NftDTO])
         case failed(String)
     }
 
@@ -95,7 +95,7 @@ final class MyNFTViewModel {
 
         phase = .loading
 
-        var ordered: [Nft] = []
+        var ordered: [NftDTO] = []
         ordered.reserveCapacity(nftIds.count)
 
         for id in nftIds {

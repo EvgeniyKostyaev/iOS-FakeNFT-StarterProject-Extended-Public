@@ -146,9 +146,9 @@ est: 0.5 часов / fact: 0.5 часов
 Подключить mock API:
 
 - Заиспользовать NetworkClient / func request<T: Decodable>() / URLSession / async/await
-- Заиспользовать сервис CatalogService (getCollections() / getCollectionNFTs())
+- Создать сервис CatalogService (getCollections() / getCollectionById). Заиспользовать NftService
 
-est: 4 часа / fact: x часов
+est: 4 часа / fact: 2 часов
 
 #### Модели API
 
