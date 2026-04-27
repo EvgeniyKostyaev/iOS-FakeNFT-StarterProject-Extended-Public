@@ -1,85 +1,13 @@
 //
-//  CatalogCollectionViewData.swift
+//  CollectionNFTViewData+Mock.swift
 //  iOS-FakeNFT-Extended
 //
-//  Created by Evgeniy Kostyaev on 22.04.2026.
+//  Created by Evgeniy Kostyaev on 27.04.2026.
 //
 
 import Foundation
-import SwiftUI
 
-enum ImageSourceType: Hashable {
-    case remote(URL)
-    case local(ImageResource)
-}
-
-struct CollectionViewData: Identifiable, Hashable {
-    let id: String
-    let title: String
-    let coverImageType: ImageSourceType
-    let nftCount: Int
-}
-
-struct CollectionDetailViewData: Identifiable, Hashable {
-    let id: String
-    let title: String
-    let coverImageType: ImageSourceType
-    let authorName: String
-    let authorURL: URL?
-    let description: String
-    let nftItems: [CollectionNFTViewData]
-}
-
-struct CollectionNFTViewData: Identifiable, Hashable {
-    let id: String
-    let title: String
-    let imageType: ImageSourceType
-    let rating: Int
-    let price: Decimal
-    let isFavorite: Bool
-    let isInCart: Bool
-}
-
-extension CollectionViewData {
-    static func mock() -> [CollectionViewData] {
-        [
-            CollectionViewData(
-                id: "1",
-                title: "Peach",
-                coverImageType: .local(.collectionPeach),
-                nftCount: 11
-            ),
-            CollectionViewData(
-                id: "2",
-                title: "Brawn",
-                coverImageType: .local(.collectionBrawn),
-                nftCount: 8
-            ),
-            CollectionViewData(
-                id: "3",
-                title: "White",
-                coverImageType: .local(.collectionWhite),
-                nftCount: 7
-            )
-        ]
-    }
-}
-
-extension CollectionDetailViewData {
-    static func mock(from collection: CollectionViewData) -> CollectionDetailViewData {
-        CollectionDetailViewData(
-            id: collection.id,
-            title: collection.title,
-            coverImageType: collection.coverImageType,
-            authorName: "John Doe",
-            authorURL: URL(string: "https://practicum.yandex.ru/ios-developer/?from=catalog"),
-            description: "Персиковый - как облака над закатным солнцем в океане. В этой коллекции совмещены трогательная нежность и живая игривость сказочных зефирных зверей.",
-            nftItems: CollectionNFTViewData.mockItems()
-        )
-    }
-}
-
-private extension CollectionNFTViewData {
+extension CollectionNFTViewData {
     static func mockItems() -> [CollectionNFTViewData] {
         firstRow + secondRow + thirdRow + fourthRow
     }
