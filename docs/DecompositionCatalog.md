@@ -154,15 +154,15 @@ est: 4 часа / fact: 2 часов
 
 Создать модели:
 
-- Создать модель NFTCollectionDTO(id, name, cover, nfts)
-- Создать модель NFTDTO(id, name, rating, price, image, isLiked) 
+- Создать модель CollectionDTO(id, name, cover, nfts)
+- Заиспользовать модель NftDTO(id, name, rating, price, image, isLiked)
 
-est: 2 часа  / fact: x часов
+est: 2 часа  / fact: 0.5 часов
 
 Маппинг DTO → Domain:
 
-- extension NFTCollectionDTO
-- extension NFTDTO
+- extension CollectionDTO
+- extension NftDTO
 
 est: 1 час  / fact: x часов
 
