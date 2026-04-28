@@ -1,3 +1,10 @@
+//
+//  LoadFailedView.swift
+//  iOS-FakeNFT-Extended
+//
+//  Created by Evgeniy Kostyaev on 28.04.2026.
+//
+
 import SwiftUI
 
 private enum LoadFailedViewTheme {

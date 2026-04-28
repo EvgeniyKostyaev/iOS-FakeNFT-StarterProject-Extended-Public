@@ -8,12 +8,6 @@
 import SwiftUI
 
 // MARK: - Theme
-private enum CatalogViewTheme {
-    static let scaleEffect: CGFloat = 1.5
-    static let backgroundOpacity: CGFloat = 0.8
-}
-
-// MARK: - View
 struct CatalogView: View {
     
     // MARK: - State
@@ -50,10 +44,7 @@ struct CatalogView: View {
         Group {
             switch viewModel.state {
             case .idle, .loading:
-                ProgressView()
-                    .scaleEffect(CatalogViewTheme.scaleEffect)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Color(.systemBackground).opacity(CatalogViewTheme.backgroundOpacity))
+                LoadInProgressView()
             case .ready(let collections):
                 List(collections) { item in
                     NavigationLink(value: item) {

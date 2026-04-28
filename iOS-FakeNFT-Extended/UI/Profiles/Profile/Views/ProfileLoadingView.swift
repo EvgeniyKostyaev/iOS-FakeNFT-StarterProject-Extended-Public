@@ -9,13 +9,7 @@ import SwiftUI
 
 struct ProfileLoadingView: View {
     var body: some View {
-        VStack {
-            Spacer()
-            ProgressView()
-            Spacer()
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.dayNightWhite.ignoresSafeArea())
+        LoadInProgressView()
     }
 }
 
