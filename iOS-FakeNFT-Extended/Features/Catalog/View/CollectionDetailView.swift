@@ -11,7 +11,7 @@ private enum CollectionDetailViewTheme {
     static let gridSpacing: CGFloat = 8
     static let contentSpacing: CGFloat = 24
     static let gridVerticalSpacing: CGFloat = 28
-    static let coverHeight: CGFloat = 310
+    static let coverImageHeight: CGFloat = 310
     static let coverCornerRadius: CGFloat = 12
     static let horizontalPadding: CGFloat = 16
     static let gridHorizontalPadding: CGFloat = 12
@@ -37,7 +37,7 @@ struct CollectionDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: CollectionDetailViewTheme.contentSpacing) {
                 CoverImage(imageSourceType: itemViewData.coverImageType)
-                    .frame(height: CollectionDetailViewTheme.coverHeight)
+                    .frame(height: CollectionDetailViewTheme.coverImageHeight)
                     .frame(maxWidth: .infinity)
                     .clipShape(RoundedRectangle(cornerRadius: CollectionDetailViewTheme.coverCornerRadius))
                 

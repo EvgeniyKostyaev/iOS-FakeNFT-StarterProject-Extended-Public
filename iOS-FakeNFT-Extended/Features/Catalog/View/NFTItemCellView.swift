@@ -30,8 +30,8 @@ struct NFTItemCellView: View {
         VStack(alignment: .leading, spacing: NFTItemCellViewTheme.contentSpacing) {
             ZStack(alignment: .topTrailing) {
                 nftImage
-                    .frame(maxWidth: .infinity)
                     .frame(height: NFTItemCellViewTheme.imageHeight)
+                    .frame(maxWidth: .infinity)
                     .clipShape(RoundedRectangle(cornerRadius: NFTItemCellViewTheme.imageCornerRadius))
                 
                 Button {
