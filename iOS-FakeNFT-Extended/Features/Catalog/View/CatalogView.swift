@@ -24,8 +24,7 @@ struct CatalogView: View {
     // MARK: - Body
     var body: some View {
         NavigationStack {
-            contentList
-                .overlay { loadingView }
+            content
                 .toolbar { toolbarContent }
                 .navigationTitle("Catalog.title")
                 .navigationBarTitleDisplayMode(.inline)
@@ -47,26 +46,28 @@ struct CatalogView: View {
     
     // MARK: - Subviews
     @ViewBuilder
-    private var contentList: some View {
-        List(viewModel.collections) { item in
-            NavigationLink(value: item) {
-                CollectionCellView(itemViewData: item)
+    private var content: some View {
+        Group {
+            switch viewModel.state {
+            case .idle, .loading:
+                ProgressView()
+                    .scaleEffect(CatalogViewTheme.scaleEffect)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color(.systemBackground).opacity(CatalogViewTheme.backgroundOpacity))
+            case .ready(let collections):
+                List(collections) { item in
+                    NavigationLink(value: item) {
+                        CollectionCellView(itemViewData: item)
+                    }
+                    .listRowSeparator(.hidden)
+                }
+                .listStyle(.plain)
+            case .failed(let message):
+                loadFailedView(message: message)
             }
-            .listRowSeparator(.hidden)
         }
-        .listStyle(.plain)
         .task {
             await viewModel.loadCollections(catalogService: services.catalogService)
-        }
-    }
-    
-    @ViewBuilder
-    private var loadingView: some View {
-        if viewModel.isLoading {
-            ProgressView()
-                .scaleEffect(CatalogViewTheme.scaleEffect)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color(.systemBackground).opacity(CatalogViewTheme.backgroundOpacity))
         }
     }
     
@@ -95,6 +96,23 @@ struct CatalogView: View {
             viewModel.sortByCountNFT()
         }
         Button("Common.close", role: .cancel) { }
+    }
+
+    private func loadFailedView(message: String) -> some View {
+        VStack(spacing: 16) {
+            Text(message)
+                .font(.dsBodyRegular)
+                .foregroundStyle(.dayNightBlack)
+                .multilineTextAlignment(.center)
+            Button(NSLocalizedString("Error.repeat", comment: "")) {
+                Task {
+                    await viewModel.loadCollections(catalogService: services.catalogService)
+                }
+            }
+            .font(.dsBodySemibold)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.horizontal, 16)
     }
 }
 

@@ -15,17 +15,35 @@ private enum CatalogSorting {
 @MainActor
 @Observable
 final class CatalogViewModel {
+    enum State: Equatable {
+        case idle
+        case loading
+        case ready([CollectionViewData])
+        case failed(message: String)
+    }
+
     private var sourceCollections: [Collection] = []
     private var currentSorting: CatalogSorting = .byNftCount
-    
-    private(set) var collections: [CollectionViewData] = []
-    private(set) var isLoading: Bool = false
+
+    private(set) var state: State = .idle
+
+    var collections: [CollectionViewData] {
+        guard case .ready(let collections) = state else { return [] }
+        return collections
+    }
+
+    var isLoading: Bool {
+        if case .loading = state {
+            return true
+        }
+
+        return false
+    }
     
     func loadCollections(catalogService: CatalogService) async {
-        guard !isLoading else { return }
+        if case .loading = state { return }
         
-        isLoading = true
-        defer { isLoading = false }
+        state = .loading
         
         do {
             sourceCollections = try await catalogService.loadCollections()
@@ -34,7 +52,9 @@ final class CatalogViewModel {
             applyCurrentSorting()
         } catch {
             sourceCollections = []
-            collections = []
+            state = .failed(
+                message: NSLocalizedString("Catalog.loadFailed", comment: "")
+            )
         }
     }
     
@@ -55,19 +75,19 @@ final class CatalogViewModel {
     private func applyCurrentSorting() {
         switch currentSorting {
         case .byName:
-            collections = sourceCollections.sorted {
+            state = .ready(sourceCollections.sorted {
                 $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
             }
-            .map { $0.toViewData() }
+            .map { $0.toViewData() })
         case .byNftCount:
-            collections = sourceCollections.sorted {
+            state = .ready(sourceCollections.sorted {
                 if $0.nfts.count == $1.nfts.count {
                     return $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
                 }
                 
                 return $0.nfts.count > $1.nfts.count
             }
-            .map { $0.toViewData() }
+            .map { $0.toViewData() })
         }
     }
 }
