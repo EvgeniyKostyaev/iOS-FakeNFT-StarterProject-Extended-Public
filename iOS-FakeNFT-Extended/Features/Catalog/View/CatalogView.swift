@@ -17,6 +17,7 @@ private enum CatalogViewTheme {
 struct CatalogView: View {
     
     // MARK: - State
+    @Environment(ServicesAssembly.self) private var services
     @State private var viewModel = CatalogViewModel()
     @State private var showConfirmationDialog: Bool = false
     
@@ -45,13 +46,16 @@ struct CatalogView: View {
     // MARK: - Subviews
     @ViewBuilder
     private var contentList: some View {
-        List(CollectionViewData.mock()) { item in
+        List(viewModel.collections) { item in
             NavigationLink(value: item) {
                 CollectionCellView(itemViewData: item)
             }
             .listRowSeparator(.hidden)
         }
         .listStyle(.plain)
+        .task {
+            await viewModel.loadCollections(catalogService: services.catalogService)
+        }
     }
     
     @ViewBuilder
@@ -95,4 +99,10 @@ struct CatalogView: View {
 // MARK: - Preview
 #Preview {
     CatalogView()
+        .environment(
+            ServicesAssembly(
+                networkClient: DefaultNetworkClient(),
+                nftStorage: NftStorageImpl()
+            )
+        )
 }

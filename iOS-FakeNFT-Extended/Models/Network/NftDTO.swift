@@ -15,19 +15,3 @@ struct NftDTO: Decodable, Sendable, Identifiable, Hashable {
         images.first
     }
 }
-
-extension NftDTO {
-    func toDomain() -> Nft {
-        Nft(
-            id: id,
-            name: name,
-            images: images,
-            rating: rating,
-            description: description,
-            price: price,
-            author: author,
-            websiteURL: website.flatMap(URL.init(string:)),
-            createdAt: createdAt
-        )
-    }
-}
