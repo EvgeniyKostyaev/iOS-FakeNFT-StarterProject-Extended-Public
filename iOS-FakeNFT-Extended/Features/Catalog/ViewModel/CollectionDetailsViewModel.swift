@@ -18,7 +18,7 @@ final class CollectionDetailsViewModel {
     }
 
     let collection: Collection
-
+ 
     private(set) var state: State = .idle
 
     var nfts: [CollectionNFTViewData] {

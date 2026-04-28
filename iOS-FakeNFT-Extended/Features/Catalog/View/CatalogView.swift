@@ -65,11 +65,13 @@ struct CatalogView: View {
     // MARK: - Toolbar
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
-        ToolbarItem(placement: .topBarTrailing) {
-            Button {
-                showConfirmationDialog = true
-            } label: {
-                Image(.sort)
+        if !viewModel.collections.isEmpty {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    showConfirmationDialog = true
+                } label: {
+                    Image(.sort)
+                }
             }
         }
         ToolbarItem(placement: .principal) {
