@@ -36,7 +36,11 @@ struct CollectionDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: CollectionDetailViewTheme.contentSpacing) {
-                coverView
+                CoverImage(imageSourceType: itemViewData.coverImageType)
+                    .frame(height: CollectionDetailViewTheme.coverHeight)
+                    .frame(maxWidth: .infinity)
+                    .clipShape(RoundedRectangle(cornerRadius: CollectionDetailViewTheme.coverCornerRadius))
+                
                 headerView
                 
                 LazyVGrid(
@@ -65,33 +69,6 @@ struct CollectionDetailView: View {
         .navigationDestination(for: CollectionNFTViewData.self) { item in
             NftDetailBridgeView(nftId: item.id)
         }
-    }
-    
-    @ViewBuilder
-    private var coverView: some View {
-        Group {
-            switch itemViewData.coverImageType {
-            case .local(let imageResource):
-                Image(imageResource)
-                    .resizable()
-                    .scaledToFill()
-            case .remote(let url):
-                AsyncImage(url: url) { image in
-                    image
-                        .resizable()
-                        .scaledToFill()
-                } placeholder: {
-                    Rectangle()
-                        .fill(Color(.dayNightLightGray))
-                        .overlay {
-                            ProgressView()
-                        }
-                }
-            }
-        }
-        .frame(height: CollectionDetailViewTheme.coverHeight)
-        .frame(maxWidth: .infinity)
-        .clipShape(RoundedRectangle(cornerRadius: CollectionDetailViewTheme.coverCornerRadius))
     }
     
     @ViewBuilder
