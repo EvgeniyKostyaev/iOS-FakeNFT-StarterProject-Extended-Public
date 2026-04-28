@@ -16,7 +16,7 @@ private enum CatalogSorting {
 @Observable
 final class CatalogViewModel {
     private var sourceCollections: [CollectionViewData] = []
-    private var currentSorting: CatalogSorting = .byName
+    private var currentSorting: CatalogSorting = .byNftCount
 
     private(set) var collections: [CollectionViewData] = []
     private(set) var isLoading: Bool = false
