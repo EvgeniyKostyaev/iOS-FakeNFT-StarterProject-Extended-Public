@@ -118,20 +118,16 @@ struct CollectionDetailsView: View {
     }
 
     private func loadFailedView(message: String) -> some View {
-        VStack(spacing: CollectionDetailViewTheme.headerSpacing) {
-            Text(message)
-                .font(.dsBodyRegular)
-                .foregroundStyle(Color(.dayNightBlack))
-                .multilineTextAlignment(.center)
-
-            Button(NSLocalizedString("Error.repeat", comment: "")) {
+        LoadFailedView(
+            message: message,
+            retryAction: {
                 Task {
                     await viewModel.loadNFTs(nftService: services.nftService)
                 }
-            }
-            .font(.dsBodySemibold)
-        }
-        .frame(maxWidth: .infinity)
+            },
+            horizontalPadding: CollectionDetailViewTheme.gridHorizontalPadding,
+            expandsVertically: false
+        )
     }
 }
 

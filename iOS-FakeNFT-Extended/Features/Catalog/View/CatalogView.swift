@@ -99,20 +99,11 @@ struct CatalogView: View {
     }
 
     private func loadFailedView(message: String) -> some View {
-        VStack(spacing: 16) {
-            Text(message)
-                .font(.dsBodyRegular)
-                .foregroundStyle(.dayNightBlack)
-                .multilineTextAlignment(.center)
-            Button(NSLocalizedString("Error.repeat", comment: "")) {
-                Task {
-                    await viewModel.loadCollections(catalogService: services.catalogService)
-                }
+        LoadFailedView(message: message) {
+            Task {
+                await viewModel.loadCollections(catalogService: services.catalogService)
             }
-            .font(.dsBodySemibold)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(.horizontal, 16)
     }
 }
 

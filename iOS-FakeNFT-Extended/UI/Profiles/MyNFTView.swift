@@ -93,20 +93,15 @@ struct MyNFTView: View {
     }
 
     private func loadFailedView(message: String) -> some View {
-        VStack(spacing: 16) {
-            Text(message)
-                .font(.dsBodyRegular)
-                .foregroundStyle(.dayNightBlack)
-                .multilineTextAlignment(.center)
-            Button(NSLocalizedString("Error.repeat", comment: "")) {
+        LoadFailedView(
+            message: message,
+            retryAction: {
                 Task {
                     await load()
                 }
-            }
-            .font(.dsBodySemibold)
-        }
-        .padding(.horizontal, MyNFTListRowViewLayout.listLeadingPadding)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+            },
+            horizontalPadding: MyNFTListRowViewLayout.listLeadingPadding
+        )
     }
 
     private var nftList: some View {
