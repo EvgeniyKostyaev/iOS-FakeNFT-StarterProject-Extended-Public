@@ -15,7 +15,7 @@ private enum CatalogSorting {
 @MainActor
 @Observable
 final class CatalogViewModel {
-    private var sourceCollections: [CollectionViewData] = []
+    private var sourceCollections: [Collection] = []
     private var currentSorting: CatalogSorting = .byNftCount
     
     private(set) var collections: [CollectionViewData] = []
@@ -28,11 +28,9 @@ final class CatalogViewModel {
         defer { isLoading = false }
         
         do {
-            let collectionItems = try await catalogService.loadCollections()
+            sourceCollections = try await catalogService.loadCollections()
                 .map { $0.toDomain() }
-                .map { $0.toViewData() }
-            
-            sourceCollections = collectionItems
+
             applyCurrentSorting()
         } catch {
             sourceCollections = []
@@ -49,21 +47,27 @@ final class CatalogViewModel {
         currentSorting = .byNftCount
         applyCurrentSorting()
     }
+
+    func collection(id: String) -> Collection? {
+        sourceCollections.first { $0.id == id }
+    }
     
     private func applyCurrentSorting() {
         switch currentSorting {
         case .byName:
             collections = sourceCollections.sorted {
-                $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending
+                $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
             }
+            .map { $0.toViewData() }
         case .byNftCount:
             collections = sourceCollections.sorted {
-                if $0.nftCount == $1.nftCount {
-                    return $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending
+                if $0.nfts.count == $1.nfts.count {
+                    return $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
                 }
                 
-                return $0.nftCount > $1.nftCount
+                return $0.nfts.count > $1.nfts.count
             }
+            .map { $0.toViewData() }
         }
     }
 }

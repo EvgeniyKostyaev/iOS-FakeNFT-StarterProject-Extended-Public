@@ -102,7 +102,6 @@ struct CatalogView: View {
         .environment(
             ServicesAssembly(
                 networkClient: DefaultNetworkClient(),
-                nftStorage: NftStorageImpl()
             )
         )
 }

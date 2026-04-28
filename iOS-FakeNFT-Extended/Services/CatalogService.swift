@@ -26,7 +26,8 @@ final class CatalogServiceImpl: CatalogService {
     }
     
     func loadCollections() async throws -> [CollectionDTO] {
-        if let collections = await collectionsStorage.getCollections(), !collections.isEmpty  {
+        if let collections = await collectionsStorage.getCollections(),
+            !collections.isEmpty {
             return collections
         }
 
