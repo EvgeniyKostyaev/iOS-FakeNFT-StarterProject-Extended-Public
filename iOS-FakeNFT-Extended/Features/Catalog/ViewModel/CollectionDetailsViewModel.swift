@@ -1,5 +1,5 @@
 //
-//  CollectionDetailViewModel.swift
+//  CollectionDetailsViewModel.swift
 //  iOS-FakeNFT-Extended
 //
 //  Created by Evgeniy Kostyaev on 28.04.2026.
@@ -9,29 +9,41 @@ import Foundation
 
 @MainActor
 @Observable
-final class CollectionDetailViewModel {
+final class CollectionDetailsViewModel {
+    enum State: Equatable {
+        case idle
+        case loading
+        case ready([CollectionNFTViewData])
+        case failed(message: String)
+    }
+
     let collection: Collection
 
-    private(set) var nfts: [CollectionNFTViewData] = []
-    private(set) var isLoading: Bool = false
+    private(set) var state: State = .idle
+
+    var nfts: [CollectionNFTViewData] {
+        guard case .ready(let nfts) = state else { return [] }
+        return nfts
+    }
 
     init(collection: Collection) {
         self.collection = collection
     }
 
     func loadNFTs(nftService: NftService) async {
-        guard !isLoading else { return }
+        if case .loading = state { return }
 
-        isLoading = true
-        defer { isLoading = false }
+        state = .loading
 
         do {
             let nftItems = try await loadNftItems(nftService: nftService)
-            nfts = nftItems.map { index, nft in
+            state = .ready(nftItems.map { index, nft in
                 nft.toViewData(id: "\(nft.id)-\(index)")
-            }
+            })
         } catch {
-            nfts = []
+            state = .failed(
+                message: NSLocalizedString("CollectionDetail.loadFailed", comment: "")
+            )
         }
     }
 

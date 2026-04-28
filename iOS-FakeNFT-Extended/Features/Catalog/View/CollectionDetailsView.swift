@@ -1,5 +1,5 @@
 //
-//  CollectionDetailView.swift
+//  CollectionDetailsView.swift
 //  iOS-FakeNFT-Extended
 //
 //  Created by Evgeniy Kostyaev on 21.04.2026.
@@ -22,9 +22,9 @@ private enum CollectionDetailViewTheme {
     static let loadingScale: CGFloat = 1.2
 }
 
-struct CollectionDetailView: View {
+struct CollectionDetailsView: View {
     @Environment(ServicesAssembly.self) private var services
-    @State private var viewModel: CollectionDetailViewModel
+    @State private var viewModel: CollectionDetailsViewModel
 
     private let gridItems = [
         GridItem(.flexible(), spacing: CollectionDetailViewTheme.gridSpacing),
@@ -33,7 +33,7 @@ struct CollectionDetailView: View {
     ]
     
     init(collection: Collection) {
-        _viewModel = State(wrappedValue: CollectionDetailViewModel(collection: collection))
+        _viewModel = State(wrappedValue: CollectionDetailsViewModel(collection: collection))
     }
     
     var body: some View {
@@ -47,11 +47,12 @@ struct CollectionDetailView: View {
                 headerView
                 
                 Group {
-                    if viewModel.isLoading && viewModel.nfts.isEmpty {
+                    switch viewModel.state {
+                    case .idle, .loading:
                         ProgressView()
                             .scaleEffect(CollectionDetailViewTheme.loadingScale)
                             .frame(maxWidth: .infinity)
-                    } else {
+                    case .ready:
                         LazyVGrid(
                             columns: gridItems,
                             alignment: .center,
@@ -63,6 +64,8 @@ struct CollectionDetailView: View {
                                 }
                             }
                         }
+                    case .failed(let message):
+                        loadFailedView(message: message)
                     }
                 }
                 .padding(.horizontal, CollectionDetailViewTheme.gridHorizontalPadding)
@@ -113,11 +116,28 @@ struct CollectionDetailView: View {
         }
         .padding(.horizontal, CollectionDetailViewTheme.horizontalPadding)
     }
+
+    private func loadFailedView(message: String) -> some View {
+        VStack(spacing: CollectionDetailViewTheme.headerSpacing) {
+            Text(message)
+                .font(.dsBodyRegular)
+                .foregroundStyle(Color(.dayNightBlack))
+                .multilineTextAlignment(.center)
+
+            Button(NSLocalizedString("Error.repeat", comment: "")) {
+                Task {
+                    await viewModel.loadNFTs(nftService: services.nftService)
+                }
+            }
+            .font(.dsBodySemibold)
+        }
+        .frame(maxWidth: .infinity)
+    }
 }
 
 #Preview {
     NavigationStack {
-        CollectionDetailView(
+        CollectionDetailsView(
             collection: Collection(
                 id: "1",
                 name: "Peach",

@@ -32,7 +32,7 @@ struct CatalogView: View {
                 .navigationLinkIndicatorVisibility(.hidden)
                 .navigationDestination(for: CollectionViewData.self, destination: { item in
                     if let collection = viewModel.collection(id: item.id) {
-                        CollectionDetailView(collection: collection)
+                        CollectionDetailsView(collection: collection)
                             .toolbar(.hidden, for: .tabBar)
                     }
                 })
