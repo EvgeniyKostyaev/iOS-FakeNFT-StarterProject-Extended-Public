@@ -27,14 +27,16 @@ final class CollectionDetailViewModel {
 
         do {
             let nftItems = try await loadNftItems(nftService: nftService)
-            nfts = nftItems.map { $0.toViewData() }
+            nfts = nftItems.map { index, nft in
+                nft.toViewData(id: "\(nft.id)-\(index)")
+            }
         } catch {
             nfts = []
         }
     }
 
-    private func loadNftItems(nftService: NftService) async throws -> [Nft] {
-        try await withThrowingTaskGroup(of: (Int, Nft).self, returning: [Nft].self) { group in
+    private func loadNftItems(nftService: NftService) async throws -> [(Int, Nft)] {
+        try await withThrowingTaskGroup(of: (Int, Nft).self, returning: [(Int, Nft)].self) { group in
             for (index, nftId) in collection.nfts.enumerated() {
                 group.addTask {
                     let nftDTO = try await nftService.loadNft(id: nftId)
@@ -51,7 +53,6 @@ final class CollectionDetailViewModel {
 
             return indexedNfts
                 .sorted { $0.0 < $1.0 }
-                .map(\.1)
         }
     }
 }

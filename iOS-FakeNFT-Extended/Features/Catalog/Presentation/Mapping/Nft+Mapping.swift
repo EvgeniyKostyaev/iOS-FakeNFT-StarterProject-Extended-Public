@@ -8,9 +8,10 @@
 import Foundation
 
 extension Nft {
-    func toViewData() -> CollectionNFTViewData {
+    func toViewData(id: String? = nil) -> CollectionNFTViewData {
         CollectionNFTViewData(
-            id: id,
+            id: id ?? self.id,
+            nftId: self.id,
             title: name,
             imageType: previewImageURL.map(ImageSourceType.remote) ?? .local(._1),
             rating: rating,

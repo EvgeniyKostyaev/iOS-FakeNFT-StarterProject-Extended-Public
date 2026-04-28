@@ -9,6 +9,7 @@ import Foundation
 
 struct CollectionNFTViewData: Identifiable, Hashable {
     let id: String
+    let nftId: String
     let title: String
     let imageType: ImageSourceType
     let rating: Int

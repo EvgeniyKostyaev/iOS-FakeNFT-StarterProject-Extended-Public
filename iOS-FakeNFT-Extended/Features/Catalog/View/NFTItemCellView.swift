@@ -136,6 +136,7 @@ struct NFTItemCellView: View {
     NFTItemCellView(
         itemViewData: CollectionNFTViewData(
             id: "1",
+            nftId: "1",
             title: "Archie",
             imageType: .local(._1),
             rating: 3,

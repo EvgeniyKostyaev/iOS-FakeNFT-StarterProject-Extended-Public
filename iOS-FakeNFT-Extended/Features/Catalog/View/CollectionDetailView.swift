@@ -79,7 +79,7 @@ struct CollectionDetailView: View {
             WebViewRepresentable(url: url)
         }
         .navigationDestination(for: CollectionNFTViewData.self) { item in
-            NftDetailBridgeView(nftId: item.id)
+            NftDetailBridgeView(nftId: item.nftId)
         }
     }
     
