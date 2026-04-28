@@ -17,3 +17,18 @@ struct CollectionDTO: Decodable, Sendable, Identifiable, Hashable {
     let name: String
     let createdAt: String?
 }
+
+extension CollectionDTO {
+    func toDomain() -> Collection {
+        Collection(
+            id: id,
+            name: name,
+            cover: cover,
+            nfts: nfts,
+            author: author,
+            description: description,
+            websiteURL: website.flatMap(URL.init(string:)),
+            createdAt: createdAt
+        )
+    }
+}
