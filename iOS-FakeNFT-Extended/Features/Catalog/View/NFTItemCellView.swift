@@ -14,9 +14,10 @@ private enum NFTItemCellViewTheme {
     static let imageHeight: CGFloat = 108
     static let imageCornerRadius: CGFloat = 12
     static let iconSize: CGFloat = 20
-    static let starsSpacing: CGFloat = 2
+    static let starsSpacing: CGFloat = 0
     static let starSize: CGFloat = 12
     static let priceSpacing: CGFloat = 4
+    static let lineLimit: Int = 1
 }
 
 struct NFTItemCellView: View {
@@ -78,11 +79,12 @@ struct NFTItemCellView: View {
                     Text(itemViewData.title)
                         .font(.dsBodyBold)
                         .foregroundStyle(Color(.dayNightBlack))
-                        .lineLimit(1)
+                        .lineLimit(NFTItemCellViewTheme.lineLimit)
 
                     Text("\(itemViewData.price.formattedPriceETH) \(String(localized: "NFT.currency.eth"))")
                         .font(.dsCaption4Medium)
                         .foregroundStyle(Color(.dayNightBlack))
+                        .lineLimit(NFTItemCellViewTheme.lineLimit)
                     
                 }
                 
@@ -137,10 +139,10 @@ struct NFTItemCellView: View {
         itemViewData: CollectionNFTViewData(
             id: "1",
             nftId: "1",
-            title: "Archie",
+            title: "Archie7777",
             imageType: .local(._1),
-            rating: 3,
-            price: 1,
+            rating: 5,
+            price: 1.567778978,
             isFavorite: true,
             isInCart: false
         )
