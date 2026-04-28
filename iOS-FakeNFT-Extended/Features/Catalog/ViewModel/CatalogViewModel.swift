@@ -42,6 +42,7 @@ final class CatalogViewModel {
     
     func loadCollections(catalogService: CatalogService) async {
         if case .loading = state { return }
+        if case .ready = state, !sourceCollections.isEmpty { return }
         
         state = .loading
         
