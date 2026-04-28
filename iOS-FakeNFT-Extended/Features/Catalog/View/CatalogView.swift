@@ -31,8 +31,10 @@ struct CatalogView: View {
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationLinkIndicatorVisibility(.hidden)
                 .navigationDestination(for: CollectionViewData.self, destination: { item in
-                    CollectionDetailView(itemViewData: .mock(from: item))
-                        .toolbar(.hidden, for: .tabBar)
+                    if let collection = viewModel.collection(id: item.id) {
+                        CollectionDetailView(collection: collection)
+                            .toolbar(.hidden, for: .tabBar)
+                    }
                 })
                 .confirmationDialog(
                     "Catalog.sorting",

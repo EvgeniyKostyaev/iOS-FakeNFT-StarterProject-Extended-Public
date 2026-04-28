@@ -19,38 +19,49 @@ private enum CollectionDetailViewTheme {
     static let headerSpacing: CGFloat = 8
     static let authorSpacing: CGFloat = 4
     static let headerTextBottomPadding: CGFloat = 6
+    static let loadingScale: CGFloat = 1.2
 }
 
 struct CollectionDetailView: View {
-    private let itemViewData: CollectionDetailViewData
+    @Environment(ServicesAssembly.self) private var services
+    @State private var viewModel: CollectionDetailViewModel
+
     private let gridItems = [
         GridItem(.flexible(), spacing: CollectionDetailViewTheme.gridSpacing),
         GridItem(.flexible(), spacing: CollectionDetailViewTheme.gridSpacing),
         GridItem(.flexible(), spacing: CollectionDetailViewTheme.gridSpacing)
     ]
     
-    init(itemViewData: CollectionDetailViewData) {
-        self.itemViewData = itemViewData
+    init(collection: Collection) {
+        _viewModel = State(wrappedValue: CollectionDetailViewModel(collection: collection))
     }
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: CollectionDetailViewTheme.contentSpacing) {
-                CoverImage(imageSourceType: itemViewData.coverImageType)
+                CoverImage(imageSourceType: .remote(viewModel.collection.cover))
                     .frame(height: CollectionDetailViewTheme.coverImageHeight)
                     .frame(maxWidth: .infinity)
                     .clipShape(RoundedRectangle(cornerRadius: CollectionDetailViewTheme.coverCornerRadius))
                 
                 headerView
                 
-                LazyVGrid(
-                    columns: gridItems,
-                    alignment: .center,
-                    spacing: CollectionDetailViewTheme.gridVerticalSpacing
-                ) {
-                    ForEach(itemViewData.nftItems) { item in
-                        NavigationLink(value: item) {
-                            NFTItemCellView(itemViewData: item)
+                Group {
+                    if viewModel.isLoading && viewModel.nfts.isEmpty {
+                        ProgressView()
+                            .scaleEffect(CollectionDetailViewTheme.loadingScale)
+                            .frame(maxWidth: .infinity)
+                    } else {
+                        LazyVGrid(
+                            columns: gridItems,
+                            alignment: .center,
+                            spacing: CollectionDetailViewTheme.gridVerticalSpacing
+                        ) {
+                            ForEach(viewModel.nfts) { item in
+                                NavigationLink(value: item) {
+                                    NFTItemCellView(itemViewData: item)
+                                }
+                            }
                         }
                     }
                 }
@@ -61,10 +72,11 @@ struct CollectionDetailView: View {
         .background(Color(.dayNightWhite).ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
         .ignoresSafeArea(edges: .top)
-        .navigationDestination(for: CollectionDetailViewData.self) { item in
-            if let authorURL = item.authorURL {
-                WebViewRepresentable(url: authorURL)
-            }
+        .task(id: viewModel.collection.id) {
+            await viewModel.loadNFTs(nftService: services.nftService)
+        }
+        .navigationDestination(for: URL.self) { url in
+            WebViewRepresentable(url: url)
         }
         .navigationDestination(for: CollectionNFTViewData.self) { item in
             NftDetailBridgeView(nftId: item.id)
@@ -74,7 +86,7 @@ struct CollectionDetailView: View {
     @ViewBuilder
     private var headerView: some View {
         VStack(alignment: .leading, spacing: CollectionDetailViewTheme.headerSpacing) {
-            Text(itemViewData.title)
+            Text(viewModel.collection.name)
                 .font(.dsHeadline3)
                 .foregroundStyle(Color(.dayNightBlack))
                 .padding(.bottom, CollectionDetailViewTheme.headerTextBottomPadding)
@@ -84,12 +96,18 @@ struct CollectionDetailView: View {
                     .font(.dsCaption2)
                     .foregroundStyle(Color(.dayNightBlack))
                 
-                NavigationLink(itemViewData.authorName, value: itemViewData)
-                    .font(.dsCaption1)
-                    .foregroundStyle(Color(.universalBlue))
+                if let websiteURL = viewModel.collection.websiteURL {
+                    NavigationLink(viewModel.collection.author, value: websiteURL)
+                        .font(.dsCaption1)
+                        .foregroundStyle(Color(.universalBlue))
+                } else {
+                    Text(viewModel.collection.author)
+                        .font(.dsCaption1)
+                        .foregroundStyle(Color(.dayNightBlack))
+                }
             }
             
-            Text(itemViewData.description)
+            Text(viewModel.collection.description)
                 .font(.dsCaption2)
                 .foregroundStyle(Color(.dayNightBlack))
         }
@@ -100,13 +118,15 @@ struct CollectionDetailView: View {
 #Preview {
     NavigationStack {
         CollectionDetailView(
-            itemViewData: .mock(
-                from: CollectionViewData(
-                    id: "1",
-                    title: "Peach",
-                    coverImageType: .local(.collectionPeach),
-                    nftCount: 11
-                )
+            collection: Collection(
+                id: "1",
+                name: "Peach",
+                cover: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Collections/1.png")!,
+                nfts: [],
+                author: "John Doe",
+                description: "Collection description",
+                websiteURL: URL(string: "https://practicum.yandex.ru"),
+                createdAt: nil
             )
         )
     }
