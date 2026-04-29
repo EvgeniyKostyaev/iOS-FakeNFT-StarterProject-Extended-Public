@@ -8,7 +8,7 @@
 import Foundation
 
 extension Nft {
-    func toViewData(id: String? = nil) -> CollectionNFTViewData {
+    func toViewData(id: String? = nil, isFavorite: Bool = false) -> CollectionNFTViewData {
         CollectionNFTViewData(
             id: id ?? self.id,
             nftId: self.id,
@@ -16,7 +16,7 @@ extension Nft {
             imageType: previewImageURL.map(ImageSourceType.remote) ?? .local(._1),
             rating: rating,
             price: Decimal(price),
-            isFavorite: false,
+            isFavorite: isFavorite,
             isInCart: false
         )
     }

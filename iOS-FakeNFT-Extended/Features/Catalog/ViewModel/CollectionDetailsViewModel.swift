@@ -30,16 +30,24 @@ final class CollectionDetailsViewModel {
         self.collection = collection
     }
 
-    func loadNFTs(nftService: NftService) async {
+    func loadNFTs(nftService: NftService, profileService: ProfileServiceProtocol) async {
         if case .loading = state { return }
         if case .ready = state, !nfts.isEmpty { return }
 
         state = .loading
 
         do {
-            let nftItems = try await loadNftItems(nftService: nftService)
+            async let nftItemsTask = loadNftItems(nftService: nftService)
+            async let likedNFTIdsTask = loadLikedNFTIds(profileService: profileService)
+
+            let nftItems = try await nftItemsTask
+            let likedNFTIds = try await likedNFTIdsTask
+
             state = .ready(nftItems.map { index, nft in
-                nft.toViewData(id: "\(nft.id)-\(index)")
+                nft.toViewData(
+                    id: "\(nft.id)-\(index)",
+                    isFavorite: likedNFTIds.contains(nft.id)
+                )
             })
         } catch {
             state = .failed(
@@ -67,5 +75,13 @@ final class CollectionDetailsViewModel {
             return indexedNfts
                 .sorted { $0.0 < $1.0 }
         }
+    }
+
+    private func loadLikedNFTIds(profileService: ProfileServiceProtocol) async throws -> Set<String> {
+        let profile = try await profileService.loadProfile(
+            userId: ProfileAPIPath.gatewayProfilePathSegment
+        )
+
+        return Set(profile.likes)
     }
 }

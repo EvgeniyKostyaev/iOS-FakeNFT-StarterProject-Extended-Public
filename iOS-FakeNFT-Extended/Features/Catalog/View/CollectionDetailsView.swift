@@ -76,7 +76,10 @@ struct CollectionDetailsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .ignoresSafeArea(edges: .top)
         .task(id: viewModel.collection.id) {
-            await viewModel.loadNFTs(nftService: services.nftService)
+            await viewModel.loadNFTs(
+                nftService: services.nftService,
+                profileService: services.profileService
+            )
         }
         .navigationDestination(for: URL.self) { url in
             WebViewRepresentable(url: url)
@@ -122,7 +125,10 @@ struct CollectionDetailsView: View {
             message: message,
             retryAction: {
                 Task {
-                    await viewModel.loadNFTs(nftService: services.nftService)
+                    await viewModel.loadNFTs(
+                        nftService: services.nftService,
+                        profileService: services.profileService
+                    )
                 }
             },
             horizontalPadding: CollectionDetailViewTheme.gridHorizontalPadding,
