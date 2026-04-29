@@ -9,6 +9,7 @@ import SwiftUI
 
 private enum CollectionCellViewTheme {
     static let cornerRadius: CGFloat = 12
+    static let coverViewHeight: CGFloat = 140
 }
 
 struct CollectionCellView: View {
@@ -20,24 +21,9 @@ struct CollectionCellView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Group {
-                switch itemViewData.coverImageType {
-                case .local(let imageResource):
-                    Image(imageResource)
-                        .resizable()
-                case .remote(let url):
-                    AsyncImage(url: url) { image in
-                        image
-                            .resizable()
-                    } placeholder: {
-                        Image(systemName: "photo.fill")
-                            .resizable()
-                    }
-                }
-            }
-            .scaledToFill()
-            .frame(height: 140, alignment: .top)
-            .clipShape(RoundedRectangle(cornerRadius: CollectionCellViewTheme.cornerRadius))
+            NFTImageView(imageSourceType: itemViewData.coverImageType)
+                .frame(height: CollectionCellViewTheme.coverViewHeight, alignment: .top)
+                .clipShape(RoundedRectangle(cornerRadius: CollectionCellViewTheme.cornerRadius))
             Text("\(itemViewData.title) (\(itemViewData.nftCount))")
                 .font(Font.dsBodyBold)
         }

@@ -17,7 +17,7 @@ final class FavoriteNFTViewModel {
     enum State: Equatable {
         case idle
         case loading
-        case ready([Nft])
+        case ready([NftDTO])
         case failed(message: String)
     }
 
@@ -41,7 +41,7 @@ final class FavoriteNFTViewModel {
 
         state = .loading
 
-        var ordered: [Nft] = []
+        var ordered: [NftDTO] = []
         ordered.reserveCapacity(likedNFTIds.count)
 
         for id in likedNFTIds {

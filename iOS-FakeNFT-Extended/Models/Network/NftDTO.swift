@@ -1,6 +1,6 @@
 import Foundation
 
-struct Nft: Decodable, Sendable, Identifiable, Hashable {
+struct NftDTO: Decodable, Sendable, Identifiable, Hashable {
     let id: String
     let name: String
     let images: [URL]

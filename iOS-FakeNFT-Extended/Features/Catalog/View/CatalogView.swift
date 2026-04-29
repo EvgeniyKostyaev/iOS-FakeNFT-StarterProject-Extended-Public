@@ -8,29 +8,23 @@
 import SwiftUI
 
 // MARK: - Theme
-private enum CatalogViewTheme {
-    static let scaleEffect: CGFloat = 1.5
-    static let backgroundOpacity: CGFloat = 0.8
-}
-
-// MARK: - View
 struct CatalogView: View {
     
     // MARK: - State
+    @Environment(ServicesAssembly.self) private var services
     @State private var viewModel = CatalogViewModel()
     @State private var showConfirmationDialog: Bool = false
     
     // MARK: - Body
     var body: some View {
         NavigationStack {
-            contentList
-                .overlay { loadingView }
+            content
                 .toolbar { toolbarContent }
                 .navigationTitle("Catalog.title")
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationLinkIndicatorVisibility(.hidden)
-                .navigationDestination(for: CollectionViewData.self, destination: { item in
-                    CollectionDetailView(itemViewData: .mock(from: item))
+                .navigationDestination(for: Collection.self, destination: { collection in
+                    CollectionDetailsView(collection: collection)
                         .toolbar(.hidden, for: .tabBar)
                 })
                 .confirmationDialog(
@@ -44,34 +38,41 @@ struct CatalogView: View {
     
     // MARK: - Subviews
     @ViewBuilder
-    private var contentList: some View {
-        List(CollectionViewData.mock()) { item in
-            NavigationLink(value: item) {
-                CollectionCellView(itemViewData: item)
+    private var content: some View {
+        Group {
+            switch viewModel.state {
+            case .idle, .loading:
+                LoadInProgressView()
+            case .ready(let collections):
+                List(collections) { collection in
+                    NavigationLink(value: collection) {
+                        CollectionCellView(itemViewData: collection.toViewData())
+                    }
+                    .listRowSeparator(.hidden)
+                }
+                .listStyle(.plain)
+                .refreshable {
+                    await viewModel.reloadCollections(catalogService: services.catalogService)
+                }
+            case .failed(let message):
+                loadFailedView(message: message)
             }
-            .listRowSeparator(.hidden)
         }
-        .listStyle(.plain)
-    }
-    
-    @ViewBuilder
-    private var loadingView: some View {
-        if viewModel.isLoading {
-            ProgressView()
-                .scaleEffect(CatalogViewTheme.scaleEffect)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color(.systemBackground).opacity(CatalogViewTheme.backgroundOpacity))
+        .task {
+            await viewModel.loadCollectionsIfNeeded(catalogService: services.catalogService)
         }
     }
     
     // MARK: - Toolbar
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
-        ToolbarItem(placement: .topBarTrailing) {
-            Button {
-                showConfirmationDialog = true
-            } label: {
-                Image(.sort)
+        if !viewModel.collections.isEmpty {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    showConfirmationDialog = true
+                } label: {
+                    Image(.sort)
+                }
             }
         }
         ToolbarItem(placement: .principal) {
@@ -90,9 +91,22 @@ struct CatalogView: View {
         }
         Button("Common.close", role: .cancel) { }
     }
+
+    private func loadFailedView(message: String) -> some View {
+        LoadFailedView(message: message) {
+            Task {
+                await viewModel.reloadCollections(catalogService: services.catalogService)
+            }
+        }
+    }
 }
 
 // MARK: - Preview
 #Preview {
     CatalogView()
+        .environment(
+            ServicesAssembly(
+                networkClient: DefaultNetworkClient(),
+            )
+        )
 }

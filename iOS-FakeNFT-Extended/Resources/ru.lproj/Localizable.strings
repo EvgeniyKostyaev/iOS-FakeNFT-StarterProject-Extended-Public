@@ -66,6 +66,8 @@
 "Catalog.sorting" = "Сортировка";
 "Catalog.sortingByName" = "По названию";
 "Catalog.sortingByCountNFT" = "По количеству NFT";
+"Catalog.loadFailed" = "Не удалось загрузить коллекции. Проверьте сеть и попробуйте снова.";
+"CollectionDetail.loadFailed" = "Не удалось загрузить NFT коллекции. Проверьте сеть и попробуйте снова.";
 
 // MARK: - Error
 

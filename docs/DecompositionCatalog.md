@@ -139,52 +139,52 @@ est: 0.5 часов / fact: 1 часов
 est: 0.5 часов / fact: 0.5 часов
     
 
-## Модуль 2 - Работа с сетью и данными (est: ~20 часов):
+## Модуль 2 - Работа с сетью и данными (est: 9.5 часов):
 
 #### Настроить сеть
 
 Подключить mock API:
 
 - Заиспользовать NetworkClient / func request<T: Decodable>() / URLSession / async/await
-- Заиспользовать сервис CatalogService (getCollections() / getCollectionNFTs())
+- Создать сервис CatalogService (getCollections() / getCollectionById). Заиспользовать NftService
 
-est: 4 часа / fact: x часов
+est: 4 часа / fact: 2 часов
 
 #### Модели API
 
 Создать модели:
 
-- Создать модель NFTCollectionDTO(id, name, cover, nfts)
-- Создать модель NFTDTO(id, name, rating, price, image, isLiked) 
+- Создать модель CollectionDTO(id, name, cover, nfts)
+- Заиспользовать модель NftDTO(id, name, rating, price, image, isLiked)
 
-est: 2 часа  / fact: x часов
+est: 2 часа  / fact: 0.5 часов
 
 Маппинг DTO → Domain:
 
-- extension NFTCollectionDTO
-- extension NFTDTO
+- extension CollectionDTO
+- extension NftDTO
 
-est: 1 час  / fact: x часов
+est: 1 час  / fact: 0.5 часов
 
 #### ViewModel
 
 CatalogViewModel:
 
 - Создать CatalogueViewModel
-- @Published var collections
-- @Published var isLoading
+- var collections
+- var isLoading
 - loadCollections()
 - sortCollections()
 
-est: 2.5 часа  / fact: x часов
+est: 2.5 часа  / fact: 1 час
 
 CollectionDetailViewModel:
 
 - Создать CollectionDetailViewModel
-- @Published var nfts
+- var nfts
 - loadNFTs()
 
-est: 2 часа  / fact: x часов
+est: 2 часа  / fact: 2 часа
 
 #### Подключение данных к UI
 
@@ -192,13 +192,13 @@ est: 2 часа  / fact: x часов
 
 - Загрузка коллекций
 
-est: 2 часа  / fact: x часов
+est: 2 часа  / fact: 0.5ч часов
 
 Подключить CollectionDetailViewModel к CollectionDetailView:
 
 - Загрузка NFT
 
-est: 2 часа  / fact: x часов
+est: 2 часа  / fact: 1 час
 
 Обработка состояния загрузки:
 
@@ -206,7 +206,7 @@ est: 2 часа  / fact: x часов
 - success
 - error
 
-est: 2 часа  / fact: x часов
+est: 2 часа  / fact: 2 часа
 
 ## Module 3 Логика взаимодействия пользователя (est: ~20 часов):
 

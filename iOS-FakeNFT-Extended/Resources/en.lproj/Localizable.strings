@@ -66,6 +66,8 @@
 "Catalog.sorting" = "Sorting";
 "Catalog.sortingByName" = "By name";
 "Catalog.sortingByCountNFT" = "By count NFT";
+"Catalog.loadFailed" = "Could not load collections. Check your connection and try again.";
+"CollectionDetail.loadFailed" = "Could not load collection NFTs. Check your connection and try again.";
 
 // MARK: - Error
 

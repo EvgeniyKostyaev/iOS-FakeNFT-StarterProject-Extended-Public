@@ -123,7 +123,7 @@ struct MyNFTListRowView: View {
     List {
         MyNFTListRowView(
             model: MyNFTListRowModel(
-                nft: Nft(
+                nft: NftDTO(
                     id: "1",
                     name: "Lilo",
                     images: [URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Beige/Finn/1.png")!],

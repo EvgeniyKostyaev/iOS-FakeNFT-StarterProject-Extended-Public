@@ -23,11 +23,11 @@ struct ProfileView: View {
                     ProfileLoadingView()
                 }
             case .failed(let message):
-                ProfileLoadErrorView(
-                    viewModel: ProfileLoadErrorViewModel(message: message) {
+                LoadFailedView(message: message) {
+                    Task {
                         viewModel.retryLoading(profileService: services.profileService)
                     }
-                )
+                }
             }
         }
         .onAppear {

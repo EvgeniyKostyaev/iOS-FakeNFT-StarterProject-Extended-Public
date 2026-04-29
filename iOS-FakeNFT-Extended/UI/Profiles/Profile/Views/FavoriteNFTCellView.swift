@@ -111,7 +111,7 @@ struct FavoriteNFTCellView: View {
 #Preview("FavoriteNFTCellView") {
     FavoriteNFTCellView(
         model: FavoriteNFTCellModel(
-            nft: Nft(
+            nft: NftDTO(
                 id: "1",
                 name: "Lilo",
                 images: [URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Beige/Finn/1.png")!],

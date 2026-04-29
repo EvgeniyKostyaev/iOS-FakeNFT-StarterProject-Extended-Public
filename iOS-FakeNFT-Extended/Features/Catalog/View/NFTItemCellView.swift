@@ -14,9 +14,10 @@ private enum NFTItemCellViewTheme {
     static let imageHeight: CGFloat = 108
     static let imageCornerRadius: CGFloat = 12
     static let iconSize: CGFloat = 20
-    static let starsSpacing: CGFloat = 2
+    static let starsSpacing: CGFloat = 0
     static let starSize: CGFloat = 12
     static let priceSpacing: CGFloat = 4
+    static let lineLimit: Int = 1
 }
 
 struct NFTItemCellView: View {
@@ -29,9 +30,9 @@ struct NFTItemCellView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: NFTItemCellViewTheme.contentSpacing) {
             ZStack(alignment: .topTrailing) {
-                nftImage
-                    .frame(maxWidth: .infinity)
+                NFTImageView(imageSourceType: itemViewData.imageType)
                     .frame(height: NFTItemCellViewTheme.imageHeight)
+                    .frame(maxWidth: .infinity)
                     .clipShape(RoundedRectangle(cornerRadius: NFTItemCellViewTheme.imageCornerRadius))
                 
                 Button {
@@ -78,11 +79,12 @@ struct NFTItemCellView: View {
                     Text(itemViewData.title)
                         .font(.dsBodyBold)
                         .foregroundStyle(Color(.dayNightBlack))
-                        .lineLimit(1)
+                        .lineLimit(NFTItemCellViewTheme.lineLimit)
 
                     Text("\(itemViewData.price.formattedPriceETH) \(String(localized: "NFT.currency.eth"))")
                         .font(.dsCaption4Medium)
                         .foregroundStyle(Color(.dayNightBlack))
+                        .lineLimit(NFTItemCellViewTheme.lineLimit)
                     
                 }
                 
@@ -108,38 +110,17 @@ struct NFTItemCellView: View {
         }
         .frame(width: NFTItemCellViewTheme.contentWidth)
     }
-    
-    @ViewBuilder
-    private var nftImage: some View {
-        switch itemViewData.imageType {
-        case .local(let imageResource):
-            Image(imageResource)
-                .resizable()
-                .scaledToFill()
-        case .remote(let url):
-            AsyncImage(url: url) { image in
-                image
-                    .resizable()
-                    .scaledToFill()
-            } placeholder: {
-                RoundedRectangle(cornerRadius: NFTItemCellViewTheme.imageCornerRadius)
-                    .fill(Color(.dayNightLightGray))
-                    .overlay {
-                        ProgressView()
-                    }
-            }
-        }
-    }
 }
 
 #Preview {
     NFTItemCellView(
         itemViewData: CollectionNFTViewData(
             id: "1",
-            title: "Archie",
-            imageType: .local(._1),
-            rating: 3,
-            price: 1,
+            nftId: "1",
+            title: "Archie7777",
+            imageType: .remote(URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Blue/Clover/1.png")!),
+            rating: 5,
+            price: 1.567778978,
             isFavorite: true,
             isInCart: false
         )

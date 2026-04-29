@@ -14,7 +14,7 @@ struct FavoriteNFTCellModel: Identifiable, Hashable, Sendable {
     let price: Double
     let previewImageURL: URL?
 
-    init(nft: Nft) {
+    init(nft: NftDTO) {
         id = nft.id
         name = nft.name
         rating = nft.rating
