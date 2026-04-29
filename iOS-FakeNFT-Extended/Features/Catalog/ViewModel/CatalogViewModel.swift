@@ -18,7 +18,7 @@ final class CatalogViewModel {
     enum State: Equatable {
         case idle
         case loading
-        case ready([CollectionViewData])
+        case ready([Collection])
         case failed(message: String)
     }
 
@@ -29,7 +29,7 @@ final class CatalogViewModel {
 
     var collections: [CollectionViewData] {
         guard case .ready(let collections) = state else { return [] }
-        return collections
+        return collections.map { $0.toViewData() }
     }
 
     var isLoading: Bool {
@@ -74,17 +74,12 @@ final class CatalogViewModel {
         applyCurrentSorting()
     }
 
-    func collection(id: String) -> Collection? {
-        sourceCollections.first { $0.id == id }
-    }
-    
     private func applyCurrentSorting() {
         switch currentSorting {
         case .byName:
             state = .ready(sourceCollections.sorted {
                 $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
-            }
-            .map { $0.toViewData() })
+            })
         case .byNftCount:
             state = .ready(sourceCollections.sorted {
                 if $0.nfts.count == $1.nfts.count {
@@ -92,8 +87,7 @@ final class CatalogViewModel {
                 }
                 
                 return $0.nfts.count > $1.nfts.count
-            }
-            .map { $0.toViewData() })
+            })
         }
     }
 }
