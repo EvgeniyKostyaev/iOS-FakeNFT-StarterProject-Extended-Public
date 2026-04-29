@@ -53,6 +53,9 @@ struct CatalogView: View {
                     .listRowSeparator(.hidden)
                 }
                 .listStyle(.plain)
+                .refreshable {
+                    await viewModel.reloadCollections(catalogService: services.catalogService)
+                }
             case .failed(let message):
                 loadFailedView(message: message)
             }

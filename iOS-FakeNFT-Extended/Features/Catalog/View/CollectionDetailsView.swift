@@ -72,6 +72,9 @@ struct CollectionDetailsView: View {
             }
             .padding(.bottom, CollectionDetailViewTheme.bottomPadding)
         }
+        .refreshable {
+            await viewModel.reloadNFTs(nftService: services.nftService)
+        }
         .background(Color(.dayNightWhite).ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
         .ignoresSafeArea(edges: .top)
