@@ -30,9 +30,14 @@ final class CollectionDetailsViewModel {
         self.collection = collection
     }
 
-    func loadNFTs(nftService: NftService) async {
-        if case .loading = state { return }
+    func loadNFTsIfNeeded(nftService: NftService) async {
         if case .ready = state, !nfts.isEmpty { return }
+
+        await reloadNFTs(nftService: nftService)
+    }
+
+    func reloadNFTs(nftService: NftService) async {
+        if case .loading = state { return }
 
         state = .loading
 

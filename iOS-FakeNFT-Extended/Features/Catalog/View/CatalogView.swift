@@ -58,7 +58,7 @@ struct CatalogView: View {
             }
         }
         .task {
-            await viewModel.loadCollections(catalogService: services.catalogService)
+            await viewModel.loadCollectionsIfNeeded(catalogService: services.catalogService)
         }
     }
     
@@ -94,7 +94,7 @@ struct CatalogView: View {
     private func loadFailedView(message: String) -> some View {
         LoadFailedView(message: message) {
             Task {
-                await viewModel.loadCollections(catalogService: services.catalogService)
+                await viewModel.reloadCollections(catalogService: services.catalogService)
             }
         }
     }

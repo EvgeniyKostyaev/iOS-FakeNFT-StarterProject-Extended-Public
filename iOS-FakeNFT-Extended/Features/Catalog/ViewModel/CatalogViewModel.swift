@@ -40,10 +40,15 @@ final class CatalogViewModel {
         return false
     }
     
-    func loadCollections(catalogService: CatalogService) async {
-        if case .loading = state { return }
+    func loadCollectionsIfNeeded(catalogService: CatalogService) async {
         if case .ready = state, !sourceCollections.isEmpty { return }
-        
+
+        await reloadCollections(catalogService: catalogService)
+    }
+
+    func reloadCollections(catalogService: CatalogService) async {
+        if case .loading = state { return }
+
         state = .loading
         
         do {

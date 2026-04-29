@@ -458,14 +458,14 @@
 			path = Mapping;
 			sourceTree = "<group>";
 		};
-		6B8D1B9D2FA0A68A0090C7F5 /* Doman */ = {
+		6B8D1B9D2FA0A68A0090C7F5 /* Domain */ = {
 			isa = PBXGroup;
 			children = (
 				6BEA10022FA12A1000C0DE01 /* Collection.swift */,
 				6BEA10042FA12A1000C0DE01 /* Nft.swift */,
 				36B19E272F8D1E800084D8B3 /* ProfileScreen.swift */,
 			);
-			path = Doman;
+			path = Domain;
 			sourceTree = "<group>";
 		};
 		6B8D1B9E2FA0A6D40090C7F5 /* Mapping */ = {
@@ -610,7 +610,7 @@
 			children = (
 				ABC5E19F2C31F6CB002B4068 /* Network */,
 				6B8D1B9E2FA0A6D40090C7F5 /* Mapping */,
-				6B8D1B9D2FA0A68A0090C7F5 /* Doman */,
+				6B8D1B9D2FA0A68A0090C7F5 /* Domain */,
 			);
 			path = Models;
 			sourceTree = "<group>";
