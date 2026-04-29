@@ -78,7 +78,7 @@ struct CollectionDetailsView: View {
         }
         .background(Color(.dayNightWhite).ignoresSafeArea())
         .ignoresSafeArea(edges: .top)
-        .customNavigationBar(action: { dismiss() })
+        .customNavigationBar(displayMode: .overlay, action: { dismiss() })
         .task(id: viewModel.collection.id) {
             await viewModel.loadNFTsIfNeeded(nftService: services.nftService)
         }
