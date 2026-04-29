@@ -20,6 +20,7 @@ final class CollectionDetailsViewModel {
     let collection: Collection
  
     private(set) var state: State = .idle
+    private(set) var actionErrorMessage: String?
     private var isUpdatingFavorite = false
     private var isUpdatingCart = false
 
@@ -30,6 +31,10 @@ final class CollectionDetailsViewModel {
 
     init(collection: Collection) {
         self.collection = collection
+    }
+
+    func clearActionError() {
+        actionErrorMessage = nil
     }
 
     func loadNFTsIfNeeded(
@@ -80,6 +85,8 @@ final class CollectionDetailsViewModel {
         nftId: String,
         orderService: OrderService
     ) async {
+        actionErrorMessage = nil
+
         guard case .ready(let currentNFTs) = state,
               !isUpdatingCart else { return }
 
@@ -113,9 +120,7 @@ final class CollectionDetailsViewModel {
                 }
             )
         } catch {
-            state = .failed(
-                message: NSLocalizedString("CollectionDetail.loadFailed", comment: "")
-            )
+            actionErrorMessage = NSLocalizedString("CollectionDetail.cartUpdateFailed", comment: "")
         }
     }
 
@@ -123,6 +128,8 @@ final class CollectionDetailsViewModel {
         nftId: String,
         profileService: ProfileServiceProtocol
     ) async {
+        actionErrorMessage = nil
+
         guard case .ready(let currentNFTs) = state,
               !isUpdatingFavorite else { return }
 
@@ -168,9 +175,7 @@ final class CollectionDetailsViewModel {
 
             NotificationCenter.default.post(name: .profileDidUpdate, object: nil)
         } catch {
-            state = .failed(
-                message: NSLocalizedString("CollectionDetail.loadFailed", comment: "")
-            )
+            actionErrorMessage = NSLocalizedString("CollectionDetail.favoriteUpdateFailed", comment: "")
         }
     }
 

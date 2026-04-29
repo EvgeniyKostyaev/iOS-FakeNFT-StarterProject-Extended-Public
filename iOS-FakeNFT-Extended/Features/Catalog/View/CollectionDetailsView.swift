@@ -101,6 +101,21 @@ struct CollectionDetailsView: View {
                 orderService: services.orderService
             )
         }
+        .alert(
+            NSLocalizedString("Error.title", comment: ""),
+            isPresented: Binding(
+                get: { viewModel.actionErrorMessage != nil },
+                set: { if !$0 { viewModel.clearActionError() } }
+            ),
+            actions: {
+                Button(NSLocalizedString("Error.ok", comment: ""), role: .cancel) {
+                    viewModel.clearActionError()
+                }
+            },
+            message: {
+                Text(viewModel.actionErrorMessage ?? "")
+            }
+        )
         .navigationDestination(for: URL.self) { url in
             WebViewRepresentable(url: url)
         }
