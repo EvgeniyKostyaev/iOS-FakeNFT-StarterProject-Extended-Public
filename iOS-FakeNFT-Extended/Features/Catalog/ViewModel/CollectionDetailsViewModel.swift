@@ -52,9 +52,7 @@ final class CollectionDetailsViewModel {
         orderService: OrderService
     ) async {
         if case .loading = state { return }
-
         state = .loading
-
         do {
             async let nftItemsTask = loadNftItems(nftService: nftService)
             async let likedNFTIdsTask = loadLikedNFTIds(profileService: profileService)
