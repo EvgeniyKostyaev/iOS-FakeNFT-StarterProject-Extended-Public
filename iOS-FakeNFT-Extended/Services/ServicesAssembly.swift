@@ -36,6 +36,14 @@ final class ServicesAssembly {
         OrderServiceImpl(networkClient: networkClient)
     }
 
+    var collectionDetailsService: CollectionDetailsService {
+        CollectionDetailsServiceImpl(
+            nftService: nftService,
+            profileService: profileService,
+            orderService: orderService
+        )
+    }
+
     var catalogService: CatalogService {
         CatalogServiceImpl(
             networkClient: networkClient,

@@ -67,7 +67,7 @@ struct CollectionDetailsView: View {
                                             Task {
                                                 await viewModel.toggleFavorite(
                                                     nftId: item.nftId,
-                                                    profileService: services.profileService
+                                                    collectionDetailsService: services.collectionDetailsService
                                                 )
                                             }
                                         },
@@ -75,7 +75,7 @@ struct CollectionDetailsView: View {
                                             Task {
                                                 await viewModel.toggleCart(
                                                     nftId: item.nftId,
-                                                    orderService: services.orderService
+                                                    collectionDetailsService: services.collectionDetailsService
                                                 )
                                             }
                                         }
@@ -96,9 +96,7 @@ struct CollectionDetailsView: View {
         .customNavigationBar(displayMode: .overlay, action: { dismiss() })
         .task(id: viewModel.collection.id) {
             await viewModel.loadNFTsIfNeeded(
-                nftService: services.nftService,
-                profileService: services.profileService,
-                orderService: services.orderService
+                collectionDetailsService: services.collectionDetailsService
             )
         }
         .alert(
@@ -161,9 +159,7 @@ struct CollectionDetailsView: View {
             retryAction: {
                 Task {
                     await viewModel.reloadNFTs(
-                        nftService: services.nftService,
-                        profileService: services.profileService,
-                        orderService: services.orderService
+                        collectionDetailsService: services.collectionDetailsService
                     )
                 }
             },
