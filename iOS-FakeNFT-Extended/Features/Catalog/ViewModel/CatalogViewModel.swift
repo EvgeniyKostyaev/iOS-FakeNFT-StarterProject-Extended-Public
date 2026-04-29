@@ -7,9 +7,24 @@
 
 import Foundation
 
-private enum CatalogSorting {
+private enum CatalogSorting: String {
     case byName
     case byNftCount
+
+    private static let storageKey = "catalog.sorting"
+
+    static func loadSaved() -> CatalogSorting {
+        guard let rawValue = UserDefaults.standard.string(forKey: storageKey),
+              let sorting = CatalogSorting(rawValue: rawValue) else {
+            return .byNftCount
+        }
+
+        return sorting
+    }
+
+    func save() {
+        UserDefaults.standard.set(rawValue, forKey: Self.storageKey)
+    }
 }
 
 @MainActor
@@ -23,7 +38,7 @@ final class CatalogViewModel {
     }
 
     private var sourceCollections: [Collection] = []
-    private var currentSorting: CatalogSorting = .byNftCount
+    private var currentSorting: CatalogSorting
 
     private(set) var state: State = .idle
 
@@ -38,6 +53,10 @@ final class CatalogViewModel {
         }
 
         return false
+    }
+
+    init() {
+        currentSorting = CatalogSorting.loadSaved()
     }
     
     func loadCollectionsIfNeeded(catalogService: CatalogService) async {
@@ -66,11 +85,13 @@ final class CatalogViewModel {
     
     func sortByName() {
         currentSorting = .byName
+        currentSorting.save()
         applyCurrentSorting()
     }
     
     func sortByCountNFT() {
         currentSorting = .byNftCount
+        currentSorting.save()
         applyCurrentSorting()
     }
 
