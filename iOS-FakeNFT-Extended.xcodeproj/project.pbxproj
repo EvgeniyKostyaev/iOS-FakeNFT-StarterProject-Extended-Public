@@ -90,6 +90,9 @@
 		7C0A1B052FA3000100A0A005 /* OrderGetRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0A1B152FA3000100A0A005 /* OrderGetRequest.swift */; };
 		7C0A1B062FA3000100A0A006 /* OrderPutRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0A1B162FA3000100A0A006 /* OrderPutRequest.swift */; };
 		A1B2C3D42FB0000100AA1102 /* CollectionDetailsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D42FB0000100AA1101 /* CollectionDetailsService.swift */; };
+		A1B2C3D42FB0000100AA1105 /* CatalogSortingStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D42FB0000100AA1104 /* CatalogSortingStorage.swift */; };
+		A1B2C3D42FB0000100AA1107 /* CatalogCollectionsSorter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D42FB0000100AA1106 /* CatalogCollectionsSorter.swift */; };
+		A1B2C3D42FB0000100AA1109 /* CatalogSorting.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D42FB0000100AA1108 /* CatalogSorting.swift */; };
 		6BD67C722F9A2A5900896195 /* CatalogViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BD67C712F9A2A5900896195 /* CatalogViewModel.swift */; };
 		6BD67C742FA141A200896195 /* CollectionDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BD67C732FA141A200896195 /* CollectionDetailsViewModel.swift */; };
 		6BEA10012FA12A1000C0DE01 /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BEA10022FA12A1000C0DE01 /* Collection.swift */; };
@@ -219,6 +222,9 @@
 		7C0A1B152FA3000100A0A005 /* OrderGetRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderGetRequest.swift; sourceTree = "<group>"; };
 		7C0A1B162FA3000100A0A006 /* OrderPutRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderPutRequest.swift; sourceTree = "<group>"; };
 		A1B2C3D42FB0000100AA1101 /* CollectionDetailsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionDetailsService.swift; sourceTree = "<group>"; };
+		A1B2C3D42FB0000100AA1104 /* CatalogSortingStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogSortingStorage.swift; sourceTree = "<group>"; };
+		A1B2C3D42FB0000100AA1106 /* CatalogCollectionsSorter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogCollectionsSorter.swift; sourceTree = "<group>"; };
+		A1B2C3D42FB0000100AA1108 /* CatalogSorting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogSorting.swift; sourceTree = "<group>"; };
 		6BD67C712F9A2A5900896195 /* CatalogViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogViewModel.swift; sourceTree = "<group>"; };
 		6BD67C732FA141A200896195 /* CollectionDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionDetailsViewModel.swift; sourceTree = "<group>"; };
 		6BEA10022FA12A1000C0DE01 /* Collection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
@@ -495,6 +501,9 @@
 		A1B2C3D42FB0000100AA1103 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				A1B2C3D42FB0000100AA1108 /* CatalogSorting.swift */,
+				A1B2C3D42FB0000100AA1104 /* CatalogSortingStorage.swift */,
+				A1B2C3D42FB0000100AA1106 /* CatalogCollectionsSorter.swift */,
 				A1B2C3D42FB0000100AA1101 /* CollectionDetailsService.swift */,
 			);
 			path = Services;
@@ -911,6 +920,9 @@
 				364BEE992F91656500A7FD67 /* ProfileLoadedContentViewModel.swift in Sources */,
 				6B8D1BA62FA11A110090C7F5 /* LoadFailedView.swift in Sources */,
 				6B8D1BA82FA11A120090C7F5 /* LoadInProgressView.swift in Sources */,
+				A1B2C3D42FB0000100AA1109 /* CatalogSorting.swift in Sources */,
+				A1B2C3D42FB0000100AA1105 /* CatalogSortingStorage.swift in Sources */,
+				A1B2C3D42FB0000100AA1107 /* CatalogCollectionsSorter.swift in Sources */,
 				A1B2C3D42FB0000100AA1102 /* CollectionDetailsService.swift in Sources */,
 				7C0A1B032FA3000100A0A003 /* OrderService.swift in Sources */,
 				7C0A1B052FA3000100A0A005 /* OrderGetRequest.swift in Sources */,
