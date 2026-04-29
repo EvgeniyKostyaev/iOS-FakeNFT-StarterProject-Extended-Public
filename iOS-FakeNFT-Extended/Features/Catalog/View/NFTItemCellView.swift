@@ -22,9 +22,17 @@ private enum NFTItemCellViewTheme {
 
 struct NFTItemCellView: View {
     let itemViewData: CollectionNFTViewData
+    let onFavoriteTap: () -> Void
+    let onCartTap: () -> Void
     
-    init(itemViewData: CollectionNFTViewData) {
+    init(
+        itemViewData: CollectionNFTViewData,
+        onFavoriteTap: @escaping () -> Void = {},
+        onCartTap: @escaping () -> Void = {}
+    ) {
         self.itemViewData = itemViewData
+        self.onFavoriteTap = onFavoriteTap
+        self.onCartTap = onCartTap
     }
     
     var body: some View {
@@ -36,7 +44,7 @@ struct NFTItemCellView: View {
                     .clipShape(RoundedRectangle(cornerRadius: NFTItemCellViewTheme.imageCornerRadius))
                 
                 Button {
-                    
+                    onFavoriteTap()
                 } label: {
                     Image(systemName: "heart.fill")
                         .resizable()
@@ -55,6 +63,7 @@ struct NFTItemCellView: View {
                     width: NFTItemCellViewTheme.actionButtonSize,
                     height: NFTItemCellViewTheme.actionButtonSize
                 )
+                .buttonStyle(.plain)
             }
             
             HStack(spacing: NFTItemCellViewTheme.starsSpacing) {
@@ -91,7 +100,7 @@ struct NFTItemCellView: View {
                 Spacer()
                 
                 Button {
-                    
+                    onCartTap()
                 } label: {
                     Image(itemViewData.isInCart ? .cartMinus : .cart)
                         .resizable()
@@ -106,6 +115,7 @@ struct NFTItemCellView: View {
                     width: NFTItemCellViewTheme.actionButtonSize,
                     height: NFTItemCellViewTheme.actionButtonSize
                 )
+                .buttonStyle(.plain)
             }
         }
         .frame(width: NFTItemCellViewTheme.contentWidth)

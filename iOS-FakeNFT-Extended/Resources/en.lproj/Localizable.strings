@@ -68,6 +68,8 @@
 "Catalog.sortingByCountNFT" = "By count NFT";
 "Catalog.loadFailed" = "Could not load collections. Check your connection and try again.";
 "CollectionDetail.loadFailed" = "Could not load collection NFTs. Check your connection and try again.";
+"CollectionDetail.favoriteUpdateFailed" = "Could not update favorites. Check your connection and try again.";
+"CollectionDetail.cartUpdateFailed" = "Could not update cart. Check your connection and try again.";
 
 // MARK: - Error
 

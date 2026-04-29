@@ -61,7 +61,25 @@ struct CollectionDetailsView: View {
                         ) {
                             ForEach(viewModel.nfts) { item in
                                 NavigationLink(value: item) {
-                                    NFTItemCellView(itemViewData: item)
+                                    NFTItemCellView(
+                                        itemViewData: item,
+                                        onFavoriteTap: {
+                                            Task {
+                                                await viewModel.toggleFavorite(
+                                                    nftId: item.nftId,
+                                                    collectionDetailsService: services.collectionDetailsService
+                                                )
+                                            }
+                                        },
+                                        onCartTap: {
+                                            Task {
+                                                await viewModel.toggleCart(
+                                                    nftId: item.nftId,
+                                                    collectionDetailsService: services.collectionDetailsService
+                                                )
+                                            }
+                                        }
+                                    )
                                 }
                             }
                         }
@@ -73,15 +91,29 @@ struct CollectionDetailsView: View {
             }
             .padding(.bottom, CollectionDetailViewTheme.bottomPadding)
         }
-        .refreshable {
-            await viewModel.reloadNFTs(nftService: services.nftService)
-        }
         .background(Color(.dayNightWhite).ignoresSafeArea())
         .ignoresSafeArea(edges: .top)
         .customNavigationBar(displayMode: .overlay, action: { dismiss() })
         .task(id: viewModel.collection.id) {
-            await viewModel.loadNFTsIfNeeded(nftService: services.nftService)
+            await viewModel.loadNFTsIfNeeded(
+                collectionDetailsService: services.collectionDetailsService
+            )
         }
+        .alert(
+            NSLocalizedString("Error.title", comment: ""),
+            isPresented: Binding(
+                get: { viewModel.actionErrorMessage != nil },
+                set: { if !$0 { viewModel.clearActionError() } }
+            ),
+            actions: {
+                Button(NSLocalizedString("Error.ok", comment: ""), role: .cancel) {
+                    viewModel.clearActionError()
+                }
+            },
+            message: {
+                Text(viewModel.actionErrorMessage ?? "")
+            }
+        )
         .navigationDestination(for: URL.self) { url in
             WebViewRepresentable(url: url)
         }
@@ -126,7 +158,9 @@ struct CollectionDetailsView: View {
             message: message,
             retryAction: {
                 Task {
-                    await viewModel.reloadNFTs(nftService: services.nftService)
+                    await viewModel.reloadNFTs(
+                        collectionDetailsService: services.collectionDetailsService
+                    )
                 }
             },
             horizontalPadding: CollectionDetailViewTheme.gridHorizontalPadding,
