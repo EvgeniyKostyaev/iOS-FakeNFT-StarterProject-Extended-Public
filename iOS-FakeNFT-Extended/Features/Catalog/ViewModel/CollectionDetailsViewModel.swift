@@ -32,13 +32,26 @@ final class CollectionDetailsViewModel {
         self.collection = collection
     }
 
-    func loadNFTs(
+    func loadNFTsIfNeeded(
+        nftService: NftService,
+        profileService: ProfileServiceProtocol,
+        orderService: OrderService
+    ) async {
+        if case .ready = state, !nfts.isEmpty { return }
+
+        await reloadNFTs(
+            nftService: nftService,
+            profileService: profileService,
+            orderService: orderService
+        )
+    }
+
+    func reloadNFTs(
         nftService: NftService,
         profileService: ProfileServiceProtocol,
         orderService: OrderService
     ) async {
         if case .loading = state { return }
-        if case .ready = state, !nfts.isEmpty { return }
 
         state = .loading
 
@@ -47,7 +60,7 @@ final class CollectionDetailsViewModel {
             async let likedNFTIdsTask = loadLikedNFTIds(profileService: profileService)
             async let cartNFTIdsTask = loadCartNFTIds(orderService: orderService)
 
-            let nftItems = try await nftItemsTask
+            let nftItems = await nftItemsTask
             let likedNFTIds = try await likedNFTIdsTask
             let cartNFTIds = try await cartNFTIdsTask
 
@@ -163,20 +176,25 @@ final class CollectionDetailsViewModel {
         }
     }
 
-    private func loadNftItems(nftService: NftService) async throws -> [(Int, Nft)] {
-        try await withThrowingTaskGroup(of: (Int, Nft).self, returning: [(Int, Nft)].self) { group in
+    private func loadNftItems(nftService: NftService) async -> [(Int, Nft)] {
+        await withTaskGroup(of: (Int, Nft?).self, returning: [(Int, Nft)].self) { group in
             for (index, nftId) in collection.nfts.enumerated() {
                 group.addTask {
-                    let nftDTO = try await nftService.loadNft(id: nftId)
-                    return (index, nftDTO.toDomain())
+                    do {
+                        let nftDTO = try await nftService.loadNft(id: nftId)
+                        return (index, nftDTO.toDomain())
+                    } catch {
+                        return (index, nil)
+                    }
                 }
             }
 
             var indexedNfts: [(Int, Nft)] = []
             indexedNfts.reserveCapacity(collection.nfts.count)
 
-            for try await item in group {
-                indexedNfts.append(item)
+            for await (index, nft) in group {
+                guard let nft else { continue }
+                indexedNfts.append((index, nft))
             }
 
             return indexedNfts

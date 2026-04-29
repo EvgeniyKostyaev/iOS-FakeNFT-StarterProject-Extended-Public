@@ -23,6 +23,7 @@ private enum CollectionDetailViewTheme {
 }
 
 struct CollectionDetailsView: View {
+    @Environment(\.dismiss) private var dismiss
     @Environment(ServicesAssembly.self) private var services
     @State private var viewModel: CollectionDetailsViewModel
 
@@ -90,11 +91,18 @@ struct CollectionDetailsView: View {
             }
             .padding(.bottom, CollectionDetailViewTheme.bottomPadding)
         }
+        .refreshable {
+            await viewModel.reloadNFTs(
+                nftService: services.nftService,
+                profileService: services.profileService,
+                orderService: services.orderService
+            )
+        }
         .background(Color(.dayNightWhite).ignoresSafeArea())
-        .navigationBarTitleDisplayMode(.inline)
         .ignoresSafeArea(edges: .top)
+        .customNavigationBar(action: { dismiss() })
         .task(id: viewModel.collection.id) {
-            await viewModel.loadNFTs(
+            await viewModel.loadNFTsIfNeeded(
                 nftService: services.nftService,
                 profileService: services.profileService,
                 orderService: services.orderService
@@ -144,7 +152,7 @@ struct CollectionDetailsView: View {
             message: message,
             retryAction: {
                 Task {
-                    await viewModel.loadNFTs(
+                    await viewModel.reloadNFTs(
                         nftService: services.nftService,
                         profileService: services.profileService,
                         orderService: services.orderService

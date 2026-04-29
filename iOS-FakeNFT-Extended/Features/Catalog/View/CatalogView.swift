@@ -23,11 +23,9 @@ struct CatalogView: View {
                 .navigationTitle("Catalog.title")
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationLinkIndicatorVisibility(.hidden)
-                .navigationDestination(for: CollectionViewData.self, destination: { item in
-                    if let collection = viewModel.collection(id: item.id) {
-                        CollectionDetailsView(collection: collection)
-                            .toolbar(.hidden, for: .tabBar)
-                    }
+                .navigationDestination(for: Collection.self, destination: { collection in
+                    CollectionDetailsView(collection: collection)
+                        .toolbar(.hidden, for: .tabBar)
                 })
                 .confirmationDialog(
                     "Catalog.sorting",
@@ -46,19 +44,22 @@ struct CatalogView: View {
             case .idle, .loading:
                 LoadInProgressView()
             case .ready(let collections):
-                List(collections) { item in
-                    NavigationLink(value: item) {
-                        CollectionCellView(itemViewData: item)
+                List(collections) { collection in
+                    NavigationLink(value: collection) {
+                        CollectionCellView(itemViewData: collection.toViewData())
                     }
                     .listRowSeparator(.hidden)
                 }
                 .listStyle(.plain)
+                .refreshable {
+                    await viewModel.reloadCollections(catalogService: services.catalogService)
+                }
             case .failed(let message):
                 loadFailedView(message: message)
             }
         }
         .task {
-            await viewModel.loadCollections(catalogService: services.catalogService)
+            await viewModel.loadCollectionsIfNeeded(catalogService: services.catalogService)
         }
     }
     
@@ -94,7 +95,7 @@ struct CatalogView: View {
     private func loadFailedView(message: String) -> some View {
         LoadFailedView(message: message) {
             Task {
-                await viewModel.loadCollections(catalogService: services.catalogService)
+                await viewModel.reloadCollections(catalogService: services.catalogService)
             }
         }
     }
