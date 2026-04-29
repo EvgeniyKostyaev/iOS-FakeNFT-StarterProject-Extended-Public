@@ -37,28 +37,25 @@ struct WKWebViewRepresentable: UIViewRepresentable {
 }
 
 struct WebViewRepresentable: View {
-    let url: URL
-
-    var body: some View {
-        WKWebViewRepresentable(url: url)
-            .ignoresSafeArea(edges: .bottom)
-            .navigationBarTitleDisplayMode(.inline)
-    }
-}
-
-struct WebViewFullScreenModal: View {
     @Environment(\.dismiss) private var dismiss
 
     let url: URL
 
     var body: some View {
+        WKWebViewRepresentable(url: url)
+            .ignoresSafeArea(edges: .bottom)
+            .customNavigationBar {
+                dismiss()
+            }
+    }
+}
+
+struct WebViewFullScreenModal: View {
+    let url: URL
+
+    var body: some View {
         NavigationStack {
             WebViewRepresentable(url: url)
-                .navigationTitle("")
-                .navigationBarTitleDisplayMode(.inline)
-                .customNavigationBar {
-                    dismiss()
-                }
         }
         .toolbar(.hidden, for: .tabBar)
     }

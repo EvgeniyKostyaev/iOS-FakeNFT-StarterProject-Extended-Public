@@ -23,6 +23,7 @@ private enum CollectionDetailViewTheme {
 }
 
 struct CollectionDetailsView: View {
+    @Environment(\.dismiss) private var dismiss
     @Environment(ServicesAssembly.self) private var services
     @State private var viewModel: CollectionDetailsViewModel
 
@@ -76,8 +77,8 @@ struct CollectionDetailsView: View {
             await viewModel.reloadNFTs(nftService: services.nftService)
         }
         .background(Color(.dayNightWhite).ignoresSafeArea())
-        .navigationBarTitleDisplayMode(.inline)
         .ignoresSafeArea(edges: .top)
+        .customNavigationBar(action: { dismiss() })
         .task(id: viewModel.collection.id) {
             await viewModel.loadNFTsIfNeeded(nftService: services.nftService)
         }
