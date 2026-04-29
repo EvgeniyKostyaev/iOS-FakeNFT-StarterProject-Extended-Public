@@ -16,6 +16,11 @@ private enum CustomNavigationBarLayout {
     static let titleFont: Font = .headline
 }
 
+enum CustomNavigationBarDisplayMode {
+    case inset
+    case overlay
+}
+
 struct NavigationBarBackButtonView: View {
     let action: () -> Void
 
@@ -43,6 +48,7 @@ struct NavigationBarBackButtonView: View {
 private struct CustomNavigationBarView<Trailing: View>: View {
     let title: String?
     let action: () -> Void
+    let showsBackground: Bool
     @ViewBuilder let trailing: () -> Trailing
 
     var body: some View {
@@ -66,38 +72,72 @@ private struct CustomNavigationBarView<Trailing: View>: View {
         }
         .frame(maxWidth: .infinity)
         .frame(height: CustomNavigationBarLayout.barHeight)
-        .background(.dayNightWhite)
+        .background(showsBackground ? AnyShapeStyle(.dayNightWhite) : AnyShapeStyle(.clear))
     }
 }
 
 private struct CustomNavigationBarModifier<Trailing: View>: ViewModifier {
     let title: String?
     let action: () -> Void
+    let displayMode: CustomNavigationBarDisplayMode
     @ViewBuilder let trailing: () -> Trailing
 
     func body(content: Content) -> some View {
-        content
-            .navigationBarBackButtonHidden(true)
-            .toolbar(.hidden, for: .navigationBar)
-            .safeAreaInset(edge: .top, spacing: 0) {
-                CustomNavigationBarView(
-                    title: title,
-                    action: action,
-                    trailing: trailing
+        GeometryReader { geometry in
+            let navigationBar = CustomNavigationBarView(
+                title: title,
+                action: action,
+                showsBackground: displayMode == .inset,
+                trailing: trailing
+            )
+
+            content
+                .navigationBarBackButtonHidden(true)
+                .toolbar(.hidden, for: .navigationBar)
+                .modifier(
+                    CustomNavigationBarPlacementModifier(
+                        displayMode: displayMode,
+                        topSafeAreaInset: geometry.safeAreaInsets.top,
+                        navigationBar: navigationBar
+                    )
                 )
+        }
+    }
+}
+
+private struct CustomNavigationBarPlacementModifier<NavigationBar: View>: ViewModifier {
+    let displayMode: CustomNavigationBarDisplayMode
+    let topSafeAreaInset: CGFloat
+    let navigationBar: NavigationBar
+
+    func body(content: Content) -> some View {
+        switch displayMode {
+        case .inset:
+            content.safeAreaInset(edge: .top, spacing: 0) {
+                navigationBar
             }
+        case .overlay:
+            content
+                .overlay(alignment: .top) {
+                    navigationBar
+                        .padding(.top, topSafeAreaInset)
+                }
+                .ignoresSafeArea(edges: .top)
+        }
     }
 }
 
 extension View {
     func customNavigationBar(
         title: String? = nil,
+        displayMode: CustomNavigationBarDisplayMode = .inset,
         action: @escaping () -> Void
     ) -> some View {
         modifier(
             CustomNavigationBarModifier(
                 title: title,
                 action: action,
+                displayMode: displayMode,
                 trailing: { EmptyView() }
             )
         )
@@ -105,6 +145,7 @@ extension View {
 
     func customNavigationBar<Trailing: View>(
         title: String? = nil,
+        displayMode: CustomNavigationBarDisplayMode = .inset,
         action: @escaping () -> Void,
         @ViewBuilder trailing: @escaping () -> Trailing
     ) -> some View {
@@ -112,6 +153,7 @@ extension View {
             CustomNavigationBarModifier(
                 title: title,
                 action: action,
+                displayMode: displayMode,
                 trailing: trailing
             )
         )
