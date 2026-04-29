@@ -60,7 +60,17 @@ struct CollectionDetailsView: View {
                         ) {
                             ForEach(viewModel.nfts) { item in
                                 NavigationLink(value: item) {
-                                    NFTItemCellView(itemViewData: item)
+                                    NFTItemCellView(
+                                        itemViewData: item,
+                                        onFavoriteTap: {
+                                            Task {
+                                                await viewModel.toggleFavorite(
+                                                    nftId: item.nftId,
+                                                    profileService: services.profileService
+                                                )
+                                            }
+                                        }
+                                    )
                                 }
                             }
                         }

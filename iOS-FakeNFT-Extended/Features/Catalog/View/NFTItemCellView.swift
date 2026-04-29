@@ -22,9 +22,14 @@ private enum NFTItemCellViewTheme {
 
 struct NFTItemCellView: View {
     let itemViewData: CollectionNFTViewData
+    let onFavoriteTap: () -> Void
     
-    init(itemViewData: CollectionNFTViewData) {
+    init(
+        itemViewData: CollectionNFTViewData,
+        onFavoriteTap: @escaping () -> Void = {}
+    ) {
         self.itemViewData = itemViewData
+        self.onFavoriteTap = onFavoriteTap
     }
     
     var body: some View {
@@ -36,7 +41,7 @@ struct NFTItemCellView: View {
                     .clipShape(RoundedRectangle(cornerRadius: NFTItemCellViewTheme.imageCornerRadius))
                 
                 Button {
-                    
+                    onFavoriteTap()
                 } label: {
                     Image(systemName: "heart.fill")
                         .resizable()
@@ -55,6 +60,7 @@ struct NFTItemCellView: View {
                     width: NFTItemCellViewTheme.actionButtonSize,
                     height: NFTItemCellViewTheme.actionButtonSize
                 )
+                .buttonStyle(.plain)
             }
             
             HStack(spacing: NFTItemCellViewTheme.starsSpacing) {

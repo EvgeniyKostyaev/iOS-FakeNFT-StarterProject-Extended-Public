@@ -20,6 +20,7 @@ final class CollectionDetailsViewModel {
     let collection: Collection
  
     private(set) var state: State = .idle
+    private var isUpdatingFavorite = false
 
     var nfts: [CollectionNFTViewData] {
         guard case .ready(let nfts) = state else { return [] }
@@ -56,6 +57,61 @@ final class CollectionDetailsViewModel {
         }
     }
 
+    func toggleFavorite(
+        nftId: String,
+        profileService: ProfileServiceProtocol
+    ) async {
+        guard case .ready(let currentNFTs) = state,
+              !isUpdatingFavorite else { return }
+
+        isUpdatingFavorite = true
+        defer { isUpdatingFavorite = false }
+
+        do {
+            let profile = try await profileService.loadProfile(
+                userId: ProfileAPIPath.gatewayProfilePathSegment
+            )
+
+            let updatedLikes = makeUpdatedLikes(
+                currentLikes: profile.likes,
+                nftId: nftId
+            )
+            let payload = ProfileUpdatePayload(
+                name: profile.name,
+                description: profile.description,
+                website: profile.websiteURL.absoluteString,
+                avatar: profile.avatarURL?.absoluteString ?? "",
+                likes: updatedLikes,
+                nfts: profile.nfts
+            )
+
+            try await profileService.updateProfile(payload)
+
+            state = .ready(
+                currentNFTs.map { item in
+                    guard item.nftId == nftId else { return item }
+
+                    return CollectionNFTViewData(
+                        id: item.id,
+                        nftId: item.nftId,
+                        title: item.title,
+                        imageType: item.imageType,
+                        rating: item.rating,
+                        price: item.price,
+                        isFavorite: !item.isFavorite,
+                        isInCart: item.isInCart
+                    )
+                }
+            )
+
+            NotificationCenter.default.post(name: .profileDidUpdate, object: nil)
+        } catch {
+            state = .failed(
+                message: NSLocalizedString("CollectionDetail.loadFailed", comment: "")
+            )
+        }
+    }
+
     private func loadNftItems(nftService: NftService) async throws -> [(Int, Nft)] {
         try await withThrowingTaskGroup(of: (Int, Nft).self, returning: [(Int, Nft)].self) { group in
             for (index, nftId) in collection.nfts.enumerated() {
@@ -83,5 +139,16 @@ final class CollectionDetailsViewModel {
         )
 
         return Set(profile.likes)
+    }
+
+    private func makeUpdatedLikes(
+        currentLikes: [String],
+        nftId: String
+    ) -> [String] {
+        if currentLikes.contains(nftId) {
+            return currentLikes.filter { $0 != nftId }
+        } else {
+            return currentLikes + [nftId]
+        }
     }
 }
