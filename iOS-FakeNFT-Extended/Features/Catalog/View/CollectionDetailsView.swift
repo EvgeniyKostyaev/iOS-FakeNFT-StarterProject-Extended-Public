@@ -39,7 +39,7 @@ struct CollectionDetailsView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: CollectionDetailViewTheme.contentSpacing) {
-                CoverImage(imageSourceType: .remote(viewModel.collection.cover))
+                NFTImageView(imageSourceType: .remote(viewModel.collection.cover))
                     .frame(height: CollectionDetailViewTheme.coverImageHeight)
                     .frame(maxWidth: .infinity)
                     .clipShape(RoundedRectangle(cornerRadius: CollectionDetailViewTheme.coverCornerRadius))

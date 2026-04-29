@@ -21,7 +21,7 @@ struct CollectionCellView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            CoverImage(imageSourceType: itemViewData.coverImageType)
+            NFTImageView(imageSourceType: itemViewData.coverImageType)
                 .frame(height: CollectionCellViewTheme.coverViewHeight, alignment: .top)
                 .clipShape(RoundedRectangle(cornerRadius: CollectionCellViewTheme.cornerRadius))
             Text("\(itemViewData.title) (\(itemViewData.nftCount))")

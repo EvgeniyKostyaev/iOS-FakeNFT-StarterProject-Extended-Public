@@ -1,5 +1,5 @@
 //
-//  CoverImage.swift
+//  NFTImageView.swift
 //  iOS-FakeNFT-Extended
 //
 //  Created by Evgeniy Kostyaev on 28.04.2026.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CoverImage: View {
+struct NFTImageView: View {
     let imageSourceType: ImageSourceType
     
     var body: some View {
@@ -32,4 +32,8 @@ struct CoverImage: View {
             }
         }
     }
+}
+
+#Preview {
+    NFTImageView(imageSourceType: .remote(URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Blue/Clover/1.png")!))
 }
