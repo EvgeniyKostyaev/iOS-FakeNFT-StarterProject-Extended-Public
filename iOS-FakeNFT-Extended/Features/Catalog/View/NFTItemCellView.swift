@@ -23,13 +23,16 @@ private enum NFTItemCellViewTheme {
 struct NFTItemCellView: View {
     let itemViewData: CollectionNFTViewData
     let onFavoriteTap: () -> Void
+    let onCartTap: () -> Void
     
     init(
         itemViewData: CollectionNFTViewData,
-        onFavoriteTap: @escaping () -> Void = {}
+        onFavoriteTap: @escaping () -> Void = {},
+        onCartTap: @escaping () -> Void = {}
     ) {
         self.itemViewData = itemViewData
         self.onFavoriteTap = onFavoriteTap
+        self.onCartTap = onCartTap
     }
     
     var body: some View {
@@ -97,7 +100,7 @@ struct NFTItemCellView: View {
                 Spacer()
                 
                 Button {
-                    
+                    onCartTap()
                 } label: {
                     Image(itemViewData.isInCart ? .cartMinus : .cart)
                         .resizable()
@@ -112,6 +115,7 @@ struct NFTItemCellView: View {
                     width: NFTItemCellViewTheme.actionButtonSize,
                     height: NFTItemCellViewTheme.actionButtonSize
                 )
+                .buttonStyle(.plain)
             }
         }
         .frame(width: NFTItemCellViewTheme.contentWidth)

@@ -21,6 +21,7 @@ final class CollectionDetailsViewModel {
  
     private(set) var state: State = .idle
     private var isUpdatingFavorite = false
+    private var isUpdatingCart = false
 
     var nfts: [CollectionNFTViewData] {
         guard case .ready(let nfts) = state else { return [] }
@@ -31,7 +32,11 @@ final class CollectionDetailsViewModel {
         self.collection = collection
     }
 
-    func loadNFTs(nftService: NftService, profileService: ProfileServiceProtocol) async {
+    func loadNFTs(
+        nftService: NftService,
+        profileService: ProfileServiceProtocol,
+        orderService: OrderService
+    ) async {
         if case .loading = state { return }
         if case .ready = state, !nfts.isEmpty { return }
 
@@ -40,16 +45,62 @@ final class CollectionDetailsViewModel {
         do {
             async let nftItemsTask = loadNftItems(nftService: nftService)
             async let likedNFTIdsTask = loadLikedNFTIds(profileService: profileService)
+            async let cartNFTIdsTask = loadCartNFTIds(orderService: orderService)
 
             let nftItems = try await nftItemsTask
             let likedNFTIds = try await likedNFTIdsTask
+            let cartNFTIds = try await cartNFTIdsTask
 
             state = .ready(nftItems.map { index, nft in
                 nft.toViewData(
                     id: "\(nft.id)-\(index)",
-                    isFavorite: likedNFTIds.contains(nft.id)
+                    isFavorite: likedNFTIds.contains(nft.id),
+                    isInCart: cartNFTIds.contains(nft.id)
                 )
             })
+        } catch {
+            state = .failed(
+                message: NSLocalizedString("CollectionDetail.loadFailed", comment: "")
+            )
+        }
+    }
+
+    func toggleCart(
+        nftId: String,
+        orderService: OrderService
+    ) async {
+        guard case .ready(let currentNFTs) = state,
+              !isUpdatingCart else { return }
+
+        isUpdatingCart = true
+        defer { isUpdatingCart = false }
+
+        do {
+            let order = try await orderService.loadOrder(id: OrderAPIPath.gatewayOrderPathSegment)
+            let updatedNfts = makeUpdatedCartNFTs(currentNFTIds: order.nfts, nftId: nftId)
+            let payload = OrderUpdatePayload(nfts: updatedNfts)
+
+            _ = try await orderService.updateOrder(
+                id: OrderAPIPath.gatewayOrderPathSegment,
+                payload: payload
+            )
+
+            state = .ready(
+                currentNFTs.map { item in
+                    guard item.nftId == nftId else { return item }
+
+                    return CollectionNFTViewData(
+                        id: item.id,
+                        nftId: item.nftId,
+                        title: item.title,
+                        imageType: item.imageType,
+                        rating: item.rating,
+                        price: item.price,
+                        isFavorite: item.isFavorite,
+                        isInCart: !item.isInCart
+                    )
+                }
+            )
         } catch {
             state = .failed(
                 message: NSLocalizedString("CollectionDetail.loadFailed", comment: "")
@@ -141,6 +192,14 @@ final class CollectionDetailsViewModel {
         return Set(profile.likes)
     }
 
+    private func loadCartNFTIds(orderService: OrderService) async throws -> Set<String> {
+        let order = try await orderService.loadOrder(
+            id: OrderAPIPath.gatewayOrderPathSegment
+        )
+
+        return Set(order.nfts)
+    }
+
     private func makeUpdatedLikes(
         currentLikes: [String],
         nftId: String
@@ -149,6 +208,17 @@ final class CollectionDetailsViewModel {
             return currentLikes.filter { $0 != nftId }
         } else {
             return currentLikes + [nftId]
+        }
+    }
+
+    private func makeUpdatedCartNFTs(
+        currentNFTIds: [String],
+        nftId: String
+    ) -> [String] {
+        if currentNFTIds.contains(nftId) {
+            return currentNFTIds.filter { $0 != nftId }
+        } else {
+            return currentNFTIds + [nftId]
         }
     }
 }

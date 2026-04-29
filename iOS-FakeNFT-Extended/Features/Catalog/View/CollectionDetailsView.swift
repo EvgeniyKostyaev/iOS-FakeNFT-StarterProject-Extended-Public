@@ -69,6 +69,14 @@ struct CollectionDetailsView: View {
                                                     profileService: services.profileService
                                                 )
                                             }
+                                        },
+                                        onCartTap: {
+                                            Task {
+                                                await viewModel.toggleCart(
+                                                    nftId: item.nftId,
+                                                    orderService: services.orderService
+                                                )
+                                            }
                                         }
                                     )
                                 }
@@ -88,7 +96,8 @@ struct CollectionDetailsView: View {
         .task(id: viewModel.collection.id) {
             await viewModel.loadNFTs(
                 nftService: services.nftService,
-                profileService: services.profileService
+                profileService: services.profileService,
+                orderService: services.orderService
             )
         }
         .navigationDestination(for: URL.self) { url in
@@ -137,7 +146,8 @@ struct CollectionDetailsView: View {
                 Task {
                     await viewModel.loadNFTs(
                         nftService: services.nftService,
-                        profileService: services.profileService
+                        profileService: services.profileService,
+                        orderService: services.orderService
                     )
                 }
             },

@@ -32,6 +32,10 @@ final class ServicesAssembly {
         ProfileServiceImpl(networkClient: networkClient)
     }
 
+    var orderService: OrderService {
+        OrderServiceImpl(networkClient: networkClient)
+    }
+
     var catalogService: CatalogService {
         CatalogServiceImpl(
             networkClient: networkClient,
