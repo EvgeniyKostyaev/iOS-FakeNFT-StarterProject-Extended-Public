@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct NFTImageView: View {
     let imageSourceType: ImageSourceType
@@ -18,17 +19,16 @@ struct NFTImageView: View {
                     .resizable()
                     .scaledToFill()
             case .remote(let url):
-                AsyncImage(url: url) { image in
-                    image
-                        .resizable()
-                        .scaledToFill()
-                } placeholder: {
-                    Rectangle()
-                        .fill(Color(.dayNightLightGray))
-                        .overlay {
-                            ProgressView()
-                        }
-                }
+                KFImage(url)
+                    .placeholder {
+                        Rectangle()
+                            .fill(Color(.dayNightLightGray))
+                            .overlay {
+                                ProgressView()
+                            }
+                    }
+                    .resizable()
+                    .scaledToFill()
             }
         }
     }
