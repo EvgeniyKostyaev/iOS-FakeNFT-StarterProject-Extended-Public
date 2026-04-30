@@ -30,6 +30,13 @@ struct ProfileView: View {
                 }
             }
         }
+        .navigationTitle("")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text(String())
+            }
+        }
         .onAppear {
             Task {
                 await viewModel.loadProfile(profileService: services.profileService)

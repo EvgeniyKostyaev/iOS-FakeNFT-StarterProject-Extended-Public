@@ -7,11 +7,6 @@
 
 import Foundation
 
-private enum CatalogSorting {
-    case byName
-    case byNftCount
-}
-
 @MainActor
 @Observable
 final class CatalogViewModel {
@@ -23,7 +18,9 @@ final class CatalogViewModel {
     }
 
     private var sourceCollections: [Collection] = []
-    private var currentSorting: CatalogSorting = .byNftCount
+    private var currentSorting: CatalogSorting
+    private let sortingStorage: CatalogSortingStorage
+    private let collectionsSorter: CatalogCollectionsSorter
 
     private(set) var state: State = .idle
 
@@ -32,12 +29,13 @@ final class CatalogViewModel {
         return collections.map { $0.toViewData() }
     }
 
-    var isLoading: Bool {
-        if case .loading = state {
-            return true
-        }
-
-        return false
+    init(
+        sortingStorage: CatalogSortingStorage = CatalogSortingStorageImpl(),
+        collectionsSorter: CatalogCollectionsSorter = CatalogCollectionsSorter()
+    ) {
+        self.sortingStorage = sortingStorage
+        self.collectionsSorter = collectionsSorter
+        currentSorting = sortingStorage.loadSorting()
     }
     
     func loadCollectionsIfNeeded(catalogService: CatalogService) async {
@@ -66,28 +64,19 @@ final class CatalogViewModel {
     
     func sortByName() {
         currentSorting = .byName
+        sortingStorage.saveSorting(currentSorting)
         applyCurrentSorting()
     }
     
     func sortByCountNFT() {
         currentSorting = .byNftCount
+        sortingStorage.saveSorting(currentSorting)
         applyCurrentSorting()
     }
 
     private func applyCurrentSorting() {
-        switch currentSorting {
-        case .byName:
-            state = .ready(sourceCollections.sorted {
-                $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
-            })
-        case .byNftCount:
-            state = .ready(sourceCollections.sorted {
-                if $0.nfts.count == $1.nfts.count {
-                    return $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
-                }
-                
-                return $0.nfts.count > $1.nfts.count
-            })
-        }
+        state = .ready(
+            collectionsSorter.sort(sourceCollections, by: currentSorting)
+        )
     }
 }

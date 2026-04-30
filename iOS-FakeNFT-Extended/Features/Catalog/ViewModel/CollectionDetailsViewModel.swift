@@ -20,6 +20,9 @@ final class CollectionDetailsViewModel {
     let collection: Collection
  
     private(set) var state: State = .idle
+    private(set) var actionErrorMessage: String?
+    private var isUpdatingFavorite = false
+    private var isUpdatingCart = false
 
     var nfts: [CollectionNFTViewData] {
         guard case .ready(let nfts) = state else { return [] }
@@ -30,54 +33,111 @@ final class CollectionDetailsViewModel {
         self.collection = collection
     }
 
-    func loadNFTsIfNeeded(nftService: NftService) async {
-        if case .ready = state, !nfts.isEmpty { return }
-
-        await reloadNFTs(nftService: nftService)
+    func clearActionError() {
+        actionErrorMessage = nil
     }
 
-    func reloadNFTs(nftService: NftService) async {
+    func loadNFTsIfNeeded(
+        collectionDetailsService: CollectionDetailsService
+    ) async {
+        if case .ready = state, !nfts.isEmpty { return }
+
+        await reloadNFTs(collectionDetailsService: collectionDetailsService)
+    }
+
+    func reloadNFTs(
+        collectionDetailsService: CollectionDetailsService
+    ) async {
         if case .loading = state { return }
-
         state = .loading
-
-        let nftItems = await loadNftItems(nftService: nftService)
-
-        guard !nftItems.isEmpty else {
+        do {
+            state = .ready(
+                try await collectionDetailsService.loadNFTs(for: collection)
+            )
+        } catch {
             state = .failed(
                 message: NSLocalizedString("CollectionDetail.loadFailed", comment: "")
             )
-            return
         }
-
-        state = .ready(nftItems.map { index, nft in
-            nft.toViewData(id: "\(nft.id)-\(index)")
-        })
     }
 
-    private func loadNftItems(nftService: NftService) async -> [(Int, Nft)] {
-        await withTaskGroup(of: (Int, Nft?).self, returning: [(Int, Nft)].self) { group in
-            for (index, nftId) in collection.nfts.enumerated() {
-                group.addTask {
-                    do {
-                        let nftDTO = try await nftService.loadNft(id: nftId)
-                        return (index, nftDTO.toDomain())
-                    } catch {
-                        return (index, nil)
-                    }
-                }
-            }
+    func toggleCart(
+        nftId: String,
+        collectionDetailsService: CollectionDetailsService
+    ) async {
+        actionErrorMessage = nil
 
-            var indexedNfts: [(Int, Nft)] = []
-            indexedNfts.reserveCapacity(collection.nfts.count)
+        guard case .ready(let currentNFTs) = state,
+              !isUpdatingCart else { return }
 
-            for await (index, nft) in group {
-                guard let nft else { continue }
-                indexedNfts.append((index, nft))
-            }
+        isUpdatingCart = true
+        defer { isUpdatingCart = false }
 
-            return indexedNfts
-                .sorted { $0.0 < $1.0 }
+        do {
+            try await collectionDetailsService.updateCartStatus(for: nftId)
+            state = .ready(toggleCartState(for: nftId, in: currentNFTs))
+        } catch {
+            actionErrorMessage = NSLocalizedString("CollectionDetail.cartUpdateFailed", comment: "")
+        }
+    }
+
+    func toggleFavorite(
+        nftId: String,
+        collectionDetailsService: CollectionDetailsService
+    ) async {
+        actionErrorMessage = nil
+
+        guard case .ready(let currentNFTs) = state,
+              !isUpdatingFavorite else { return }
+
+        isUpdatingFavorite = true
+        defer { isUpdatingFavorite = false }
+
+        do {
+            try await collectionDetailsService.updateFavoriteStatus(for: nftId)
+            state = .ready(toggleFavoriteState(for: nftId, in: currentNFTs))
+        } catch {
+            actionErrorMessage = NSLocalizedString("CollectionDetail.favoriteUpdateFailed", comment: "")
+        }
+    }
+
+    private func toggleFavoriteState(
+        for nftId: String,
+        in items: [CollectionNFTViewData]
+    ) -> [CollectionNFTViewData] {
+        items.map { item in
+            guard item.nftId == nftId else { return item }
+
+            return CollectionNFTViewData(
+                id: item.id,
+                nftId: item.nftId,
+                title: item.title,
+                imageType: item.imageType,
+                rating: item.rating,
+                price: item.price,
+                isFavorite: !item.isFavorite,
+                isInCart: item.isInCart
+            )
+        }
+    }
+
+    private func toggleCartState(
+        for nftId: String,
+        in items: [CollectionNFTViewData]
+    ) -> [CollectionNFTViewData] {
+        items.map { item in
+            guard item.nftId == nftId else { return item }
+
+            return CollectionNFTViewData(
+                id: item.id,
+                nftId: item.nftId,
+                title: item.title,
+                imageType: item.imageType,
+                rating: item.rating,
+                price: item.price,
+                isFavorite: item.isFavorite,
+                isInCart: !item.isInCart
+            )
         }
     }
 }

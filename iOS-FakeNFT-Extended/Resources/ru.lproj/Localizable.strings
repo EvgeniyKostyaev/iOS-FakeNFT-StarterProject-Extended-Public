@@ -68,6 +68,8 @@
 "Catalog.sortingByCountNFT" = "По количеству NFT";
 "Catalog.loadFailed" = "Не удалось загрузить коллекции. Проверьте сеть и попробуйте снова.";
 "CollectionDetail.loadFailed" = "Не удалось загрузить NFT коллекции. Проверьте сеть и попробуйте снова.";
+"CollectionDetail.favoriteUpdateFailed" = "Не удалось обновить избранное. Проверьте сеть и попробуйте снова.";
+"CollectionDetail.cartUpdateFailed" = "Не удалось обновить корзину. Проверьте сеть и попробуйте снова.";
 
 // MARK: - Error
 
