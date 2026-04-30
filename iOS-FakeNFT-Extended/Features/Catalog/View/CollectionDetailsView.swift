@@ -26,6 +26,7 @@ struct CollectionDetailsView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(ServicesAssembly.self) private var services
     @State private var viewModel: CollectionDetailsViewModel
+    @State private var selectedNFT: CollectionNFTViewData?
 
     private let gridItems = [
         GridItem(.flexible(), spacing: CollectionDetailViewTheme.gridSpacing),
@@ -60,7 +61,9 @@ struct CollectionDetailsView: View {
                             spacing: CollectionDetailViewTheme.gridVerticalSpacing
                         ) {
                             ForEach(viewModel.nfts) { item in
-                                NavigationLink(value: item) {
+                                Button {
+                                    selectedNFT = item
+                                } label: {
                                     NFTItemCellView(
                                         itemViewData: item,
                                         onFavoriteTap: {
@@ -81,6 +84,7 @@ struct CollectionDetailsView: View {
                                         }
                                     )
                                 }
+                                .buttonStyle(.plain)
                             }
                         }
                     case .failed(let message):
@@ -117,7 +121,7 @@ struct CollectionDetailsView: View {
         .navigationDestination(for: URL.self) { url in
             WebViewRepresentable(url: url)
         }
-        .navigationDestination(for: CollectionNFTViewData.self) { item in
+        .sheet(item: $selectedNFT) { item in
             NftDetailBridgeView(nftId: item.nftId)
         }
     }
