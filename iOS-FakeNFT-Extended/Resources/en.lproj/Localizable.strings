@@ -1,0 +1,80 @@
+"Common.close" = "Close";
+"Collection.author" = "Author collection:";
+"NFT.currency.eth" = "ETH";
+// MARK: - Tab
+
+"Tab.profile" = "Profile";
+"Tab.catalog" = "Catalog";
+
+// MARK: - Common
+
+"Common.name" = "Name";
+"Common.description" = "Description";
+"Common.website" = "Website";
+"Common.save" = "Save";
+"Common.cancel" = "Cancel";
+"Common.exit" = "Exit";
+
+// MARK: - Profile
+
+"Profile.myNFTsFormat" = "My NFTs (%lld)";
+"Profile.favoritesFormat" = "Favorite NFTs (%lld)";
+"Profile.edit" = "Edit";
+"Profile.myNFTsNavTitle" = "My NFTs";
+"Profile.favoritesNavTitle" = "Favorite NFTs";
+"Profile.loadFailed" = "Failed to load profile";
+"Profile.editSaveFailed" = "Could not save changes. Check your connection and try again.";
+"Profile.editValidationNameEmpty" = "Enter a name.";
+"Profile.editValidationWebsiteEmpty" = "Enter a website URL.";
+"Profile.editValidationWebsiteInvalid" = "Enter a valid URL (for example, https://example.com).";
+"Profile.editExitTitle" = "Are you sure you want to\nexit?";
+"Profile.editExitStay" = "Stay";
+
+// MARK: - Profile Avatar
+
+"Profile.avatarSheetTitle" = "Profile photo";
+"Profile.avatarChangePhoto" = "Change photo";
+"Profile.avatarDeletePhoto" = "Delete photo";
+"Profile.avatarLinkTitle" = "Photo link";
+
+// MARK: - My NFT
+
+"MyNFT.empty" = "You don't have any NFT yet";
+"MyNFT.loadFailed" = "Could not load NFT list. Check your connection and try again.";
+"MyNFT.authorPrefix" = "by";
+"MyNFT.priceLabel" = "Price";
+"MyNFT.priceCurrency" = "ETH";
+"MyNFT.ratingAccessibilityFormat" = "Rating %d out of %d";
+"MyNFT.sortAccessibility" = "Sort";
+"MyNFT.sortDialogTitle" = "Sorting";
+"MyNFT.sortClose" = "Close";
+"MyNFT.sortByPrice" = "By price";
+"MyNFT.sortByRating" = "By rating";
+"MyNFT.sortByName" = "By name";
+
+// MARK: - Favorite NFT
+
+"FavoriteNFT.empty" = "You don't have any favorite NFT yet";
+"FavoriteNFT.loadFailed" = "Could not load favorites. Check your connection and try again.";
+"FavoriteNFT.removeFailed" = "Could not update favorites. Check your connection and try again.";
+"FavoriteNFT.removeFromFavoritesAccessibility" = "Remove from favorites";
+
+// MARK: - Catalog
+
+"Catalog.title" = "Catalog";
+"Catalog.openNft" = "Open NFT";
+"Catalog.sorting" = "Sorting";
+"Catalog.sortingByName" = "By name";
+"Catalog.sortingByCountNFT" = "By count NFT";
+"Catalog.loadFailed" = "Could not load collections. Check your connection and try again.";
+"CollectionDetail.loadFailed" = "Could not load collection NFTs. Check your connection and try again.";
+"CollectionDetail.favoriteUpdateFailed" = "Could not update favorites. Check your connection and try again.";
+"CollectionDetail.cartUpdateFailed" = "Could not update cart. Check your connection and try again.";
+
+// MARK: - Error
+
+"Error.network" = "A network error occurred";
+"Error.unknown" = "An unknown error occurred";
+"Error.repeat" = "Retry";
+"Error.title" = "Error";
+"Error.ok" = "OK";
