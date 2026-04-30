@@ -29,14 +29,6 @@ final class CatalogViewModel {
         return collections.map { $0.toViewData() }
     }
 
-    var isLoading: Bool {
-        if case .loading = state {
-            return true
-        }
-
-        return false
-    }
-
     init(
         sortingStorage: CatalogSortingStorage = CatalogSortingStorageImpl(),
         collectionsSorter: CatalogCollectionsSorter = CatalogCollectionsSorter()
